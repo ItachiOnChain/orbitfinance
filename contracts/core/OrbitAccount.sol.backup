@@ -1,0 +1,781 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {IVaultRegistry} from "../interfaces/IVaultRegistry.sol";
+import {IDebtManager} from "../interfaces/IDebtManager.sol";
+import {IPriceOracle} from "../interfaces/IPriceOracle.sol";
+import {IVault} from "../interfaces/IVault.sol";
+import {AccountingLib} from "../libraries/AccountingLib.sol";
+import {SafetyLib} from "../libraries/SafetyLib.sol";
+import {OrbitErrors} from "../errors/OrbitErrors.sol";
+
+/**
+ * @title OrbitAccount
+ * @notice User state container for Orbit Finance
+ * @dev One contract per user, manages deposits, debt, and yield tracking
+ */
+contract OrbitAccount is ReentrancyGuard {
+    using SafeERC20 for IERC20;
+    using AccountingLib for uint256;
+
+    /// @notice Maximum number of different assets supported
+    uint256 private constant MAX_ASSETS = 5;
+
+    /// @notice Account states
+    enum State {
+        CREATED,
+        DEPOSITED,
+        BORROWED,
+        DEBT_CLEARED,
+        EXITED
+    }
+
+    /// @notice The owner of this account
+    address public owner;
+
+    /// @notice The vault registry contract
+    address public immutable vaultRegistry;
+
+    /// @notice The debt manager contract
+    address public immutable debtManager;
+
+    /// @notice Mapping of asset to deposited amount
+    mapping(address asset => uint256 amount) public deposits;
+
+    /// @notice Mapping of asset to strategy shares (for future use)
+    mapping(address asset => uint256 shares) public strategyShares;
+
+    /// @notice Total debt owed by this account
+    uint256 public totalDebt;
+
+    /// @notice The debt token used by this account (orUSD or orETH)
+    address public debtToken;
+
+    /// @notice Accumulated credit from yield (for future use)
+    uint256 public accumulatedCredit;
+
+    /// @notice Last block when account was updated
+    uint256 public lastUpdateBlock;
+
+    /// @notice Array of deposited assets for iteration
+    address[] private depositedAssets;
+
+    /// @notice Mapping to check if asset is already in depositedAssets array
+    mapping(address => bool) private isDepositedAsset;
+
+    /// @notice Last synced value for each asset (for future use)
+    mapping(address asset => uint256 value) public lastSyncedValue;
+
+    /// @notice Total deposits made over account lifetime
+    uint256 public totalDepositsAllTime;
+
+    /// @notice Total borrows made over account lifetime
+    uint256 public totalBorrowsAllTime;
+
+    /// @notice Total repayments made over account lifetime
+    uint256 public totalRepaymentsAllTime;
+
+    /// @notice Current state of the account
+    State public currentState;
+
+    /// @notice Array to track deposited assets
+
+    /**
+     * @notice Emitted when collateral is deposited
+     * @param asset The asset address
+     * @param amount The amount deposited
+     * @param shares The shares received (0 for now)
+     */
+    event Deposit(address indexed asset, uint256 amount, uint256 shares);
+
+    /**
+     * @notice Emitted when debt is borrowed
+     * @param amount The amount borrowed
+     * @param totalDebt The new total debt
+     */
+    event Borrowed(uint256 amount, uint256 totalDebt);
+
+    /**
+     * @notice Emitted when debt is repaid
+     * @param amount The amount repaid
+     * @param remainingDebt The remaining debt
+     */
+    event Repaid(uint256 amount, uint256 remainingDebt);
+
+    /**
+     * @notice Emitted when collateral is withdrawn
+     * @param asset The asset address
+     * @param amount The amount withdrawn
+     * @param remaining The remaining deposit
+     */
+    event Withdrawal(address indexed asset, uint256 amount, uint256 remaining);
+
+    /**
+     * @notice Emitted when debt is automatically repaid from yield
+     * @param amount The amount of debt repaid
+     * @param remainingDebt The remaining debt after repayment
+     */
+    event DebtRepaid(uint256 amount, uint256 remainingDebt);
+
+    /**
+     * @notice Emitted when yield is accumulated as credit
+     * @param amount The amount of credit accrued
+     * @param totalCredit The total accumulated credit
+     */
+    event CreditAccrued(uint256 amount, uint256 totalCredit);
+
+    /**
+     * @notice Emitted when credit is claimed by the user
+     * @param amount The amount of credit claimed
+     * @param remainingCredit The remaining credit
+     */
+    event CreditClaimed(uint256 amount, uint256 remainingCredit);
+
+    /**
+     * @notice Emitted when user self-liquidates position
+     * @param asset The collateral asset used
+     * @param collateralUsed The amount of collateral used
+     * @param debtRepaid The amount of debt repaid
+     */
+    event SelfLiquidated(
+        address indexed asset,
+        uint256 collateralUsed,
+        uint256 debtRepaid
+    );
+
+    /**
+     * @notice Ensures only the owner can call the function
+     */
+    modifier onlyOwner() {
+        if (msg.sender != owner) {
+            revert OrbitErrors.Unauthorized(msg.sender);
+        }
+        _;
+    }
+
+    /**
+     * @notice Creates a new OrbitAccount
+     * @dev Constructor is minimal, actual initialization happens in initialize()
+     * @param _vaultRegistry The vault registry address
+     * @param _debtManager The debt manager address
+     */
+    constructor(address _vaultRegistry, address _debtManager) {
+        if (_vaultRegistry == address(0) || _debtManager == address(0)) {
+            revert OrbitErrors.InvalidImplementation(address(0));
+        }
+        vaultRegistry = _vaultRegistry;
+        debtManager = _debtManager;
+    }
+
+    /**
+     * @notice Initializes the account for a user
+     * @dev Can only be called once
+     * @param _owner The owner of this account
+     * @param _vaultRegistry The vault registry address (must match immutable)
+     * @param _debtManager The debt manager address (must match immutable)
+     * @param _yieldRouter The yield router address (for future use)
+     */
+    function initialize(
+        address _owner,
+        address _vaultRegistry,
+        address _debtManager,
+        address _yieldRouter
+    ) external {
+        if (owner != address(0)) {
+            revert OrbitErrors.AccountAlreadyExists(_owner, address(this));
+        }
+
+        if (_vaultRegistry != vaultRegistry || _debtManager != debtManager) {
+            revert OrbitErrors.InvalidImplementation(address(0));
+        }
+
+        owner = _owner;
+        currentState = State.CREATED;
+        lastUpdateBlock = block.number;
+
+        // yieldRouter will be used in Phase 7, for now we just validate it's not zero
+        // but don't store it since we don't have storage for it yet
+    }
+
+    /**
+     * @notice Deposits collateral into the account
+     * @param amount The amount to deposit
+     * @param asset The asset to deposit
+     */
+    function deposit(
+        uint256 amount,
+        address asset
+    ) external onlyOwner nonReentrant {
+        if (amount == 0) {
+            revert OrbitErrors.ZeroAmount();
+        }
+
+        // Get vault from registry
+        address vault = IVaultRegistry(vaultRegistry).getVault(asset);
+        if (vault == address(0)) {
+            revert OrbitErrors.InvalidImplementation(vault);
+        }
+
+        // Transfer asset from user to this contract
+        IERC20(asset).safeTransferFrom(msg.sender, address(this), amount);
+
+        // CRITICAL FIX: Track deposited assets
+        if (!isDepositedAsset[asset]) {
+            depositedAssets.push(asset);
+            isDepositedAsset[asset] = true;
+        }
+
+        // Approve and deposit to vault
+        IERC20(asset).forceApprove(vault, amount);
+        uint256 shares = IVault(vault).deposit(amount, address(this));
+
+        // Update deposits and shares
+        deposits[asset] += amount;
+        strategyShares[asset] += shares;
+        totalDepositsAllTime += amount;
+        lastSyncedValue[asset] = deposits[asset];
+
+        // Update state
+        if (currentState == State.CREATED) {
+            currentState = State.DEPOSITED;
+        }
+
+        emit Deposit(asset, amount, shares);
+    }
+
+    /**
+     * @notice Borrows debt tokens against collateral
+     * @param amount The amount to borrow
+     * @param _debtToken The debt token to borrow
+     */
+    function borrow(
+        uint256 amount,
+        address _debtToken
+    ) external onlyOwner nonReentrant {
+        if (amount == 0) {
+            revert OrbitErrors.ZeroAmount();
+        }
+
+        // Update debt with yield (stub for now)
+        _updateDebtWithYield();
+
+        // Calculate max borrowable
+        uint256 maxBorrowable = _calculateMaxBorrowable(_debtToken);
+        uint256 newDebt = totalDebt + amount;
+
+        if (newDebt > maxBorrowable) {
+            revert OrbitErrors.ExceedsMaxBorrow(newDebt, maxBorrowable);
+        }
+
+        // Enforce single debt token type
+        if (debtToken == address(0)) {
+            debtToken = _debtToken;
+        } else if (debtToken != _debtToken) {
+            revert OrbitErrors.InvalidState(uint8(1), uint8(0));
+        }
+
+        // Update debt
+        totalDebt = newDebt;
+        totalBorrowsAllTime += amount;
+
+        // Mint debt tokens to user
+        IDebtManager(debtManager).mint(msg.sender, amount);
+
+        // Update state
+        if (currentState == State.DEPOSITED) {
+            currentState = State.BORROWED;
+        }
+
+        emit Borrowed(amount, totalDebt);
+    }
+
+    /**
+     * @notice Repays outstanding debt
+     * @param amount The amount to repay
+     */
+    function repay(uint256 amount) external onlyOwner nonReentrant {
+        if (amount == 0) {
+            revert OrbitErrors.ZeroAmount();
+        }
+
+        if (amount > totalDebt) {
+            revert OrbitErrors.InsufficientCollateral(amount, totalDebt);
+        }
+
+        // Update debt with yield
+        _updateDebtWithYield();
+
+        // Transfer debt tokens from user to this contract
+        IERC20(debtToken).safeTransferFrom(msg.sender, address(this), amount);
+
+        // Burn debt tokens
+        IDebtManager(debtManager).burn(address(this), amount);
+
+        // Update debt
+        totalDebt -= amount;
+        totalRepaymentsAllTime += amount;
+
+        // Update state
+        if (totalDebt == 0) {
+            currentState = State.DEBT_CLEARED;
+        }
+
+        emit Repaid(amount, totalDebt);
+    }
+
+    /**
+     * @notice Withdraws collateral from the account
+     * @param amount The amount to withdraw
+     * @param asset The asset to withdraw
+     */
+    function withdraw(
+        uint256 amount,
+        address asset
+    ) external onlyOwner nonReentrant {
+        if (amount == 0) {
+            revert OrbitErrors.ZeroAmount();
+        }
+
+        // Sync deposit value (stub for now)
+        _syncDepositValue(asset);
+
+        // Update debt with yield
+        _updateDebtWithYield();
+
+        // Calculate max withdrawable
+        uint256 maxWithdrawable = _calculateWithdrawable(asset);
+
+        if (amount > maxWithdrawable) {
+            revert OrbitErrors.InsufficientCollateral(amount, maxWithdrawable);
+        }
+
+        // Update deposits
+        deposits[asset] -= amount;
+
+        // Transfer asset to user
+        IERC20(asset).safeTransfer(msg.sender, amount);
+
+        // Update state if all deposits withdrawn
+        if (_getTotalDepositValue() == 0) {
+            currentState = State.EXITED;
+        }
+
+        emit Withdrawal(asset, amount, deposits[asset]);
+    }
+
+    /**
+     * @notice Returns the maximum borrowable amount
+     * @return The maximum amount that can be borrowed
+     */
+    function maxBorrowableAmount() external view returns (uint256) {
+        // If debt token is set, use it; otherwise return 0
+        // In practice, UI should call with specific debt token
+        if (debtToken == address(0)) {
+            return 0;
+        }
+        return _calculateMaxBorrowable(debtToken);
+    }
+
+    /**
+     * @notice Returns the maximum borrowable amount for a specific debt token
+     * @param _debtToken The debt token address
+     * @return The maximum amount that can be borrowed
+     */
+    function maxBorrowableAmount(address _debtToken) external view returns (uint256) {
+        return _calculateMaxBorrowable(_debtToken);
+    }
+
+    /**
+     * @notice Returns the withdrawable collateral for a specific asset
+     * @param asset The asset to query
+     * @return The amount that can be withdrawn
+     */
+    function withdrawableCollateral(
+        address asset
+    ) external view returns (uint256) {
+        return _calculateWithdrawable(asset);
+    }
+
+    /**
+     * @notice Returns array of deposited assets
+     * @return Array of asset addresses
+     */
+    function getDepositedAssets() external view returns (address[] memory) {
+        return depositedAssets;
+    }
+
+    /**
+     * @notice Synchronizes all deposits and applies yield to debt
+     * @dev Can be called by anyone to trigger yield processing
+     */
+    function sync() external {
+        _updateDebtWithYield();
+
+        // Sync all deposit values
+        address[] memory assets = _getDepositedAssets();
+        for (uint256 i = 0; i < assets.length; i++) {
+            _syncDepositValue(assets[i]);
+        }
+    }
+
+    /**
+     * @notice Claims accumulated credit as debt tokens
+     * @param amount The amount of credit to claim
+     */
+    function claimCredit(uint256 amount) external onlyOwner nonReentrant {
+        if (amount == 0) {
+            revert OrbitErrors.ZeroAmount();
+        }
+
+        if (amount > accumulatedCredit) {
+            revert OrbitErrors.InsufficientCollateral(
+                amount,
+                accumulatedCredit
+            );
+        }
+
+        accumulatedCredit -= amount;
+
+        // Mint debt tokens as credit (free money for user)
+        IDebtManager(debtManager).mint(msg.sender, amount);
+
+        emit CreditClaimed(amount, accumulatedCredit);
+    }
+
+
+    /**
+     * @notice Self-liquidates position by using collateral to repay debt
+     * @param debtAmount The amount of debt to repay
+     * @param asset The collateral asset to use
+     * @param maxCollateralIn Maximum collateral willing to spend (slippage protection)
+     */
+    function liquidate(
+        uint256 debtAmount,
+        address asset,
+        uint256 maxCollateralIn
+    ) external onlyOwner nonReentrant {
+        if (debtAmount == 0) {
+            revert OrbitErrors.ZeroAmount();
+        }
+
+        if (debtAmount > totalDebt) {
+            revert OrbitErrors.InsufficientCollateral(debtAmount, totalDebt);
+        }
+
+        // 1. Sync and update
+        _syncDepositValue(asset);
+        _updateDebtWithYield();
+
+        // 2. Calculate required collateral
+        uint256 requiredCollateral = _calculateRequiredCollateral(debtAmount, asset);
+        
+        if (requiredCollateral > maxCollateralIn) {
+            revert OrbitErrors.ExceedsMaxBorrow(requiredCollateral, maxCollateralIn);
+        }
+
+        if (requiredCollateral > deposits[asset]) {
+            revert OrbitErrors.InsufficientCollateral(requiredCollateral, deposits[asset]);
+        }
+
+        // 3. Withdraw collateral from vault
+        address vault = IVaultRegistry(vaultRegistry).getVault(asset);
+        uint256 totalShares = strategyShares[asset];
+        uint256 totalDepositAmount = deposits[asset];
+        uint256 sharesToRedeem = (totalShares * requiredCollateral) / totalDepositAmount;
+
+        IVault(vault).redeem(sharesToRedeem, address(this), address(this));
+
+        // 4. For MVP: Assume 1:1 conversion (skip DEX swap)
+        // In production, would swap via Uniswap/1inch
+        // Require asset == debtToken for MVP simplicity
+        if (asset != debtToken) {
+            revert OrbitErrors.InvalidImplementation(asset);
+        }
+
+        // 5. Burn debt tokens
+        totalDebt -= debtAmount;
+        IERC20(debtToken).forceApprove(debtManager, debtAmount);
+        IDebtManager(debtManager).burn(address(this), debtAmount);
+
+        // 6. Update accounting
+        deposits[asset] -= requiredCollateral;
+        strategyShares[asset] -= sharesToRedeem;
+        lastSyncedValue[asset] = deposits[asset];
+
+        if (totalDebt == 0) {
+            currentState = State.DEBT_CLEARED;
+        }
+
+        emit SelfLiquidated(asset, requiredCollateral, debtAmount);
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                        INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /**
+     * @notice Calculates the maximum borrowable amount
+     * @param _debtToken The debt token to borrow
+     * @return The maximum borrowable amount
+     */
+    function _calculateMaxBorrowable(
+        address _debtToken
+    ) internal view returns (uint256) {
+        if (_debtToken == address(0)) {
+            return 0;
+        }
+
+        uint256 totalBorrowCapacity = 0;
+        address[] memory assets = _getDepositedAssets();
+        IPriceOracle oracle = IPriceOracle(
+            IVaultRegistry(vaultRegistry).priceOracle()
+        );
+
+        for (uint256 i = 0; i < assets.length; i++) {
+            address asset = assets[i];
+            uint256 depositAmount = deposits[asset];
+
+            if (depositAmount == 0) continue;
+
+            uint256 assetPrice = oracle.getPrice(asset);
+            uint256 ltv = IVaultRegistry(vaultRegistry).getLTV(asset);
+
+            // Calculate asset value in USD
+            uint256 assetValue = (depositAmount * assetPrice) / 1e18;
+
+            // Calculate borrow capacity for this asset
+            uint256 borrowCapacity = (assetValue * ltv) / 10000;
+
+            totalBorrowCapacity += borrowCapacity;
+        }
+
+        // Convert total borrow capacity to debt token amount
+        uint256 debtTokenPrice = oracle.getPrice(_debtToken);
+        return (totalBorrowCapacity * 1e18) / debtTokenPrice;
+    }
+
+    /**
+     * @notice Calculates the withdrawable amount for an asset
+     * @param asset The asset to query
+     * @return The withdrawable amount
+     */
+    function _calculateWithdrawable(
+        address asset
+    ) internal view returns (uint256) {
+        // If no debt, all deposits are withdrawable
+        if (totalDebt == 0) {
+            return deposits[asset];
+        }
+
+        // Get prices and LTV
+        IPriceOracle oracle = IPriceOracle(
+            IVaultRegistry(vaultRegistry).priceOracle()
+        );
+        uint256 assetPrice = oracle.getPrice(asset);
+        uint256 debtTokenPrice = oracle.getPrice(debtToken);
+        uint256 ltv = IVaultRegistry(vaultRegistry).getLTV(asset);
+
+        // Use AccountingLib to calculate withdrawable
+        return
+            AccountingLib.calculateWithdrawable(
+                deposits[asset],
+                totalDebt,
+                assetPrice,
+                debtTokenPrice,
+                ltv
+            );
+    }
+
+    /**
+     * @notice Returns array of deposited assets
+     * @return Array of asset addresses
+     */
+    function _getDepositedAssets() internal view returns (address[] memory) {
+        return depositedAssets;
+    }
+
+    /**
+     * @notice Removes an asset from the deposited assets array
+     * @param asset The asset to remove
+     */
+    function _removeDepositedAsset(address asset) internal {
+        if (!isDepositedAsset[asset]) return;
+        
+        // Find and remove from array
+        for (uint256 i = 0; i < depositedAssets.length; i++) {
+            if (depositedAssets[i] == asset) {
+                // Move last element to this position
+                depositedAssets[i] = depositedAssets[depositedAssets.length - 1];
+                depositedAssets.pop();
+                isDepositedAsset[asset] = false;
+                break;
+            }
+        }
+    }
+
+    /**
+     * @notice Returns total deposit value in USD
+     * @return Total value in USD (18 decimals)
+     */
+    function _getTotalDepositValue() internal view returns (uint256) {
+        uint256 totalValue = 0;
+        IPriceOracle oracle = IPriceOracle(
+            IVaultRegistry(vaultRegistry).priceOracle()
+        );
+
+        for (uint256 i = 0; i < depositedAssets.length; i++) {
+            address asset = depositedAssets[i];
+            uint256 depositAmount = deposits[asset];
+
+            if (depositAmount == 0) continue;
+
+            uint256 assetPrice = oracle.getPrice(asset);
+            totalValue += (depositAmount * assetPrice) / 1e18;
+        }
+
+        return totalValue;
+    }
+
+    /**
+     * @notice Updates debt with accumulated yield
+     * @dev Calculates yield and applies it to reduce debt
+     */
+    function _updateDebtWithYield() internal {
+        uint256 blocksSinceUpdate = block.number - lastUpdateBlock;
+        if (blocksSinceUpdate == 0) return;
+
+        uint256 yieldEarned = _calculateAccruedYield();
+        _applyYieldToDebt(yieldEarned);
+
+        lastUpdateBlock = block.number;
+    }
+
+    /**
+     * @notice Calculates accrued yield from all deposits
+     * @return The total yield earned since last update
+     */
+    function _calculateAccruedYield() internal view returns (uint256) {
+        address[] memory assets = _getDepositedAssets();
+        uint256 totalYield = 0;
+
+        for (uint256 i = 0; i < assets.length; i++) {
+            address asset = assets[i];
+            address vault = IVaultRegistry(vaultRegistry).getVault(asset);
+            uint256 shares = strategyShares[asset];
+
+            if (shares == 0) continue;
+
+            // Current value of shares
+            uint256 currentValue = IVault(vault).previewRedeem(shares);
+
+            // Value at last sync
+            uint256 previousValue = lastSyncedValue[asset];
+
+            if (currentValue > previousValue) {
+                totalYield += (currentValue - previousValue);
+            }
+        }
+
+        return totalYield;
+    }
+
+    /**
+     * @notice Applies yield to debt reduction and credit accumulation
+     * @param yieldAmount The amount of yield to apply
+     */
+    function _applyYieldToDebt(uint256 yieldAmount) internal {
+        if (yieldAmount == 0) return;
+
+        if (totalDebt == 0) {
+            // No debt: all yield becomes credit
+            accumulatedCredit += yieldAmount;
+            emit CreditAccrued(yieldAmount, accumulatedCredit);
+            return;
+        }
+
+        // Debt exists: prioritize repayment
+        uint256 debtRepayment = yieldAmount < totalDebt
+            ? yieldAmount
+            : totalDebt;
+
+        // CRITICAL: Accounting-only approach for MVP
+        // Just reduce debt obligation - no token burns
+        // User keeps their borrowed tokens
+        totalDebt -= debtRepayment;
+
+        emit DebtRepaid(debtRepayment, totalDebt);
+
+        // Remaining yield becomes credit
+        uint256 remainingYield = yieldAmount - debtRepayment;
+        if (remainingYield > 0) {
+            accumulatedCredit += remainingYield;
+            emit CreditAccrued(remainingYield, accumulatedCredit);
+        }
+
+        // Check state transition
+        if (totalDebt == 0 && currentState == State.BORROWED) {
+            currentState = State.DEBT_CLEARED;
+        }
+    }
+
+    /**
+     * @notice Syncs deposit value from vault
+     * @param asset The asset to sync
+     */
+    function _syncDepositValue(address asset) internal {
+        address vault = IVaultRegistry(vaultRegistry).getVault(asset);
+        uint256 shares = strategyShares[asset];
+
+        if (shares == 0) return;
+
+        uint256 currentValue = IVault(vault).previewRedeem(shares);
+        deposits[asset] = currentValue;
+        lastSyncedValue[asset] = currentValue;
+    }
+
+    /**
+     * @notice Adds an asset to the deposited assets array
+     * @param asset The asset to add
+     */
+    /**
+     * @notice Calculates required collateral for debt repayment
+     * @param debtAmount The amount of debt to repay
+     * @param asset The collateral asset
+     * @return The required collateral amount
+     */
+    function _calculateRequiredCollateral(
+        uint256 debtAmount,
+        address asset
+    ) internal view returns (uint256) {
+        IPriceOracle oracle = IPriceOracle(
+            IVaultRegistry(vaultRegistry).priceOracle()
+        );
+        uint256 debtPrice = oracle.getPrice(debtToken);
+        uint256 assetPrice = oracle.getPrice(asset);
+
+        // Calculate required collateral value
+        uint256 debtValue = (debtAmount * debtPrice) / 1e18;
+
+        // Add 1% buffer for slippage (in production, would be actual swap slippage)
+        uint256 requiredValue = (debtValue * 10100) / 10000;
+
+        // Convert to asset amount
+        uint256 requiredAmount = (requiredValue * 1e18) / assetPrice;
+
+        return requiredAmount;
+    }
+
+    function _addDepositedAsset(address asset) internal {
+        if (depositedAssets.length >= MAX_ASSETS) {
+            revert OrbitErrors.InvalidState(
+                uint8(depositedAssets.length),
+                uint8(MAX_ASSETS)
+            );
+        }
+        depositedAssets.push(asset);
+    }
+}

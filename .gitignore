@@ -1,0 +1,40 @@
+# Compiler outputs
+out/
+cache/
+artifacts/
+
+# Dependencies
+node_modules/
+lib/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Foundry
+broadcast/
+cache_forge/
+
+# Coverage
+coverage/
+coverage.json
+lcov.info
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+.cache/
