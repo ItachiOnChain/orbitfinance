@@ -8,8 +8,8 @@ interface GlassCardProps {
 
 export function GlassCard({ icon, title, description }: GlassCardProps) {
     return (
-        <div className="group relative p-8 rounded-2xl bg-gradient-to-br from-zinc-900/50 to-black/50 backdrop-blur-sm border border-white/10 hover:border-white/20 transition-all duration-500 hover:transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-gold/10">
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="group relative p-10 rounded-3xl bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-md border border-white/10 hover:border-gold/30 transition-all duration-500 hover:transform hover:-translate-y-3 hover:shadow-[0_0_50px_rgba(212,175,55,0.15)]">
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
             <div className="relative z-10">
                 <div className="mb-6 inline-flex p-3 rounded-xl bg-gold/10 text-gold group-hover:scale-110 transition-transform duration-500">

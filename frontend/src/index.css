@@ -1,13 +1,82 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@theme {
+  --color-gold: #d4af37;
+  --color-gold-muted: #b8860b;
+  --color-emerald-glow: #10b981;
+  --color-dark-bg: #0a0b0d;
+  --color-sidebar-bg: #050607;
+
+  --color-bronze1: #a87f32;
+  --color-bronze2: #8a6528;
+  --color-bronze3: #f5e5da;
+
+  --font-inter: "Inter", system-ui, sans-serif;
+  --font-outfit: "Outfit", system-ui, sans-serif;
+  --font-space: "Space Grotesk", system-ui, sans-serif;
+
+  --letter-spacing-widest: 0.25em;
+}
+
+@layer base {
+
+  html,
+  body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: var(--color-dark-bg);
+    color: white;
+    font-family: var(--font-inter);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  html.light body {
+    background-color: #f0f2f5;
+    color: #0a0b0d;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-outfit);
+  }
+}
+
+@layer utilities {
+  .alchemix-gradient {
+    background: radial-gradient(circle at center, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  }
+
+  .text-bronze-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(to bottom right, var(--color-bronze1), var(--color-bronze3), var(--color-bronze1));
+  }
+
+  .bronze-drop-shadow {
+    filter: drop-shadow(8px 8px 16px rgba(0, 0, 0, 0.8));
+  }
+
+  .btn-emerald-outline {
+    border: 1px solid #10b981;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .btn-emerald-outline:hover {
+    background-color: color-mix(in srgb, var(--color-emerald-glow) 10%, transparent);
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
+  }
+}
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-body {
-  font-family: system-ui, -apple-system, sans-serif;
 }

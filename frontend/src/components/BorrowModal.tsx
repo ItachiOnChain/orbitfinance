@@ -107,53 +107,62 @@ export function BorrowModal({ isOpen, onClose }: BorrowModalProps) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-light text-white">Borrow</h2>
-                    <button onClick={onClose} className="text-zinc-400 hover:text-white">✕</button>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4" onClick={onClose}>
+            <div className="bg-sidebar-bg border border-zinc-900 rounded-3xl p-10 max-w-lg w-full shadow-[0_0_80px_rgba(0,0,0,0.6)]" onClick={(e) => e.stopPropagation()}>
+                <div className="flex justify-between items-center mb-10">
+                    <h2 className="text-4xl font-bold text-white tracking-tight font-outfit">Borrow</h2>
+                    <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors p-2">✕</button>
                 </div>
 
-                <div className="space-y-4">
-                    <div className="bg-zinc-800/50 rounded-lg p-4">
-                        <p className="text-sm text-zinc-400">Max Borrowable</p>
-                        <p className="text-2xl font-light text-emerald-400">
-                            {maxBorrowableDisplay} orUSD
+                <div className="space-y-8">
+                    <div className="bg-zinc-900/50 rounded-2xl p-8 border border-zinc-800/50">
+                        <p className="text-[10px] font-bold tracking-[0.3em] text-zinc-500 uppercase mb-3">Max Borrowable</p>
+                        <p className="text-4xl font-bold text-emerald-400 tracking-tight font-outfit">
+                            {maxBorrowableDisplay} <span className="text-sm font-medium text-emerald-400/60 ml-2 uppercase tracking-widest font-space">orUSD</span>
                         </p>
                     </div>
 
                     <div>
-                        <div className="flex justify-between items-center mb-2">
-                            <label className="text-sm text-zinc-400">Borrow Amount</label>
+                        <div className="flex justify-between items-center mb-4">
+                            <label className="text-[10px] font-bold tracking-[0.3em] text-zinc-500 uppercase">Borrow Amount</label>
                             <button
                                 onClick={setBorrowMax}
-                                className="text-xs text-gold hover:text-gold/80"
+                                className="text-[10px] font-bold tracking-[0.3em] text-gold hover:text-gold/80 transition-colors"
                             >
                                 MAX
                             </button>
                         </div>
-                        <input
-                            type="number"
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            placeholder="0.00"
-                            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-gold"
-                        />
+                        <div className="relative">
+                            <input
+                                type="number"
+                                value={amount}
+                                onChange={(e) => setAmount(e.target.value)}
+                                placeholder="0.00"
+                                className="w-full px-8 py-5 bg-zinc-900 border border-zinc-800 rounded-2xl text-white text-xl focus:outline-none focus:border-gold/50 transition-all font-space"
+                            />
+                            <div className="absolute right-8 top-1/2 -translate-y-1/2 text-xs font-bold tracking-[0.2em] text-zinc-600 uppercase pointer-events-none font-space">
+                                orUSD
+                            </div>
+                        </div>
                     </div>
 
                     <button
                         onClick={handleBorrow}
                         disabled={!amount || isPending}
-                        className="w-full px-6 py-3 bg-gold text-black rounded-lg font-light hover:bg-gold/90 transition-colors disabled:opacity-50"
+                        className="w-full px-10 py-5 bg-gold text-black rounded-2xl text-xs font-bold tracking-[0.3em] hover:bg-gold/90 transition-all disabled:opacity-50 shadow-[0_0_30px_rgba(212,175,55,0.15)]"
                     >
-                        {isPending ? 'Borrowing...' : `Borrow ${amount || '0'} orUSD`}
+                        {isPending ? 'BORROWING...' : `BORROW ${amount || '0'} orUSD`}
                     </button>
 
                     {isSuccess && (
-                        <p className="text-sm text-emerald-400">✓ Borrow confirmed! Refreshing...</p>
+                        <p className="text-center text-xs font-bold tracking-[0.3em] text-emerald-400 animate-pulse">
+                            ✓ BORROW CONFIRMED! REFRESHING...
+                        </p>
                     )}
                 </div>
             </div>
         </div>
     );
 }
+
+

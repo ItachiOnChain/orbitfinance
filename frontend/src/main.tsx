@@ -18,13 +18,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/app" element={<AppLayout />}>
-              <Route index element={<AccountPage />} />
-              <Route path="account" element={<AccountPage />} />
-              <Route path="vaults" element={<VaultsPage />} />
-              <Route path="transmuter" element={<div className="text-white">Transmuter</div>} />
-              <Route path="farms" element={<div className="text-white">Farms</div>} />
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/app">
+                <Route index element={<AccountPage />} />
+                <Route path="account" element={<AccountPage />} />
+                <Route path="vaults" element={<VaultsPage />} />
+                <Route path="transmuter" element={<div className="text-white">Transmuter</div>} />
+                <Route path="farms" element={<div className="text-white">Farms</div>} />
+              </Route>
             </Route>
           </Routes>
         </BrowserRouter>

@@ -9,7 +9,7 @@ interface AssetCardProps {
 
 export function AssetCard({ icon, name, apy, ltv }: AssetCardProps) {
     return (
-        <div className="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:border-gold/30 transition-all duration-300 hover:transform hover:-translate-y-1">
+        <div className="p-8 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-gold/50 transition-all duration-500 hover:transform hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(212,175,55,0.1)] group">
             <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center text-gold">
                     {icon}
