@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {IPriceOracle} from "../interfaces/IPriceOracle.sol";
 import {OrbitErrors} from "../errors/OrbitErrors.sol";

@@ -5,7 +5,7 @@ artifacts/
 
 # Dependencies
 node_modules/
-lib/
+/lib/
 
 # Environment files
 .env

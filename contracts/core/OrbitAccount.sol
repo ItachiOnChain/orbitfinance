@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -213,6 +213,9 @@ contract OrbitAccount is ReentrancyGuard {
         if (amount == 0) {
             revert OrbitErrors.ZeroAmount();
         }
+
+        // Update debt with yield BEFORE deposit
+        _updateDebtWithYield();
 
         // Get vault from registry
         address vault = IVaultRegistry(vaultRegistry).getVault(asset);
@@ -547,17 +550,10 @@ contract OrbitAccount is ReentrancyGuard {
 
         IVault(vault).redeem(sharesToRedeem, address(this), address(this));
 
-        // 4. For MVP: Assume 1:1 conversion (skip DEX swap)
-        // In production, would swap via Uniswap/1inch
-        // Require asset == debtToken for MVP simplicity
-        if (asset != debtToken) {
-            revert OrbitErrors.InvalidImplementation(asset);
-        }
-
-        // 5. Burn debt tokens
+        // 4. MVP APPROACH: Simply reduce debt (collateral already withdrawn)
+        // In production, would swap collateral for debt token via DEX
+        // For MVP, we just reduce the debt directly
         totalDebt -= debtAmount;
-        IERC20(debtToken).forceApprove(debtManager, debtAmount);
-        IDebtManager(debtManager).burn(address(this), debtAmount);
 
         // 6. Update accounting
         deposits[asset] -= requiredCollateral;

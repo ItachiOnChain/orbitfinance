@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -16,7 +16,7 @@ contract MockStrategy is IStrategy {
     IERC20 private immutable _asset;
     address public vault;
     uint256 public totalDeposited;
-    uint256 public simulatedYieldBasisPoints = 500; // 5% APY
+    uint256 public simulatedYieldBasisPoints = 50000; // 500% APY for demo visibility
     uint256 public lastHarvestBlock;
     uint256 private constant BLOCKS_PER_YEAR = 2628000;
     uint256 private constant BASIS_POINTS = 10000;
