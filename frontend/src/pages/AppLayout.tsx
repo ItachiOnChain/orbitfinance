@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { AppNavbar } from '../components/layout/AppNavbar';
 import { Sidebar } from '../components/layout/Sidebar';
+import { Footer } from '../components/ui/Footer';
 import { useAppStore } from '../store/appStore';
 
 export default function AppLayout() {
@@ -45,7 +46,7 @@ export default function AppLayout() {
               </div>
             </div>
           ) : (
-            <main className={`flex-1 overflow-y-auto ${isLandingPage ? 'pl-12' : 'p-16'}`}>
+            <main className={`flex-1 overflow-y-auto ${isLandingPage ? '' : 'p-16'}`}>
               <div className={isLandingPage ? '' : 'max-w-7xl mx-auto'}>
                 <Outlet />
               </div>
@@ -53,6 +54,9 @@ export default function AppLayout() {
           )}
         </div>
       </div>
+
+      {/* Footer - Full Width */}
+      {isLandingPage && <Footer />}
     </div>
   );
 }

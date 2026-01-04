@@ -122,23 +122,23 @@ export const OrbitHero: React.FC<OrbitHeroProps> = () => {
             </div>
 
             {/* Content */}
-            <div className="relative z-20 flex flex-col items-center justify-center min-h-[calc(100vh-128px)] text-center px-6 max-w-5xl mx-auto">
-                <h1 className="text-6xl md:text-8xl font-extrabold tracking-normal mb-8 leading-tight text-bronze-gradient bronze-drop-shadow font-outfit">
-                    Self-Repaying Loans, <br />
-                    Without Liquidations
+            <div className="relative z-20 flex flex-col items-center justify-center min-h-[calc(100vh-128px)] text-center px-6 max-w-7xl mx-auto lg:pl-28">
+                <h1 className="text-6xl md:text-8xl font-extrabold tracking-normal mb-8 leading-tight text-bronze-gradient bronze-drop-shadow font-outfit max-w-4xl">
+                    Self-Repaying Loans, Without Liquidations
                 </h1>
                 
                 <p className="font-sans font-light text-lg xl:text-xl leading-snug text-zinc-400 dark:text-white mt-2 mb-4 2xl:mt-8 2xl:mb-12 max-w-3xl transition-all [transition-duration:1.1s] opacity-100">
-                    Orbit loans automatically pay themselves off with the yield generated from your deposit. <br />
+                    Orbit loans automatically pay themselves off with the yield generated from your deposit. 
                     Unlock the potential of your assets with secure and stress-free borrowing.
                 </p>
 
                 <div className="flex flex-col md:flex-row items-center gap-6">
                     <button
                         onClick={isConnected ? handleLaunchApp : handleConnect}
-                        className="px-12 py-4 btn-gold-outline text-gold rounded-xl text-sm font-bold tracking-[0.2em] bg-gold/5 hover:bg-gold/10 transition-all shadow-[0_0_30px_rgba(212,175,55,0.15)]"
+                        className="group relative z-10 inline-flex h-16 cursor-pointer items-center justify-center rounded-xl border-0 px-14 py-6 font-outfit text-[13px] font-bold tracking-[0.3em] uppercase text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] blur-0 opacity-100 before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)] before:transition-opacity hover:before:animate-[buttonMovingGradientBg_3s_linear_infinite] hover:before:opacity-70 shadow-[0_0_40px_rgba(212,175,55,0.25)] hover:scale-105"
+                        style={{ transition: 'opacity 2s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)' }}
                     >
-                        GET A SELF-REPAYING LOAN
+                        <span className="relative z-10">GET A SELF-REPAYING LOAN</span>
                     </button>
                     <button className="p-4 btn-gold-outline text-gold rounded-xl hover:bg-gold/10 transition-all shadow-[0_0_30px_rgba(212,175,55,0.15)]">
                         <Play size={24} fill="currentColor" />
@@ -148,6 +148,9 @@ export const OrbitHero: React.FC<OrbitHeroProps> = () => {
 
             {/* Bottom Gradient */}
             <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-dark-bg to-transparent pointer-events-none" />
+            
+            {/* Golden Tapered Divider */}
+            <div className="absolute bottom-0 left-0 right-0 w-full h-[2px] bg-gradient-to-r from-transparent via-gold/40 to-transparent z-30" />
         </div>
     );
 };

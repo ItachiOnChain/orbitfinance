@@ -4,7 +4,7 @@ import { useLiquidate } from '../hooks/useLiquidate';
 import { CONTRACTS } from '../contracts/addresses';
 import AccountFactoryABI from '../contracts/abis/AccountFactory.json';
 import OrbitAccountABI from '../contracts/abis/OrbitAccount.json';
-import { formatEther, parseEther } from 'viem';
+import { formatEther } from 'viem';
 
 interface LiquidateModalProps {
     isOpen: boolean;
@@ -55,22 +55,19 @@ export function LiquidateModal({ isOpen, onClose }: LiquidateModalProps) {
         try {
             const assetAddress = asset === 'WETH' ? CONTRACTS.anvil.WETH : CONTRACTS.anvil.USDC;
 
-            // Parse debt amount
-            const debtAmountBigInt = parseEther(debtAmount);
-
-            // Calculate max collateral: debt / price * 1.2 (20% safety margin)
+            // Calculate max collateral: debt / price * 1.1 (10% safety margin)
             // Assuming WETH = $3000, USDC = $1
             const priceInUSD = asset === 'WETH' ? 3000 : 1;
-            const collateralNeeded = parseFloat(debtAmount) / priceInUSD;
-            const maxCollateralWithMargin = collateralNeeded * 1.1; // 10% safety margin
-
             const decimals = asset === 'USDC' ? 6 : 18;
+            
+            const collateralNeeded = parseFloat(debtAmount) / priceInUSD;
+            const maxCollateralWithMargin = (collateralNeeded * 1.1).toFixed(decimals);
 
             await liquidate(
                 accountAddress as `0x${string}`,
                 debtAmount,
                 assetAddress as `0x${string}`,
-                maxCollateralWithMargin.toString(),
+                maxCollateralWithMargin,
                 decimals
             );
         } catch (error) {

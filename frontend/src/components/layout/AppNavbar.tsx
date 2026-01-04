@@ -1,10 +1,11 @@
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount, useDisconnect, useConnect } from 'wagmi';
 import { useAppStore } from '../../store/appStore';
 import { Orbit, Hexagon } from 'lucide-react';
 
 export function AppNavbar() {
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
+  const { connect, connectors } = useConnect();
   const { mode, toggleMode, theme } = useAppStore();
 
   return (
@@ -47,28 +48,26 @@ export function AppNavbar() {
             >
               <button
                 onClick={toggleMode}
-                className={`px-10 py-3 text-[11px] font-bold tracking-[0.3em] rounded-lg transition-all ${
+                className={`group relative z-10 inline-flex h-10 cursor-pointer items-center justify-center rounded-lg border-0 px-10 py-3 font-outfit text-[11px] font-bold tracking-[0.3em] uppercase transition-all ${
                   mode === 'crypto'
-                    ? theme === 'light'
-                      ? 'bg-white text-gold shadow-md'
-                      : 'bg-zinc-800 text-gold shadow-[0_0_20px_rgba(212,175,55,0.2)]'
-                    : 'text-zinc-500'
+                    ? 'text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)]'
+                    : 'text-zinc-500 hover:text-zinc-400'
                 }`}
+                style={mode === 'crypto' ? { transition: 'opacity 2s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)' } : {}}
               >
-                CRYPTO
+                <span className="relative z-10">CRYPTO</span>
               </button>
 
               <button
                 onClick={toggleMode}
-                className={`px-10 py-3 text-[11px] font-bold tracking-[0.3em] rounded-lg transition-all ${
+                className={`group relative z-10 inline-flex h-10 cursor-pointer items-center justify-center rounded-lg border-0 px-10 py-3 font-outfit text-[11px] font-bold tracking-[0.3em] uppercase transition-all ${
                   mode === 'rwa'
-                    ? theme === 'light'
-                      ? 'bg-white text-gold shadow-md'
-                      : 'bg-zinc-800 text-gold shadow-[0_0_20px_rgba(212,175,55,0.2)]'
-                    : 'text-zinc-500'
+                    ? 'text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)]'
+                    : 'text-zinc-500 hover:text-zinc-400'
                 }`}
+                style={mode === 'rwa' ? { transition: 'opacity 2s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)' } : {}}
               >
-                RWA
+                <span className="relative z-10">RWA</span>
               </button>
             </div>
           </div>
@@ -98,11 +97,11 @@ export function AppNavbar() {
               </div>
             ) : (
               <button
-                className="px-20 py-6 bg-zinc-900 text-gold border border-gold/50 rounded-lg
-                           text-[15px] font-bold tracking-[0.4em] hover:bg-zinc-800
-                           transition-all shadow-[0_0_40px_rgba(212,175,55,0.25)] hover:scale-105"
+                onClick={() => connect({ connector: connectors[0] })}
+                className="group relative z-10 inline-flex h-14 cursor-pointer items-center justify-center rounded-xl border-0 px-12 py-4 font-outfit text-[13px] font-bold tracking-[0.3em] uppercase text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] blur-0 opacity-100 before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)] before:transition-opacity hover:before:animate-[buttonMovingGradientBg_3s_linear_infinite] hover:before:opacity-70 shadow-[0_0_40px_rgba(212,175,55,0.25)] hover:scale-105"
+                style={{ transition: 'opacity 2s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)' }}
               >
-                CONNECT WALLET
+                <span className="relative z-10">CONNECT WALLET</span>
               </button>
             )}
           </div>

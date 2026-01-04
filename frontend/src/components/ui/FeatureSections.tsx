@@ -1,12 +1,11 @@
 import React from 'react';
-import { ChevronRight, ArrowUp, ArrowDown, RefreshCcw } from 'lucide-react';
 
 export const FeatureSections: React.FC = () => {
   return (
-    <div className="w-full bg-dark-bg">
-      {/* Completely Flexible Section */}
-      <section className="py-64 px-6 relative overflow-hidden border-b border-zinc-900/50">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+    <div className="w-full bg-dark-bg flex flex-col">
+      {/* Completely Flexible Section - Dark Background */}
+      <section className="py-32 px-6 md:px-12 lg:px-20 relative bg-dark-bg">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center lg:pl-28">
           {/* Left: Graphic */}
           <div className="relative flex justify-center items-center h-[400px]">
             <div className="flex flex-col gap-6 w-64 relative z-10">
@@ -21,7 +20,6 @@ export const FeatureSections: React.FC = () => {
                 <div className="absolute -right-12 top-1/2 -translate-y-1/2 w-12 h-[2px] bg-gold/30" />
               </div>
             </div>
-            {/* Background Glow */}
             <div className="absolute w-80 h-80 bg-gold/5 rounded-full blur-[100px]" />
           </div>
 
@@ -35,16 +33,22 @@ export const FeatureSections: React.FC = () => {
               No fixed schedules, no forced liquidations. Just pure DeFi 
               flexibility at your fingertips.
             </p>
-            <button className="px-10 py-4 bg-gold/10 text-gold border border-gold/40 rounded-lg text-[12px] font-bold tracking-[0.3em] uppercase hover:bg-gold/20 transition-all">
-              Learn More
-            </button>
+            <a 
+              href="/docs" 
+              className="group relative z-10 inline-flex h-12 cursor-pointer items-center justify-center rounded-lg border-0 px-10 py-4 font-outfit text-[12px] font-bold tracking-[0.3em] uppercase text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] blur-0 opacity-100 before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)] before:transition-opacity hover:before:animate-[buttonMovingGradientBg_3s_linear_infinite] hover:before:opacity-70"
+              style={{ transition: 'opacity 2s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)' }}
+            >
+              <span className="relative z-10">Learn More</span>
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Zero Liquidations Section */}
-      <section className="py-64 px-6 relative overflow-hidden border-b border-zinc-900/50">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+
+
+      {/* Zero Liquidations Section - Higher Contrast Background */}
+      <section className="py-32 px-6 md:px-12 lg:px-20 relative bg-zinc-900/40 border-y border-zinc-800/30">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center lg:pl-28">
           {/* Left: Content */}
           <div className="text-left lg:pr-10">
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8 font-outfit">
@@ -60,7 +64,6 @@ export const FeatureSections: React.FC = () => {
           {/* Right: Graphic */}
           <div className="relative flex justify-center items-center h-[400px]">
             <div className="relative w-full max-w-md">
-              {/* Visualizer Bars */}
               <div className="flex items-end justify-center gap-2 h-48 mb-8">
                 {[...Array(12)].map((_, i) => (
                   <div 
@@ -73,7 +76,6 @@ export const FeatureSections: React.FC = () => {
                   />
                 ))}
               </div>
-              {/* Asset Cards */}
               <div className="flex justify-center gap-4">
                 <div className="w-24 h-32 rounded-xl border border-zinc-800 bg-zinc-900/80 flex flex-col items-center justify-center gap-2 shadow-2xl">
                   <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
@@ -93,42 +95,44 @@ export const FeatureSections: React.FC = () => {
         </div>
       </section>
 
-      {/* Security First Section */}
-      <section className="py-64 px-6 relative overflow-hidden border-b border-zinc-900/50">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+
+
+      {/* Security First Section - Dark Background */}
+      <section className="py-32 px-6 md:px-12 lg:px-20 relative bg-dark-bg">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center lg:pl-28">
           {/* Left: Content */}
           <div className="text-left lg:pr-10">
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8 font-outfit">
               Security First
             </h2>
-            <p className="text-lg md:text-xl text-zinc-400 font-light leading-relaxed mb-12 max-w-xl">
+            <p className="text-lg md:text-xl text-zinc-400 font-light leading-relaxed mb-12 max-w-xl ">
               We are the original battle-tested DeFi platform with a priority of 
               asset protection. As a pioneer in DeFi, we ensure your assets 
               are preserved at every step.
             </p>
-            <button className="px-10 py-4 bg-gold/10 text-gold border border-gold/40 rounded-lg text-[12px] font-bold tracking-[0.3em] uppercase hover:bg-gold/20 transition-all">
-              Explore our audits
-            </button>
+            <a 
+              href="/audits" 
+              className="group relative z-10 inline-flex h-12 cursor-pointer items-center justify-center rounded-lg border-0 px-10 py-4 font-outfit text-[12px] font-bold tracking-[0.3em] uppercase text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] blur-0 opacity-100 before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)] before:transition-opacity hover:before:animate-[buttonMovingGradientBg_3s_linear_infinite] hover:before:opacity-70"
+              style={{ transition: 'opacity 2s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)' }}
+            >
+              <span className="relative z-10">Explore our audits</span>
+            </a>
           </div>
 
           {/* Right: Graphic */}
           <div className="relative flex justify-center items-center h-[400px]">
-            {/* Central Logo */}
             <div className="w-24 h-24 rounded-full border-2 border-gold/30 flex items-center justify-center relative z-10 bg-dark-bg">
               <div className="w-16 h-16 border border-gold/50 rounded-full flex items-center justify-center">
                 <div className="w-10 h-10 border-2 border-gold/60 rotate-45 flex items-center justify-center">
                   <div className="w-6 h-6 border border-gold/80" />
                 </div>
               </div>
-              {/* Connection Lines */}
               <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none" style={{ transform: 'scale(4)' }}>
                 <line x1="50%" y1="50%" x2="100%" y2="0%" stroke="currentColor" strokeWidth="0.1" strokeDasharray="0.5" className="text-zinc-800" />
                 <line x1="50%" y1="50%" x2="100%" y2="100%" stroke="currentColor" strokeWidth="0.1" strokeDasharray="0.5" className="text-zinc-800" />
                 <line x1="50%" y1="50%" x2="0%" y2="50%" stroke="currentColor" strokeWidth="0.1" strokeDasharray="0.5" className="text-zinc-800" />
               </svg>
             </div>
-
-            {/* Audit Badges */}
             <div className="absolute top-10 right-0 px-4 py-2 rounded bg-zinc-900 border border-zinc-800 flex items-center gap-2 shadow-2xl">
               <div className="w-4 h-4 rounded-full bg-gold/60" />
               <span className="text-[10px] font-bold text-white tracking-wider uppercase">Runtime Verification</span>
@@ -145,9 +149,11 @@ export const FeatureSections: React.FC = () => {
         </div>
       </section>
 
-      {/* Your Favorite Tokens Section */}
-      <section className="py-64 px-6 relative overflow-hidden bg-zinc-900/10 border-b border-zinc-900/50">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+
+
+      {/* Your Favorite Tokens Section - Higher Contrast Background */}
+      <section className="py-32 px-6 md:px-12 lg:px-20 relative bg-zinc-900/40 border-y border-zinc-800/30">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center lg:pl-28">
           {/* Left: Token Grid */}
           <div className="grid grid-cols-4 gap-4">
             {[
@@ -184,139 +190,125 @@ export const FeatureSections: React.FC = () => {
           </div>
         </div>
       </section>
+      <br/>
+      <br/>
+      <br/>
 
-      {/* Get Started Section */}
-      <section className="py-80 px-6 relative overflow-hidden border-b border-zinc-900/50">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-white mb-8 font-outfit">
-            Get started with Orbit
-          </h2>
-          <p className="text-lg md:text-xl text-zinc-400 font-light leading-relaxed mb-12 max-w-3xl mx-auto">
-            Orbit's self-repaying loans automatically pay themselves off using the interest earned 
-            on your initial deposit. Borrow against your assets, earn yield on the full deposit amount, 
-            and enjoy the ability to spend and save at the same time.
-          </p>
-          
-          <button className="px-12 py-5 border border-gold/40 rounded-xl text-gold text-[14px] font-bold tracking-[0.3em] uppercase hover:bg-gold/5 transition-all mb-24 shadow-[0_0_30px_rgba(212,175,55,0.1)]">
-            Get your Self-Repaying Loan
-          </button>
+      {/* Dividing Line with LOTS of Extra Space */}
+      <div className="py-48 bg-dark-bg">
+        <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+      </div>
 
+      {/* Get Started Section - Premium Redesign & Alignment */}
+      <section className="py-40 px-6 md:px-12 lg:px-20 relative bg-dark-bg overflow-hidden">
+        <div className="max-w-7xl mx-auto relative z-10 lg:pl-28">
+          {/* Hero Block */}
+          <div className="flex flex-col items-center text-center mb-32">
+            <h2 className="text-5xl md:text-7xl font-bold tracking-tight text-gold mb-10 font-outfit">
+              Get started with Orbit
+            </h2>
+            <br/>
+            <br/>
+            <p className="max-w-2xl text-center text-lg md:text-xl font-light leading-relaxed text-zinc-400 mb-16 mx-auto">
+              Orbit's self-repaying loans automatically pay themselves off using the interest earned 
+              on your initial deposit. Borrow against your assets and earn yield simultaneously.
+            </p>
+            <br/>
+            
+            <a 
+              href="/vaults" 
+              className="group relative z-10 inline-flex h-16 cursor-pointer items-center justify-center rounded-xl border-0 px-14 py-6 font-outfit text-[13px] font-bold tracking-[0.3em] uppercase text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] blur-0 opacity-100 before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)] before:transition-opacity hover:before:animate-[buttonMovingGradientBg_3s_linear_infinite] hover:before:opacity-70"
+              style={{ transition: 'opacity 2s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)' }}
+            >
+              <span className="relative z-10">Get your Self-Repaying Loan</span>
+            </a>
+          </div>
+          <br/>
+
+          {/* Three Step Process */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
               {
-                num: '1',
+                num: '01',
                 title: 'Deposit',
-                desc: 'Deposit any asset from our list of collateral into a vault.',
+                desc: 'Deposit any supported asset from our list of collateral into a secure vault.',
                 graphic: (
-                  <div className="relative w-24 h-24 mx-auto mb-8">
-                    <div className="absolute inset-0 rounded-full border border-gold/20" />
-                    <div className="absolute inset-4 rounded-full border border-gold/30" />
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-gold shadow-[0_0_15px_rgba(212,175,55,0.8)]" />
+                  <div className="relative w-24 h-24 mx-auto mb-10">
+                    <div className="absolute inset-0 rounded-full border border-gold/10" />
+                    <div className="absolute inset-4 rounded-full border border-gold/20" />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-gold shadow-[0_0_15px_rgba(212,175,55,0.8)]" />
                   </div>
                 )
               },
               {
-                num: '2',
+                num: '02',
                 title: 'Automatically',
-                desc: 'Earn interest on your full deposit, while your loan pays itself off.',
+                desc: 'Earn yield on your full deposit, while your loan automatically pays itself off.',
                 graphic: (
-                  <div className="relative w-24 h-24 mx-auto mb-8">
-                    <div className="absolute inset-0 rounded-full border border-gold/20" />
-                    <div className="absolute inset-4 rounded-full border border-gold/40 flex items-center justify-center">
-                      <div className="w-8 h-8 rounded-full bg-gold/40 shadow-[0_0_20px_rgba(212,175,55,0.6)]" />
+                  <div className="relative w-24 h-24 mx-auto mb-10">
+                    <div className="absolute inset-0 rounded-full border border-gold/10" />
+                    <div className="absolute inset-4 rounded-full border border-gold/30 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-gold/20 shadow-[0_0_20px_rgba(212,175,55,0.4)]" />
                     </div>
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full border border-gold/60" />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full border border-gold/40" />
                   </div>
                 )
               },
               {
-                num: '3',
+                num: '03',
                 title: 'Access',
-                desc: 'Your future yield, now. Borrow up to 50% on your collateral.',
+                desc: 'Access your future yield today. Borrow up to 50% of your collateral instantly.',
                 graphic: (
-                  <div className="relative w-24 h-24 mx-auto mb-8">
-                    <div className="absolute inset-0 rounded-full border border-gold/20" />
-                    <div className="absolute inset-4 rounded-full border border-gold/40 flex items-center justify-center">
-                      <div className="w-10 h-10 rounded-full bg-gold shadow-[0_0_25px_rgba(212,175,55,0.8)]" />
+                  <div className="relative w-24 h-24 mx-auto mb-10">
+                    <div className="absolute inset-0 rounded-full border border-gold/10" />
+                    <div className="absolute inset-4 rounded-full border border-gold/30 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-gold shadow-[0_0_25px_rgba(212,175,55,0.6)]" />
                     </div>
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full border border-gold/60" />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full border border-gold/40" />
                   </div>
                 )
               }
             ].map((step, i) => (
-              <div key={i} className="p-12 rounded-3xl bg-zinc-900/40 border border-zinc-800/50 hover:border-gold/20 transition-all group">
-                <div className="flex justify-between items-start mb-4">
-                  <span className="text-6xl font-bold text-white/10 group-hover:text-white/20 transition-colors font-outfit">
-                    {step.num}
-                  </span>
+              <div key={i} className="relative py-16 px-10 rounded-[2.5rem] bg-zinc-900/20 border border-zinc-800/50 hover:border-gold/30 transition-all duration-700 group text-center overflow-hidden flex flex-col items-center justify-center shadow-[0_0_50px_rgba(0,0,0,0.3)] hover:shadow-[0_0_80px_rgba(212,175,55,0.1)]">
+                <div className="relative z-10 flex flex-col items-center">
+                  {step.graphic}
+                  <h3 className="text-2xl font-bold text-white mb-4 font-outfit tracking-tight">
+                    {step.title}
+                  </h3>
+                  <p className="text-zinc-400 font-light leading-relaxed text-base max-w-[240px] mx-auto">
+                    {step.desc}
+                  </p>
                 </div>
-                {step.graphic}
-                <h3 className="text-2xl font-bold text-white mb-4 font-outfit">
-                  {step.title}
-                </h3>
-                <p className="text-zinc-500 font-light leading-relaxed">
-                  {step.desc}
-                </p>
+
+                {/* Hover Glow */}
+                <div className="absolute inset-0 bg-gradient-to-b from-gold/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-48 h-48 bg-gold/10 blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* Extra Space After Get Started */}
+      <div className="h-48 bg-dark-bg" />
+
+      {/* Dividing Line */}
+      <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+
       {/* Stats Section */}
-      <section className="py-64 px-6 relative overflow-hidden bg-zinc-900/10 border-b border-zinc-900/50">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-20 text-center">
-            <div>
-              <p className="text-zinc-500 text-[10px] font-bold tracking-[0.4em] uppercase mb-4">Total Value Locked</p>
-              <h3 className="text-5xl md:text-6xl font-bold text-white font-outfit">$1,248,392,105</h3>
-            </div>
-            <div>
-              <p className="text-zinc-500 text-[10px] font-bold tracking-[0.4em] uppercase mb-4">Total Loans</p>
-              <h3 className="text-5xl md:text-6xl font-bold text-white font-outfit">$482,105,932</h3>
-            </div>
-            <div>
-              <p className="text-zinc-500 text-[10px] font-bold tracking-[0.4em] uppercase mb-4">Yield Generated</p>
-              <h3 className="text-5xl md:text-6xl font-bold text-gold font-outfit">$125,392,105</h3>
-            </div>
-          </div>
-        </div>
-      </section>
+      
+
+      {/* Dividing Line */}
+      <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
 
       {/* Partners / As Seen In Section */}
-      <section className="py-48 px-6 border-b border-zinc-900/50">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-center text-zinc-600 text-[10px] font-bold tracking-[0.5em] uppercase mb-16">As seen in</p>
-          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
-            <div className="text-2xl font-black tracking-tighter text-white">Bloomberg</div>
-            <div className="text-2xl font-black tracking-tighter text-white">Forbes</div>
-            <div className="text-2xl font-black tracking-tighter text-white">CoinDesk</div>
-            <div className="text-2xl font-black tracking-tighter text-white">The Block</div>
-            <div className="text-2xl font-black tracking-tighter text-white">TechCrunch</div>
-          </div>
-        </div>
-      </section>
+     
+
+      {/* Dividing Line */}
+      <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
 
       {/* Community Section */}
-      <section className="py-80 px-6 relative overflow-hidden bg-gradient-to-b from-dark-bg to-zinc-900/20">
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-12 font-outfit">
-            Join the Community
-          </h2>
-          <div className="flex flex-col md:flex-row gap-6 justify-center">
-            <button className="px-16 py-6 bg-gold text-black rounded-2xl text-[15px] font-bold tracking-[0.2em] uppercase hover:bg-gold/90 transition-all shadow-[0_0_50px_rgba(212,175,55,0.2)]">
-              Discord
-            </button>
-            <button className="px-16 py-6 border border-zinc-700 text-white rounded-2xl text-[15px] font-bold tracking-[0.2em] uppercase hover:bg-white/5 transition-all">
-              Twitter
-            </button>
-          </div>
-        </div>
-        
-        {/* Background Decorative Elements */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/10 rounded-full blur-[100px] pointer-events-none" />
-      </section>
+      
 
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes pulse {

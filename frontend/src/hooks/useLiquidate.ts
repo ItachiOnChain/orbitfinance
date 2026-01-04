@@ -13,7 +13,7 @@ export function useLiquidate() {
         maxCollateralIn: string,
         decimals: number
     ) => {
-        const parsedDebtAmount = parseUnits(debtAmount, decimals);
+        const parsedDebtAmount = parseUnits(debtAmount, 18);
         const parsedMaxCollateral = parseUnits(maxCollateralIn, decimals);
 
         await writeContract({
