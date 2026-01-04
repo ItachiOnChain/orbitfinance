@@ -2,52 +2,42 @@ import { Twitter, Github } from 'lucide-react';
 
 export function Footer() {
     return (
-        <footer className="relative bg-gradient-to-b from-[#0A0A0A] to-[#141825] border-t border-zinc-800/50">
-            <div className="max-w-7xl mx-auto px-6 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-                    <div>
-                        <h3 className="text-sm font-light tracking-[0.2em] text-white mb-4">ORBIT FINANCE</h3>
-                        <p className="text-sm text-zinc-400 font-light leading-relaxed">
-                            Self-repaying loans without liquidations
-                        </p>
+        <footer className="bg-dark-bg py-24 px-6 border-t border-zinc-900/50">
+            <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+                {/* Left: Brand */}
+                <div className="flex flex-col items-center md:items-start gap-2">
+                    <div className="flex items-center gap-3">
+                        <span className="text-lg font-black tracking-[0.2em] text-white font-outfit">ORBIT</span>
+                        <span className="text-[10px] font-bold tracking-[0.4em] text-gold">FINANCE</span>
                     </div>
-
-                    <div>
-                        <h4 className="text-xs font-light tracking-[0.2em] text-zinc-400 mb-4 uppercase">Protocol</h4>
-                        <ul className="space-y-3">
-                            <li><a href="#" className="text-sm text-zinc-300 hover:text-gold transition-colors font-light">Vaults</a></li>
-                            <li><a href="#" className="text-sm text-zinc-300 hover:text-gold transition-colors font-light">Docs</a></li>
-                            <li><a href="#" className="text-sm text-zinc-300 hover:text-gold transition-colors font-light">FAQ</a></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="text-xs font-light tracking-[0.2em] text-zinc-400 mb-4 uppercase">Resources</h4>
-                        <ul className="space-y-3">
-                            <li><a href="#" className="text-sm text-zinc-300 hover:text-gold transition-colors font-light">GitHub</a></li>
-                            <li><a href="#" className="text-sm text-zinc-300 hover:text-gold transition-colors font-light">Audit</a></li>
-                            <li><a href="#" className="text-sm text-zinc-300 hover:text-gold transition-colors font-light">Whitepaper</a></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="text-xs font-light tracking-[0.2em] text-zinc-400 mb-4 uppercase">Social</h4>
-                        <div className="flex gap-4">
-                            <a href="#" className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-gold hover:bg-zinc-700 transition-all">
-                                <Twitter className="w-5 h-5" />
-                            </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-gold hover:bg-zinc-700 transition-all">
-                                <Github className="w-5 h-5" />
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="pt-8 border-t border-zinc-800/50">
-                    <p className="text-xs text-zinc-500 font-light text-center">
-                        © 2026 Orbit Finance. All rights reserved.
+                    <p className="text-[11px] text-zinc-600 font-bold tracking-[0.2em] uppercase">
+                        Unlocking your future yield, now.
                     </p>
                 </div>
+
+                {/* Center: Links */}
+                <div className="flex gap-12">
+                    <a href="#" className="text-[11px] font-bold tracking-[0.3em] text-zinc-500 hover:text-white transition-colors uppercase">Docs</a>
+                    <a href="#" className="text-[11px] font-bold tracking-[0.3em] text-zinc-500 hover:text-white transition-colors uppercase">Audit</a>
+                    <a href="#" className="text-[11px] font-bold tracking-[0.3em] text-zinc-500 hover:text-white transition-colors uppercase">FAQ</a>
+                    <a href="#" className="text-[11px] font-bold tracking-[0.3em] text-zinc-500 hover:text-white transition-colors uppercase">Terms</a>
+                </div>
+
+                {/* Right: Socials */}
+                <div className="flex gap-8">
+                    <a href="#" className="text-zinc-600 hover:text-white transition-colors">
+                        <Twitter size={20} />
+                    </a>
+                    <a href="#" className="text-zinc-600 hover:text-white transition-colors">
+                        <Github size={20} />
+                    </a>
+                </div>
+            </div>
+            
+            <div className="mt-24 text-center">
+                <p className="text-[10px] text-zinc-800 font-bold tracking-[0.3em] uppercase">
+                    © 2026 Orbit Finance Protocol
+                </p>
             </div>
         </footer>
     );

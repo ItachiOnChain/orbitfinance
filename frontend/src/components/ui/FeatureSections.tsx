@@ -1,65 +1,28 @@
 import React from 'react';
-import { ArrowUp, ArrowDown, RefreshCcw, ChevronRight } from 'lucide-react';
+import { ChevronRight, ArrowUp, ArrowDown, RefreshCcw } from 'lucide-react';
 
 export const FeatureSections: React.FC = () => {
   return (
-    <div className="bg-dark-bg font-sans">
+    <div className="w-full bg-dark-bg">
       {/* Completely Flexible Section */}
-      <section className="py-32 px-6 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-          {/* Left: Interactive Graphic */}
-          <div className="relative flex justify-center items-center h-[500px]">
-            {/* Background Lines */}
-            <div className="absolute w-full h-px bg-zinc-800/50 top-1/2 left-0 -translate-y-1/2" />
-            <div className="absolute w-px h-full bg-zinc-800/50 left-1/2 top-0 -translate-x-1/2" />
-            
-            {/* Vertical Stack */}
-            <div className="relative z-10 flex flex-col items-center gap-4">
-              {/* Top Liquidate (Faded) */}
-              <div className="px-8 py-3 rounded-lg border border-zinc-800 bg-zinc-900/40 opacity-20 flex items-center gap-3 min-w-[180px]">
-                <RefreshCcw size={16} className="text-zinc-500" />
-                <span className="text-[11px] font-bold tracking-[0.2em] text-zinc-500 uppercase">Liquidate</span>
+      <section className="py-64 px-6 relative overflow-hidden border-b border-zinc-900/50">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+          {/* Left: Graphic */}
+          <div className="relative flex justify-center items-center h-[400px]">
+            <div className="flex flex-col gap-6 w-64 relative z-10">
+              <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/50 text-zinc-500 text-center text-sm font-bold tracking-widest opacity-50">
+                LIQUIDATE
               </div>
-
-              {/* Repay */}
-              <div className="px-8 py-3 rounded-lg border border-zinc-800 bg-zinc-900/60 flex items-center gap-3 min-w-[180px] shadow-xl">
-                <div className="flex flex-col -space-y-1">
-                  <ArrowUp size={14} className="text-zinc-400" />
-                  <ArrowDown size={14} className="text-zinc-400" />
-                </div>
-                <span className="text-[11px] font-bold tracking-[0.2em] text-zinc-400 uppercase">Repay</span>
+              <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-900/50 text-zinc-500 text-center text-sm font-bold tracking-widest opacity-50">
+                REPAY
               </div>
-
-              {/* Borrow (Highlighted) */}
-              <div className="relative group">
-                <div className="absolute -inset-1 bg-emerald-500/20 blur-xl rounded-lg opacity-100" />
-                <div className="relative px-10 py-4 rounded-lg border border-emerald-500/50 bg-zinc-900 flex items-center gap-4 min-w-[200px] shadow-[0_0_30px_rgba(16,185,129,0.15)]">
-                  <div className="flex flex-col -space-y-1">
-                    <ArrowUp size={16} className="text-emerald-400" />
-                    <ArrowDown size={16} className="text-emerald-400" />
-                  </div>
-                  <span className="text-[13px] font-bold tracking-[0.3em] text-white uppercase">Borrow</span>
-                </div>
-                {/* Horizontal Connection Lines */}
-                <div className="absolute top-1/2 -left-20 w-20 h-px bg-emerald-500/30" />
-                <div className="absolute top-1/2 -right-20 w-20 h-px bg-emerald-500/30" />
-              </div>
-
-              {/* Liquidate */}
-              <div className="px-8 py-3 rounded-lg border border-zinc-800 bg-zinc-900/60 flex items-center gap-3 min-w-[180px] shadow-xl">
-                <RefreshCcw size={16} className="text-zinc-400" />
-                <span className="text-[11px] font-bold tracking-[0.2em] text-zinc-400 uppercase">Liquidate</span>
-              </div>
-
-              {/* Bottom Borrow (Faded) */}
-              <div className="px-8 py-3 rounded-lg border border-zinc-800 bg-zinc-900/40 opacity-20 flex items-center gap-3 min-w-[180px]">
-                <div className="flex flex-col -space-y-1">
-                  <ArrowUp size={14} className="text-zinc-500" />
-                  <ArrowDown size={14} className="text-zinc-500" />
-                </div>
-                <span className="text-[11px] font-bold tracking-[0.2em] text-zinc-500 uppercase">Borrow</span>
+              <div className="p-6 rounded-xl border-2 border-gold bg-gold/10 text-gold text-center text-lg font-black tracking-[0.2em] shadow-[0_0_40px_rgba(212,175,55,0.2)] relative">
+                BORROW
+                <div className="absolute -right-12 top-1/2 -translate-y-1/2 w-12 h-[2px] bg-gold/30" />
               </div>
             </div>
+            {/* Background Glow */}
+            <div className="absolute w-80 h-80 bg-gold/5 rounded-full blur-[100px]" />
           </div>
 
           {/* Right: Content */}
@@ -68,79 +31,61 @@ export const FeatureSections: React.FC = () => {
               Completely Flexible
             </h2>
             <p className="text-lg md:text-xl text-zinc-400 font-light leading-relaxed mb-12 max-w-xl">
-              Orbit gives you full control of your finances with no hidden fees. 
-              Repay on your terms, keep your assets working for you, and borrow 
-              against your collateral to secure future yield.
+              Orbit gives you the freedom to manage your loans on your terms. 
+              No fixed schedules, no forced liquidations. Just pure DeFi 
+              flexibility at your fingertips.
             </p>
-            <button className="px-10 py-4 border border-gold/30 rounded-lg text-gold text-[12px] font-bold tracking-[0.3em] uppercase hover:bg-gold/5 transition-all flex items-center gap-2 group">
-              Explore our vaults
-              <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            <button className="px-10 py-4 bg-gold/10 text-gold border border-gold/40 rounded-lg text-[12px] font-bold tracking-[0.3em] uppercase hover:bg-gold/20 transition-all">
+              Learn More
             </button>
           </div>
         </div>
       </section>
 
       {/* Zero Liquidations Section */}
-      <section className="py-32 px-6 relative overflow-hidden bg-zinc-900/10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      <section className="py-64 px-6 relative overflow-hidden border-b border-zinc-900/50">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
           {/* Left: Content */}
-          <div className="order-2 lg:order-1 text-left lg:pr-10">
+          <div className="text-left lg:pr-10">
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8 font-outfit">
               Zero Liquidations
             </h2>
             <p className="text-lg md:text-xl text-zinc-400 font-light leading-relaxed mb-12 max-w-xl">
-              With Orbit, market volatility won't touch your vault. Your debt is 
-              securely tied to your collateral, ensuring that price swings never 
-              put you at risk.
+              Sleep easy knowing your collateral is safe. Our unique 
+              self-repaying mechanism ensures that your debt decreases 
+              over time, eliminating the risk of liquidation.
             </p>
-            <button className="px-10 py-4 border border-gold/30 rounded-lg text-gold text-[12px] font-bold tracking-[0.3em] uppercase hover:bg-gold/5 transition-all flex items-center gap-2 group">
-              Orbit Benefits
-              <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </button>
           </div>
 
           {/* Right: Graphic */}
-          <div className="order-1 lg:order-2 relative flex justify-center items-center h-[400px]">
-            {/* Visualizer Bars (Background) */}
-            <div className="absolute inset-0 flex items-center justify-center gap-2 opacity-30">
-              {[...Array(12)].map((_, i) => (
-                <div 
-                  key={i} 
-                  className="w-1.5 bg-emerald-500/50 rounded-full"
-                  style={{ 
-                    height: `${20 + Math.random() * 60}%`,
-                    animation: `pulse ${2 + Math.random() * 2}s infinite ease-in-out`
-                  }}
-                />
-              ))}
-            </div>
-
-            {/* Cards Container */}
-            <div className="relative flex items-center gap-8 z-10">
-              {/* ETH Card */}
-              <div className="w-32 h-32 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-2xl relative group">
-                <div className="absolute inset-0 bg-blue-500/5 blur-xl group-hover:bg-blue-500/10 transition-all" />
-                <div className="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center">
-                  <div className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center">
-                    <div className="w-6 h-8 bg-white/90 clip-path-eth" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }} />
+          <div className="relative flex justify-center items-center h-[400px]">
+            <div className="relative w-full max-w-md">
+              {/* Visualizer Bars */}
+              <div className="flex items-end justify-center gap-2 h-48 mb-8">
+                {[...Array(12)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="w-3 bg-gold/40 rounded-t-sm animate-pulse"
+                    style={{ 
+                      height: `${20 + Math.random() * 80}%`,
+                      animationDelay: `${i * 0.1}s`
+                    }}
+                  />
+                ))}
+              </div>
+              {/* Asset Cards */}
+              <div className="flex justify-center gap-4">
+                <div className="w-24 h-32 rounded-xl border border-zinc-800 bg-zinc-900/80 flex flex-col items-center justify-center gap-2 shadow-2xl">
+                  <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
+                    <div className="w-6 h-6 border-2 border-gold/60 rounded-full" />
                   </div>
+                  <span className="text-[10px] font-bold text-zinc-500 tracking-widest">ETH</span>
                 </div>
-              </div>
-
-              {/* Connection */}
-              <div className="flex items-center -space-x-1">
-                <div className="w-4 h-4 rounded-full border border-zinc-700" />
-                <div className="w-8 h-px bg-zinc-700" />
-                <div className="w-4 h-4 rounded-full border border-zinc-700" />
-              </div>
-
-              {/* Bronze ETH Card */}
-              <div className="w-32 h-32 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-2xl relative group">
-                <div className="absolute inset-0 bg-gold/5 blur-xl group-hover:bg-gold/10 transition-all" />
-                <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center">
-                  <div className="w-10 h-10 border-2 border-gold/40 rounded-full flex items-center justify-center">
-                    <div className="w-6 h-8 bg-gold/60 clip-path-eth" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }} />
+                <div className="w-24 h-32 rounded-xl border border-gold/30 bg-zinc-900/80 flex flex-col items-center justify-center gap-2 shadow-[0_0_30px_rgba(212,175,55,0.1)] -translate-y-4">
+                  <div className="w-10 h-10 rounded-full bg-gold/30 flex items-center justify-center">
+                    <div className="w-6 h-6 border-2 border-gold rounded-full" />
                   </div>
+                  <span className="text-[10px] font-bold text-gold tracking-widest">WETH</span>
                 </div>
               </div>
             </div>
@@ -149,8 +94,8 @@ export const FeatureSections: React.FC = () => {
       </section>
 
       {/* Security First Section */}
-      <section className="py-32 px-6 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      <section className="py-64 px-6 relative overflow-hidden border-b border-zinc-900/50">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
           {/* Left: Content */}
           <div className="text-left lg:pr-10">
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8 font-outfit">
@@ -161,9 +106,8 @@ export const FeatureSections: React.FC = () => {
               asset protection. As a pioneer in DeFi, we ensure your assets 
               are preserved at every step.
             </p>
-            <button className="px-10 py-4 border border-gold/30 rounded-lg text-gold text-[12px] font-bold tracking-[0.3em] uppercase hover:bg-gold/5 transition-all flex items-center gap-2 group">
+            <button className="px-10 py-4 bg-gold/10 text-gold border border-gold/40 rounded-lg text-[12px] font-bold tracking-[0.3em] uppercase hover:bg-gold/20 transition-all">
               Explore our audits
-              <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
 
@@ -186,11 +130,11 @@ export const FeatureSections: React.FC = () => {
 
             {/* Audit Badges */}
             <div className="absolute top-10 right-0 px-4 py-2 rounded bg-zinc-900 border border-zinc-800 flex items-center gap-2 shadow-2xl">
-              <div className="w-4 h-4 rounded-full bg-blue-500" />
+              <div className="w-4 h-4 rounded-full bg-gold/60" />
               <span className="text-[10px] font-bold text-white tracking-wider uppercase">Runtime Verification</span>
             </div>
             <div className="absolute bottom-10 right-0 px-4 py-2 rounded bg-zinc-900 border border-zinc-800 flex items-center gap-2 shadow-2xl">
-              <div className="w-4 h-4 rounded-full bg-purple-500" />
+              <div className="w-4 h-4 rounded-full bg-gold/40" />
               <span className="text-[10px] font-bold text-white tracking-wider uppercase">code4rena</span>
             </div>
             <div className="absolute top-1/2 left-0 -translate-y-1/2 px-4 py-2 rounded bg-zinc-900 border border-zinc-800 flex items-center gap-2 shadow-2xl">
@@ -202,27 +146,27 @@ export const FeatureSections: React.FC = () => {
       </section>
 
       {/* Your Favorite Tokens Section */}
-      <section className="py-32 px-6 relative overflow-hidden bg-zinc-900/10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      <section className="py-64 px-6 relative overflow-hidden bg-zinc-900/10 border-b border-zinc-900/50">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
           {/* Left: Token Grid */}
           <div className="grid grid-cols-4 gap-4">
             {[
-              { name: 'WETH', color: 'bg-blue-500/20' },
-              { name: 'DAI', color: 'bg-yellow-500/20' },
-              { name: 'USDC', color: 'bg-blue-600/20' },
-              { name: 'USDT', color: 'bg-emerald-500/20' },
-              { name: 'rETH', color: 'bg-red-500/20' },
-              { name: 'stETH', color: 'bg-sky-400/20' },
-              { name: 'ETH', color: 'bg-zinc-500/20' },
+              { name: 'WETH', color: 'bg-gold/10' },
+              { name: 'DAI', color: 'bg-gold/15' },
+              { name: 'USDC', color: 'bg-gold/10' },
+              { name: 'USDT', color: 'bg-gold/20' },
+              { name: 'rETH', color: 'bg-gold/10' },
+              { name: 'stETH', color: 'bg-gold/15' },
+              { name: 'ETH', color: 'bg-gold/20' },
             ].map((token, i) => (
               <div 
                 key={i} 
                 className={`aspect-square rounded-xl border border-zinc-800 bg-zinc-900/40 flex flex-col items-center justify-center gap-3 group hover:border-gold/30 transition-all hover:scale-105 ${i >= 4 ? 'translate-x-1/2' : ''}`}
               >
                 <div className={`w-12 h-12 rounded-full ${token.color} flex items-center justify-center shadow-inner`}>
-                  <div className="w-6 h-6 border-2 border-white/20 rounded-full" />
+                  <div className="w-6 h-6 border-2 border-gold/20 rounded-full" />
                 </div>
-                <span className="text-[10px] font-bold text-zinc-500 tracking-widest uppercase group-hover:text-white transition-colors">
+                <span className="text-[10px] font-bold text-zinc-500 tracking-widest uppercase group-hover:text-gold transition-colors">
                   {token.name}
                 </span>
               </div>
@@ -242,7 +186,7 @@ export const FeatureSections: React.FC = () => {
       </section>
 
       {/* Get Started Section */}
-      <section className="py-32 px-6 relative overflow-hidden">
+      <section className="py-80 px-6 relative overflow-hidden border-b border-zinc-900/50">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-white mb-8 font-outfit">
             Get started with Orbit
@@ -253,11 +197,11 @@ export const FeatureSections: React.FC = () => {
             and enjoy the ability to spend and save at the same time.
           </p>
           
-          <button className="px-12 py-5 border border-emerald-500/40 rounded-xl text-emerald-400 text-[14px] font-bold tracking-[0.3em] uppercase hover:bg-emerald-500/5 transition-all mb-24 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
+          <button className="px-12 py-5 border border-gold/40 rounded-xl text-gold text-[14px] font-bold tracking-[0.3em] uppercase hover:bg-gold/5 transition-all mb-24 shadow-[0_0_30px_rgba(212,175,55,0.1)]">
             Get your Self-Repaying Loan
           </button>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
               {
                 num: '1',
@@ -265,9 +209,9 @@ export const FeatureSections: React.FC = () => {
                 desc: 'Deposit any asset from our list of collateral into a vault.',
                 graphic: (
                   <div className="relative w-24 h-24 mx-auto mb-8">
-                    <div className="absolute inset-0 rounded-full border border-emerald-500/20" />
+                    <div className="absolute inset-0 rounded-full border border-gold/20" />
                     <div className="absolute inset-4 rounded-full border border-gold/30" />
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)]" />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-gold shadow-[0_0_15px_rgba(212,175,55,0.8)]" />
                   </div>
                 )
               },
@@ -277,11 +221,11 @@ export const FeatureSections: React.FC = () => {
                 desc: 'Earn interest on your full deposit, while your loan pays itself off.',
                 graphic: (
                   <div className="relative w-24 h-24 mx-auto mb-8">
-                    <div className="absolute inset-0 rounded-full border border-emerald-500/20" />
-                    <div className="absolute inset-4 rounded-full border border-emerald-500/40 flex items-center justify-center">
-                      <div className="w-8 h-8 rounded-full bg-emerald-500/40 shadow-[0_0_20px_rgba(16,185,129,0.6)]" />
+                    <div className="absolute inset-0 rounded-full border border-gold/20" />
+                    <div className="absolute inset-4 rounded-full border border-gold/40 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-gold/40 shadow-[0_0_20px_rgba(212,175,55,0.6)]" />
                     </div>
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full border border-emerald-500/60" />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full border border-gold/60" />
                   </div>
                 )
               },
@@ -291,16 +235,16 @@ export const FeatureSections: React.FC = () => {
                 desc: 'Your future yield, now. Borrow up to 50% on your collateral.',
                 graphic: (
                   <div className="relative w-24 h-24 mx-auto mb-8">
-                    <div className="absolute inset-0 rounded-full border border-emerald-500/20" />
-                    <div className="absolute inset-4 rounded-full border border-emerald-500/40 flex items-center justify-center">
-                      <div className="w-10 h-10 rounded-full bg-emerald-500 shadow-[0_0_25px_rgba(16,185,129,0.8)]" />
+                    <div className="absolute inset-0 rounded-full border border-gold/20" />
+                    <div className="absolute inset-4 rounded-full border border-gold/40 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-gold shadow-[0_0_25px_rgba(212,175,55,0.8)]" />
                     </div>
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full border border-emerald-500/60" />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full border border-gold/60" />
                   </div>
                 )
               }
             ].map((step, i) => (
-              <div key={i} className="p-10 rounded-3xl bg-zinc-900/40 border border-zinc-800/50 hover:border-emerald-500/20 transition-all group">
+              <div key={i} className="p-12 rounded-3xl bg-zinc-900/40 border border-zinc-800/50 hover:border-gold/20 transition-all group">
                 <div className="flex justify-between items-start mb-4">
                   <span className="text-6xl font-bold text-white/10 group-hover:text-white/20 transition-colors font-outfit">
                     {step.num}
@@ -317,6 +261,61 @@ export const FeatureSections: React.FC = () => {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-64 px-6 relative overflow-hidden bg-zinc-900/10 border-b border-zinc-900/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-20 text-center">
+            <div>
+              <p className="text-zinc-500 text-[10px] font-bold tracking-[0.4em] uppercase mb-4">Total Value Locked</p>
+              <h3 className="text-5xl md:text-6xl font-bold text-white font-outfit">$1,248,392,105</h3>
+            </div>
+            <div>
+              <p className="text-zinc-500 text-[10px] font-bold tracking-[0.4em] uppercase mb-4">Total Loans</p>
+              <h3 className="text-5xl md:text-6xl font-bold text-white font-outfit">$482,105,932</h3>
+            </div>
+            <div>
+              <p className="text-zinc-500 text-[10px] font-bold tracking-[0.4em] uppercase mb-4">Yield Generated</p>
+              <h3 className="text-5xl md:text-6xl font-bold text-gold font-outfit">$125,392,105</h3>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Partners / As Seen In Section */}
+      <section className="py-48 px-6 border-b border-zinc-900/50">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-center text-zinc-600 text-[10px] font-bold tracking-[0.5em] uppercase mb-16">As seen in</p>
+          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
+            <div className="text-2xl font-black tracking-tighter text-white">Bloomberg</div>
+            <div className="text-2xl font-black tracking-tighter text-white">Forbes</div>
+            <div className="text-2xl font-black tracking-tighter text-white">CoinDesk</div>
+            <div className="text-2xl font-black tracking-tighter text-white">The Block</div>
+            <div className="text-2xl font-black tracking-tighter text-white">TechCrunch</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Community Section */}
+      <section className="py-80 px-6 relative overflow-hidden bg-gradient-to-b from-dark-bg to-zinc-900/20">
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <h2 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-12 font-outfit">
+            Join the Community
+          </h2>
+          <div className="flex flex-col md:flex-row gap-6 justify-center">
+            <button className="px-16 py-6 bg-gold text-black rounded-2xl text-[15px] font-bold tracking-[0.2em] uppercase hover:bg-gold/90 transition-all shadow-[0_0_50px_rgba(212,175,55,0.2)]">
+              Discord
+            </button>
+            <button className="px-16 py-6 border border-zinc-700 text-white rounded-2xl text-[15px] font-bold tracking-[0.2em] uppercase hover:bg-white/5 transition-all">
+              Twitter
+            </button>
+          </div>
+        </div>
+        
+        {/* Background Decorative Elements */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/10 rounded-full blur-[100px] pointer-events-none" />
       </section>
 
       <style dangerouslySetInnerHTML={{ __html: `

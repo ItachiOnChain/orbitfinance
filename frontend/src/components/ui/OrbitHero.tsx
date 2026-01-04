@@ -136,11 +136,11 @@ export const OrbitHero: React.FC<OrbitHeroProps> = () => {
                 <div className="flex flex-col md:flex-row items-center gap-6">
                     <button
                         onClick={isConnected ? handleLaunchApp : handleConnect}
-                        className="px-12 py-4 btn-emerald-outline text-emerald-400 rounded-xl text-sm font-bold tracking-[0.2em] bg-emerald-400/5 hover:bg-emerald-400/10 transition-all shadow-[0_0_30px_rgba(16,185,129,0.15)]"
+                        className="px-12 py-4 btn-gold-outline text-gold rounded-xl text-sm font-bold tracking-[0.2em] bg-gold/5 hover:bg-gold/10 transition-all shadow-[0_0_30px_rgba(212,175,55,0.15)]"
                     >
                         GET A SELF-REPAYING LOAN
                     </button>
-                    <button className="p-4 btn-emerald-outline text-emerald-400 rounded-xl hover:bg-emerald-400/10 transition-all shadow-[0_0_30px_rgba(16,185,129,0.15)]">
+                    <button className="p-4 btn-gold-outline text-gold rounded-xl hover:bg-gold/10 transition-all shadow-[0_0_30px_rgba(212,175,55,0.15)]">
                         <Play size={24} fill="currentColor" />
                     </button>
                 </div>

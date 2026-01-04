@@ -1,11 +1,11 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @theme {
   --color-gold: #d4af37;
   --color-gold-muted: #b8860b;
-  --color-emerald-glow: #10b981;
-  --color-dark-bg: #0a0b0d;
+  --color-dark-bg: #0a0d11;
+  /* This might be redundant with --background, but keeping as per original structure */
   --color-sidebar-bg: #050607;
 
   --color-bronze1: #a87f32;
@@ -63,15 +63,15 @@
     filter: drop-shadow(8px 8px 16px rgba(0, 0, 0, 0.8));
   }
 
-  .btn-emerald-outline {
-    border: 1px solid #10b981;
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+  .btn-gold-outline {
+    border: 1px solid #d4af37;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
     transition: all 0.3s ease;
   }
 
-  .btn-emerald-outline:hover {
-    background-color: color-mix(in srgb, var(--color-emerald-glow) 10%, transparent);
-    box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
+  .btn-gold-outline:hover {
+    background-color: color-mix(in srgb, var(--color-gold) 10%, transparent);
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
   }
 }
 
