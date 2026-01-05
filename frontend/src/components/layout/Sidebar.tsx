@@ -11,7 +11,8 @@ import {
   Sun,
   DollarSign,
   FileText,
-  Twitter
+  Twitter,
+  User
 } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
 
@@ -36,15 +37,14 @@ export function Sidebar() {
     px-5
     flex items-center
     transition-all duration-300
-    ${
-      isActive
-        ? `
+    ${isActive
+      ? `
           bg-zinc-900/70
           border border-gold/40
           shadow-[0_0_24px_rgba(212,175,55,0.18)]
           text-gold
         `
-        : `
+      : `
           bg-transparent
           border border-transparent
           text-zinc-400
@@ -64,11 +64,10 @@ export function Sidebar() {
       {/* Sidebar Shell */}
       <div
         className={`flex-1 flex flex-col rounded-3xl border
-        ${
-          theme === 'light'
+        ${theme === 'light'
             ? 'bg-white/80 backdrop-blur-md border-zinc-200'
             : 'bg-zinc-950/50 backdrop-blur-xl border-zinc-900/60'
-        }`}
+          }`}
       >
         {/* Sidebar Content */}
         <div className="flex-1 overflow-y-auto">
@@ -84,6 +83,14 @@ export function Sidebar() {
             {/* Navigation */}
             <nav className="flex flex-col gap-3">
               <NavLink to="/app/account" className={linkClass}>
+                <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
+                  <span />
+                  <span className="text-sm font-medium tracking-wide">My Account</span>
+                  <User size={18} className="text-gold/60" />
+                </div>
+              </NavLink>
+
+              <NavLink to="/app/vaults" className={linkClass}>
                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                   <span />
                   <span className="text-sm font-medium tracking-wide">Vaults</span>
@@ -137,11 +144,10 @@ export function Sidebar() {
         {/* Footer */}
         <footer
           className={`mt-8 px-6 py-6 border-t
-          ${
-            theme === 'light'
+          ${theme === 'light'
               ? 'border-zinc-200 bg-zinc-50/50'
               : 'border-zinc-900/60 bg-zinc-900/20'
-          }`}
+            }`}
         >
           <div className="grid grid-cols-4 items-center">
             {/* Left */}
@@ -149,11 +155,10 @@ export function Sidebar() {
               <button
                 onClick={toggleTheme}
                 className={`p-2.5 rounded-xl transition-all
-                ${
-                  theme === 'light'
+                ${theme === 'light'
                     ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200 hover:bg-zinc-100'
                     : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:text-gold hover:bg-zinc-800'
-                }`}
+                  }`}
               >
                 {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
               </button>
@@ -163,11 +168,10 @@ export function Sidebar() {
             <div className="flex justify-center">
               <button
                 className={`p-2.5 rounded-xl transition-all
-                ${
-                  theme === 'light'
+                ${theme === 'light'
                     ? 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'
                     : 'text-zinc-500 hover:text-gold hover:bg-zinc-900'
-                }`}
+                  }`}
               >
                 <DollarSign size={18} />
               </button>
@@ -177,11 +181,10 @@ export function Sidebar() {
             <div className="flex justify-center">
               <button
                 className={`p-2.5 rounded-xl transition-all
-                ${
-                  theme === 'light'
+                ${theme === 'light'
                     ? 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'
                     : 'text-zinc-500 hover:text-gold hover:bg-zinc-900'
-                }`}
+                  }`}
               >
                 <FileText size={18} />
               </button>
@@ -191,11 +194,10 @@ export function Sidebar() {
             <div className="flex justify-end">
               <button
                 className={`p-2.5 rounded-xl transition-all
-                ${
-                  theme === 'light'
+                ${theme === 'light'
                     ? 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'
                     : 'text-zinc-500 hover:text-gold hover:bg-zinc-900'
-                }`}
+                  }`}
               >
                 <Twitter size={18} />
               </button>

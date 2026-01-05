@@ -3,6 +3,7 @@ import { useOrbitAccount } from '../../hooks/useOrbitAccount';
 import { useSyncYield } from '../../hooks/useSyncYield';
 import { usePendingYield } from '../../hooks/usePendingYield';
 import { MetricCard } from '../../components/ui/MetricCard';
+import { CreateAccountButton } from '../../components/CreateAccountButton';
 import { DollarSign, TrendingDown, Coins, Target, RefreshCw, TrendingUp } from 'lucide-react';
 import { formatEther, formatUnits } from 'viem';
 
@@ -55,17 +56,30 @@ export default function AccountPage() {
         );
     }
 
-    if (!accountAddress) {
+    // No account state - show Create Account CTA
+    if (!accountAddress || accountAddress === '0x0000000000000000000000000000000000000000') {
         return (
             <div className="space-y-6">
                 <h1 className="text-3xl font-light tracking-tight text-white">
                     My Account
                 </h1>
-                <div className="p-8 rounded-xl bg-zinc-900/50 border border-zinc-800 text-center">
-                    <p className="text-zinc-400 font-light mb-4">No account found</p>
-                    <p className="text-sm text-zinc-500 font-light">
-                        Create an account by making your first deposit
-                    </p>
+                <div className="max-w-2xl mx-auto mt-16">
+                    <div className="p-12 rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 border border-zinc-800/50 text-center space-y-6">
+                        <div className="w-20 h-20 mx-auto rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center">
+                            <DollarSign className="w-10 h-10 text-gold" />
+                        </div>
+                        <div>
+                            <h2 className="text-2xl font-light text-white mb-3">
+                                Create an Account to Get Started
+                            </h2>
+                            <p className="text-zinc-400 font-light max-w-md mx-auto">
+                                Create your Orbit Account to access your dashboard, deposit collateral, and borrow against your future yield.
+                            </p>
+                        </div>
+                        <div className="max-w-xs mx-auto">
+                            <CreateAccountButton />
+                        </div>
+                    </div>
                 </div>
             </div>
         );

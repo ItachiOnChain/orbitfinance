@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useCreateAccount } from '../hooks/useCreateAccount';
 
 export function CreateAccountButton() {
@@ -12,10 +13,19 @@ export function CreateAccountButton() {
         }
     };
 
+    // Auto-refresh after successful account creation
+    useEffect(() => {
+        if (isSuccess) {
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        }
+    }, [isSuccess]);
+
     if (isSuccess) {
         return (
             <div className="text-emerald-400 text-sm">
-                ✓ Account created! Refresh the page to continue.
+                ✓ Account created! Refreshing...
             </div>
         );
     }
