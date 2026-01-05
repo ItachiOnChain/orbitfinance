@@ -98,56 +98,56 @@ export const FeatureSections: React.FC = () => {
 
 
       {/* Security First Section - Dark Background */}
-      <section className="py-32 px-6 md:px-12 lg:px-20 relative bg-dark-bg">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center lg:pl-28">
-          {/* Left: Content */}
+            {/* ================= Security First ================= */}
+      <section className="py-32 px-6 md:px-12 lg:px-20 bg-dark-bg">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center lg:pl-[clamp(4rem,8vw,10rem)]">
+          
+          {/* Content */}
           <div className="text-left lg:pr-10">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-8 font-outfit">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 font-outfit">
               Security First
             </h2>
-            <p className="text-lg md:text-xl text-zinc-400 font-light leading-relaxed mb-12 max-w-xl ">
-              We are the original battle-tested DeFi platform with a priority of 
-              asset protection. As a pioneer in DeFi, we ensure your assets 
-              are preserved at every step.
+            <p className="text-lg md:text-xl text-zinc-400 font-light leading-relaxed mb-12 max-w-xl">
+              Battle-tested DeFi with audited smart contracts and runtime verification.
             </p>
-            <a 
-              href="/audits" 
-              className="group relative z-10 inline-flex h-12 cursor-pointer items-center justify-center rounded-lg border-0 px-10 py-4 font-outfit text-[12px] font-bold tracking-[0.3em] uppercase text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] blur-0 opacity-100 before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)] before:transition-opacity hover:before:animate-[buttonMovingGradientBg_3s_linear_infinite] hover:before:opacity-70"
-              style={{ transition: 'opacity 2s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)' }}
-            >
-              <span className="relative z-10">Explore our audits</span>
-            </a>
           </div>
 
-          {/* Right: Graphic */}
-          <div className="relative flex justify-center items-center h-[400px]">
-            <div className="w-24 h-24 rounded-full border-2 border-gold/30 flex items-center justify-center relative z-10 bg-dark-bg">
-              <div className="w-16 h-16 border border-gold/50 rounded-full flex items-center justify-center">
-                <div className="w-10 h-10 border-2 border-gold/60 rotate-45 flex items-center justify-center">
-                  <div className="w-6 h-6 border border-gold/80" />
+          {/* Diagram */}
+          <div className="relative flex justify-center items-center h-[420px] perspective-[1200px]">
+
+            {/* Linking Lines */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 400">
+              <line x1="200" y1="200" x2="340" y2="80" stroke="rgba(212,175,55,0.25)" />
+              <line x1="200" y1="200" x2="340" y2="320" stroke="rgba(212,175,55,0.25)" />
+              <line x1="200" y1="200" x2="60" y2="200" stroke="rgba(113,113,122,0.4)" />
+            </svg>
+
+            {/* Core */}
+            <div className="relative z-10 transform-gpu transition-transform duration-700 hover:rotate-x-6 hover:-rotate-y-6">
+              <div className="w-24 h-24 rounded-full border-2 border-gold/30 flex items-center justify-center bg-dark-bg">
+                <div className="w-16 h-16 border border-gold/50 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 border-2 border-gold/60 rotate-45 flex items-center justify-center">
+                    <div className="w-6 h-6 border border-gold/80" />
+                  </div>
                 </div>
               </div>
-              <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none" style={{ transform: 'scale(4)' }}>
-                <line x1="50%" y1="50%" x2="100%" y2="0%" stroke="currentColor" strokeWidth="0.1" strokeDasharray="0.5" className="text-zinc-800" />
-                <line x1="50%" y1="50%" x2="100%" y2="100%" stroke="currentColor" strokeWidth="0.1" strokeDasharray="0.5" className="text-zinc-800" />
-                <line x1="50%" y1="50%" x2="0%" y2="50%" stroke="currentColor" strokeWidth="0.1" strokeDasharray="0.5" className="text-zinc-800" />
-              </svg>
             </div>
-            <div className="absolute top-10 right-0 px-4 py-2 rounded bg-zinc-900 border border-zinc-800 flex items-center gap-2 shadow-2xl">
-              <div className="w-4 h-4 rounded-full bg-gold/60" />
-              <span className="text-[10px] font-bold text-white tracking-wider uppercase">Runtime Verification</span>
+
+            {/* Nodes */}
+            <div className="absolute top-10 right-4 px-4 py-2 rounded bg-zinc-900 border border-zinc-800 shadow-xl">
+              <span className="text-[10px] font-bold text-white tracking-wider">Runtime Verification</span>
             </div>
-            <div className="absolute bottom-10 right-0 px-4 py-2 rounded bg-zinc-900 border border-zinc-800 flex items-center gap-2 shadow-2xl">
-              <div className="w-4 h-4 rounded-full bg-gold/40" />
-              <span className="text-[10px] font-bold text-white tracking-wider uppercase">code4rena</span>
+            <div className="absolute bottom-10 right-4 px-4 py-2 rounded bg-zinc-900 border border-zinc-800 shadow-xl">
+              <span className="text-[10px] font-bold text-white tracking-wider">code4rena</span>
             </div>
-            <div className="absolute top-1/2 left-0 -translate-y-1/2 px-4 py-2 rounded bg-zinc-900 border border-zinc-800 flex items-center gap-2 shadow-2xl">
-              <div className="w-4 h-4 rounded-full bg-zinc-700" />
-              <span className="text-[10px] font-bold text-white tracking-wider uppercase">Immunefi</span>
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 px-4 py-2 rounded bg-zinc-900 border border-zinc-800 shadow-xl">
+              <span className="text-[10px] font-bold text-white tracking-wider">Immunefi</span>
             </div>
           </div>
         </div>
       </section>
+
+   
 
 
 
