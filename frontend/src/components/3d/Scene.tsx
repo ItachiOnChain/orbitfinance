@@ -5,7 +5,7 @@ import * as THREE from 'three';
 export function Scene() {
     const meshRef = useRef<THREE.Mesh>(null);
 
-    useFrame((state, delta) => {
+    useFrame((_state, delta) => {
         if (meshRef.current) {
             meshRef.current.rotation.x += delta * 0.2;
             meshRef.current.rotation.y += delta * 0.3;

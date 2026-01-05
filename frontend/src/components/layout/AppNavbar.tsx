@@ -1,6 +1,7 @@
 import { useAccount, useDisconnect, useConnect } from 'wagmi';
 import { useAppStore } from '../../store/appStore';
 import { Orbit, Hexagon } from 'lucide-react';
+import { WalletDropdown } from '../WalletDropdown';
 
 export function AppNavbar() {
   const { address, isConnected } = useAccount();
@@ -74,27 +75,12 @@ export function AppNavbar() {
 
           {/* Right: Wallet Section */}
           <div className="flex justify-end items-center gap-6">
-            {isConnected ? (
-              <div className="flex items-center gap-6">
-                <span
-                  className={`text-xs font-bold font-mono tracking-widest ${
-                    theme === 'light' ? 'text-zinc-500' : 'text-zinc-400'
-                  }`}
-                >
-                  {address?.slice(0, 6)}...{address?.slice(-4)}
-                </span>
-
-                <button
-                  onClick={() => disconnect()}
-                  className={`px-12 py-4 text-[12px] font-bold tracking-[0.3em] border rounded-lg transition-all ${
-                    theme === 'light'
-                      ? 'text-zinc-600 border-zinc-200 hover:bg-zinc-50'
-                      : 'text-zinc-400 border-zinc-800 hover:text-white hover:bg-zinc-900'
-                  }`}
-                >
-                  DISCONNECT
-                </button>
-              </div>
+            {isConnected && address ? (
+              <WalletDropdown 
+                address={address} 
+                onDisconnect={() => disconnect()} 
+                theme={theme}
+              />
             ) : (
               <button
                 onClick={() => connect({ connector: connectors[0] })}

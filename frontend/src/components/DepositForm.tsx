@@ -74,24 +74,28 @@ export function DepositForm({ vault }: DepositFormProps) {
     return (
         <div className="bg-zinc-900/30 rounded-lg p-6 space-y-4">
             <div>
-                <label className="text-sm text-zinc-400 block mb-2">Amount ({vault.name.split(' ')[0]})</label>
+                <label className="text-base text-zinc-400 block mb-2">Amount ({vault.name.split(' ')[0]})</label>
+                <br />
                 <input
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="0.00"
                     step={vault.name.includes('USDC') ? '0.01' : '0.0001'}
-                    className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-gold"
+                    className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-base text-white focus:outline-none focus:border-gold"
                 />
-                <p className="text-xs text-zinc-500 mt-1">
+                <br />
+                <p className="text-sm text-zinc-500 mt-1">
                     Depositing through OrbitAccount
                 </p>
             </div>
+            <br />
 
             <div>
-                <label className="text-sm text-zinc-400 block mb-2">
+                <label className="text-base text-zinc-400 block mb-2">
                     Maximum Slippage: {slippage}%
                 </label>
+                <br />
                 <div className="flex gap-2">
                     {[0.5, 1, 2, 5].map((value) => (
                         <button
