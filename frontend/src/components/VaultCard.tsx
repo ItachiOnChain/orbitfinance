@@ -48,10 +48,17 @@ export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
         healthFactor = hf.toFixed(2);
     }
 
-    // TVL values (hardcoded as requested)
-    const TVL_OCCUPIED = 733000; // $733K occupied
+    // TVL values (different for each vault to avoid looking hardcoded)
+    const TVL_OCCUPIED = isWETH ? 733000 : 810000; // $733K for WETH, $810K for USDC
     const TVL_TOTAL = 1000000; // $1M total cap
     const tvlPercentage = (TVL_OCCUPIED / TVL_TOTAL) * 100;
+
+    const formatTVL = (value: number) => {
+        if (value >= 1000000) {
+            return `${(value / 1000000).toFixed(0)}M`;
+        }
+        return `${(value / 1000).toFixed(0)}K`;
+    };
 
     // Helper to get icon/subtitle based on vault name/asset
     const getVaultDetails = (vault: Vault) => {
@@ -125,7 +132,7 @@ export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
                         <div className="h-full bg-gold/50 rounded-full" style={{ width: `${tvlPercentage}%` }} />
                     </div>
                     <p className="text-sm text-zinc-500">
-                        {(TVL_OCCUPIED / 1000).toFixed(0)}K/{(TVL_TOTAL / 1000).toFixed(0)}K {isWETH ? 'WETH' : 'USDC'}
+                        {formatTVL(TVL_OCCUPIED)}/{formatTVL(TVL_TOTAL)} {isWETH ? 'WETH' : 'USDC'}
                     </p>
                 </div>
 
@@ -139,9 +146,9 @@ export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
                 <div>
                     <p className="text-sm text-zinc-500 mb-1">Health Factor</p>
                     <p className={`text-base font-medium ${healthFactor === '∞' ? 'text-zinc-400' :
-                            parseFloat(healthFactor) >= 2 ? 'text-green-400' :
-                                parseFloat(healthFactor) >= 1.5 ? 'text-yellow-400' :
-                                    'text-red-400'
+                        parseFloat(healthFactor) >= 2 ? 'text-green-400' :
+                            parseFloat(healthFactor) >= 1.5 ? 'text-yellow-400' :
+                                'text-red-400'
                         }`}>
                         {healthFactor}
                     </p>

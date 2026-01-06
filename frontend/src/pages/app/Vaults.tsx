@@ -84,8 +84,8 @@ export default function VaultsPage() {
                 <button
                     onClick={() => setActiveTab('all')}
                     className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-light transition-all ${activeTab === 'all'
-                            ? 'bg-zinc-800 text-gold border border-gold/20 shadow-[0_0_10px_rgba(251,191,36,0.1)]'
-                            : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
+                        ? 'bg-zinc-800 text-gold border border-gold/20 shadow-[0_0_10px_rgba(251,191,36,0.1)]'
+                        : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
                         }`}
                 >
                     <LayoutGrid className="w-4 h-4" />
@@ -94,8 +94,8 @@ export default function VaultsPage() {
                 <button
                     onClick={() => setActiveTab('weth')}
                     className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-light transition-all ${activeTab === 'weth'
-                            ? 'bg-zinc-800 text-gold border border-gold/20 shadow-[0_0_10px_rgba(251,191,36,0.1)]'
-                            : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
+                        ? 'bg-zinc-800 text-gold border border-gold/20 shadow-[0_0_10px_rgba(251,191,36,0.1)]'
+                        : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
                         }`}
                 >
                     <Coins className="w-4 h-4" />
@@ -104,8 +104,8 @@ export default function VaultsPage() {
                 <button
                     onClick={() => setActiveTab('usdc')}
                     className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-light transition-all ${activeTab === 'usdc'
-                            ? 'bg-zinc-800 text-gold border border-gold/20 shadow-[0_0_10px_rgba(251,191,36,0.1)]'
-                            : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
+                        ? 'bg-zinc-800 text-gold border border-gold/20 shadow-[0_0_10px_rgba(251,191,36,0.1)]'
+                        : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
                         }`}
                 >
                     <Banknote className="w-4 h-4" />
@@ -130,7 +130,7 @@ export default function VaultsPage() {
                 </div>
                 <div className="border-l border-zinc-800 pl-8">
                     <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">Global TVL</p>
-                    <p className="text-2xl font-light text-gold drop-shadow-[0_0_5px_rgba(251,191,36,0.3)]">$43,054,683.64</p>
+                    <p className="text-2xl font-light text-gold drop-shadow-[0_0_5px_rgba(251,191,36,0.3)]">$2.14M</p>
                 </div>
             </div>
             <br />
