@@ -11,25 +11,6 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
     // Get storage keys for this account
     const getStorageKey = (key: string) => accountAddress ? `${accountAddress}_${key}` : null;
 
-    // Initialize UI values from localStorage or default to 0n
-    const [uiDebt, setUiDebt] = useState<bigint>(() => {
-        const key = getStorageKey('uiDebt');
-        if (!key) return 0n;
-        const stored = localStorage.getItem(key);
-        const value = stored ? BigInt(stored) : 0n;
-        console.log('🟢 Initial uiDebt from localStorage:', formatEther(value), 'orUSD');
-        return value;
-    });
-
-    const [uiCredit, setUiCredit] = useState<bigint>(() => {
-        const key = getStorageKey('uiCredit');
-        if (!key) return 0n;
-        const stored = localStorage.getItem(key);
-        const value = stored ? BigInt(stored) : 0n;
-        console.log('🟢 Initial uiCredit from localStorage:', formatEther(value), 'orUSD');
-        return value;
-    });
-
     // Fetch current on-chain debt
     const { data: totalDebt } = useReadContract({
         address: accountAddress,
@@ -64,38 +45,72 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
         },
     });
 
+    // Initialize UI values - sync with on-chain if there's a significant mismatch
+    const [uiDebt, setUiDebt] = useState<bigint>(() => {
+        const key = getStorageKey('uiDebt');
+        if (!key || !totalDebt) return 0n;
+
+        const stored = localStorage.getItem(key);
+        const storedValue = stored ? BigInt(stored) : 0n;
+
+        // If stored value is 0 but on-chain has debt, use on-chain value
+        if (storedValue === 0n && totalDebt > 0n) {
+            console.log('🔄 Syncing uiDebt with on-chain (stored was 0):', formatEther(totalDebt), 'orUSD');
+            localStorage.setItem(key, totalDebt.toString());
+            return totalDebt;
+        }
+
+        console.log('🟢 Initial uiDebt from localStorage:', formatEther(storedValue), 'orUSD');
+        return storedValue;
+    });
+
+    const [uiCredit, setUiCredit] = useState<bigint>(() => {
+        const key = getStorageKey('uiCredit');
+        if (!key) return 0n;
+        const stored = localStorage.getItem(key);
+        const value = stored ? BigInt(stored) : 0n;
+        console.log('🟢 Initial uiCredit from localStorage:', formatEther(value), 'orUSD');
+        return value;
+    });
+
     console.log('🔵 On-chain totalDebt:', totalDebt ? formatEther(totalDebt) : 'undefined', 'orUSD');
     console.log('🔵 On-chain accumulatedCredit:', accumulatedCredit ? formatEther(accumulatedCredit) : 'undefined', 'orUSD');
 
-    // Initialize UI values ONLY if localStorage is empty (first time)
+    // Sync with on-chain values when they load
     useEffect(() => {
-        if (!accountAddress) return;
+        if (!accountAddress || !totalDebt) return;
 
         const debtKey = getStorageKey('uiDebt');
-        const creditKey = getStorageKey('uiCredit');
+        if (!debtKey) return;
 
-        if (!debtKey || !creditKey) return;
+        const storedDebt = localStorage.getItem(debtKey);
+        const storedValue = storedDebt ? BigInt(storedDebt) : 0n;
 
-        const hasStoredDebt = localStorage.getItem(debtKey);
-        const hasStoredCredit = localStorage.getItem(creditKey);
-
-        console.log('🟡 hasStoredDebt:', !!hasStoredDebt, 'hasStoredCredit:', !!hasStoredCredit);
-
-        // Only initialize from on-chain if no stored values exist
-        if (!hasStoredDebt && totalDebt !== undefined) {
-            console.log('🟠 Initializing uiDebt from on-chain:', formatEther(totalDebt), 'orUSD');
+        // If stored is 0 but on-chain has debt, sync with on-chain
+        if (storedValue === 0n && totalDebt > 0n) {
+            console.log('🔄 Syncing uiDebt with on-chain debt:', formatEther(totalDebt), 'orUSD');
             setUiDebt(totalDebt);
             localStorage.setItem(debtKey, totalDebt.toString());
-            setPendingYield(0n);
             setUpdateCount(0);
         }
+    }, [totalDebt, accountAddress]);
 
-        if (!hasStoredCredit && accumulatedCredit !== undefined) {
-            console.log('🟠 Initializing uiCredit from on-chain:', formatEther(accumulatedCredit), 'orUSD');
+    useEffect(() => {
+        if (!accountAddress || !accumulatedCredit) return;
+
+        const creditKey = getStorageKey('uiCredit');
+        if (!creditKey) return;
+
+        const storedCredit = localStorage.getItem(creditKey);
+        const storedValue = storedCredit ? BigInt(storedCredit) : 0n;
+
+        // Sync with on-chain if needed
+        if (storedValue === 0n && accumulatedCredit > 0n) {
+            console.log('🔄 Syncing uiCredit with on-chain credit:', formatEther(accumulatedCredit), 'orUSD');
             setUiCredit(accumulatedCredit);
             localStorage.setItem(creditKey, accumulatedCredit.toString());
         }
-    }, [totalDebt, accumulatedCredit, accountAddress]);
+    }, [accumulatedCredit, accountAddress]);
 
     // Persist UI values to localStorage whenever they change
     useEffect(() => {
