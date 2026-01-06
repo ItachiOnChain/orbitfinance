@@ -17,7 +17,7 @@ interface VaultCardProps {
 }
 
 export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
-    const [activeTab, setActiveTab] = useState<'deposit' | 'withdraw' | 'migrate' | 'info'>('deposit');
+    const [activeTab, setActiveTab] = useState<'deposit' | 'withdraw' | 'info'>('deposit');
     const { address, isConnected } = useAccount();
     const { connect, connectors } = useConnect();
     const { accountAddress, totalDebt, wethShares, usdcShares } = useOrbitAccount(address);
@@ -158,7 +158,7 @@ export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
             {isExpanded && (
                 <div className="px-6 pb-6 bg-zinc-950/50 border-t border-zinc-800/50">
                     <div className="flex gap-4 py-4 mb-4">
-                        {['Deposit', 'Withdraw', 'Migrate', 'Info'].map((tab) => (
+                        {['Deposit', 'Withdraw', 'Info'].map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab.toLowerCase() as any)}
@@ -178,11 +178,6 @@ export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
                             <div className="bg-zinc-900 rounded-xl p-6 border border-zinc-800">
                                 {activeTab === 'deposit' && <DepositForm vault={vault} />}
                                 {activeTab === 'withdraw' && <WithdrawForm vault={vault} />}
-                                {activeTab === 'migrate' && (
-                                    <div className="text-center py-8 text-zinc-500">
-                                        Migration not available
-                                    </div>
-                                )}
                                 {activeTab === 'info' && (
                                     <div className="text-zinc-400 font-light text-base space-y-2">
                                         <p>Vault Address: {vault.address}</p>
@@ -192,18 +187,18 @@ export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
                                     </div>
                                 )}
                             </div>
+                        </div>
 
-                            {/* Connect Wallet Button */}
-                            <div className="space-y-4">
-                                {!isConnected && (
-                                    <button
-                                        onClick={() => connect({ connector: connectors[0] })}
-                                        className="w-full py-4 bg-emerald-900/20 border border-emerald-900/50 text-emerald-500 rounded-lg hover:bg-emerald-900/30 transition-colors font-medium"
-                                    >
-                                        Connect Wallet
-                                    </button>
-                                )}
-                            </div>
+                        {/* Connect Wallet Button */}
+                        <div className="space-y-4">
+                            {!isConnected && (
+                                <button
+                                    onClick={() => connect({ connector: connectors[0] })}
+                                    className="w-full py-4 bg-emerald-900/20 border border-emerald-900/50 text-emerald-500 rounded-lg hover:bg-emerald-900/30 transition-colors font-medium"
+                                >
+                                    Connect Wallet
+                                </button>
+                            )}
                         </div>
 
                         {/* Right Column: Stats/Graph */}
