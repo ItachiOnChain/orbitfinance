@@ -45,23 +45,14 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
         },
     });
 
-    // Initialize UI values - sync with on-chain if there's a significant mismatch
+    // Initialize UI values from localStorage
     const [uiDebt, setUiDebt] = useState<bigint>(() => {
         const key = getStorageKey('uiDebt');
-        if (!key || !totalDebt) return 0n;
-
+        if (!key) return 0n;
         const stored = localStorage.getItem(key);
-        const storedValue = stored ? BigInt(stored) : 0n;
-
-        // If stored value is 0 but on-chain has debt, use on-chain value
-        if (storedValue === 0n && totalDebt > 0n) {
-            console.log('🔄 Syncing uiDebt with on-chain (stored was 0):', formatEther(totalDebt), 'orUSD');
-            localStorage.setItem(key, totalDebt.toString());
-            return totalDebt;
-        }
-
-        console.log('🟢 Initial uiDebt from localStorage:', formatEther(storedValue), 'orUSD');
-        return storedValue;
+        const value = stored ? BigInt(stored) : 0n;
+        console.log('🟢 Initial uiDebt from localStorage:', formatEther(value), 'orUSD');
+        return value;
     });
 
     const [uiCredit, setUiCredit] = useState<bigint>(() => {
@@ -76,7 +67,7 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
     console.log('🔵 On-chain totalDebt:', totalDebt ? formatEther(totalDebt) : 'undefined', 'orUSD');
     console.log('🔵 On-chain accumulatedCredit:', accumulatedCredit ? formatEther(accumulatedCredit) : 'undefined', 'orUSD');
 
-    // Sync with on-chain values when they load
+    // Sync with on-chain values ONLY when localStorage is empty or 0
     useEffect(() => {
         if (!accountAddress || !totalDebt) return;
 
@@ -86,7 +77,7 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
         const storedDebt = localStorage.getItem(debtKey);
         const storedValue = storedDebt ? BigInt(storedDebt) : 0n;
 
-        // If stored is 0 but on-chain has debt, sync with on-chain
+        // Only sync if stored is 0 but on-chain has debt
         if (storedValue === 0n && totalDebt > 0n) {
             console.log('🔄 Syncing uiDebt with on-chain debt:', formatEther(totalDebt), 'orUSD');
             setUiDebt(totalDebt);
@@ -104,7 +95,7 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
         const storedCredit = localStorage.getItem(creditKey);
         const storedValue = storedCredit ? BigInt(storedCredit) : 0n;
 
-        // Sync with on-chain if needed
+        // Only sync if stored is 0 but on-chain has credit
         if (storedValue === 0n && accumulatedCredit > 0n) {
             console.log('🔄 Syncing uiCredit with on-chain credit:', formatEther(accumulatedCredit), 'orUSD');
             setUiCredit(accumulatedCredit);
@@ -114,7 +105,7 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
 
     // Persist UI values to localStorage whenever they change
     useEffect(() => {
-        if (!accountAddress) return;
+        if (!accountAddress || uiDebt === 0n) return;
         const key = getStorageKey('uiDebt');
         if (key) {
             localStorage.setItem(key, uiDebt.toString());
@@ -131,7 +122,7 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
         }
     }, [uiCredit, accountAddress]);
 
-    // Generate yield at intervals: 10s updates for visibility
+    // Generate yield at intervals: 10s updates with realistic 5% APY
     useEffect(() => {
         console.log('⏰ Yield timer effect triggered. uiDebt:', formatEther(uiDebt), 'orUSD');
 
@@ -146,11 +137,13 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
             const debtNumber = Number(formatEther(uiDebt));
             console.log('🔄 updateYield called! Current debt:', debtNumber, 'orUSD');
 
-            // Increased rate for visibility: 1% of debt every 10 seconds
-            const yieldPercentage = 0.01; // 1% per update
-            const yieldAmount = BigInt(Math.floor(debtNumber * yieldPercentage * 1e18));
+            // Realistic 5% APY calculation
+            // 5% per year = 0.05 / 31536000 seconds per year
+            const secondsElapsed = 10; // Update every 10 seconds
+            const yieldPerSecond = debtNumber * 0.05 / 31536000;
+            const yieldAmount = BigInt(Math.floor(yieldPerSecond * secondsElapsed * 1e18));
 
-            console.log('💰 Calculated yieldAmount:', formatEther(yieldAmount), 'orUSD (1% of debt)');
+            console.log('💰 Calculated yieldAmount:', formatEther(yieldAmount), 'orUSD (5% APY over 10s)');
 
             if (yieldAmount > 0n) {
                 console.log('✨ Applying yield update:');
