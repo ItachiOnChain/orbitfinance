@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 export function usePendingYield(accountAddress: `0x${string}` | undefined) {
     const [pendingYield, setPendingYield] = useState<bigint>(0n);
     const [updateCount, setUpdateCount] = useState(0);
+    const [initialized, setInitialized] = useState(false);
 
     console.log('🔵 usePendingYield called with accountAddress:', accountAddress);
 
@@ -45,85 +46,73 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
         },
     });
 
-    // Initialize UI values from localStorage
-    const [uiDebt, setUiDebt] = useState<bigint>(() => {
-        const key = getStorageKey('uiDebt');
-        if (!key) return 0n;
-        const stored = localStorage.getItem(key);
-        const value = stored ? BigInt(stored) : 0n;
-        console.log('🟢 Initial uiDebt from localStorage:', formatEther(value), 'orUSD');
-        return value;
-    });
-
-    const [uiCredit, setUiCredit] = useState<bigint>(() => {
-        const key = getStorageKey('uiCredit');
-        if (!key) return 0n;
-        const stored = localStorage.getItem(key);
-        const value = stored ? BigInt(stored) : 0n;
-        console.log('🟢 Initial uiCredit from localStorage:', formatEther(value), 'orUSD');
-        return value;
-    });
+    // State for UI values
+    const [uiDebt, setUiDebt] = useState<bigint>(0n);
+    const [uiCredit, setUiCredit] = useState<bigint>(0n);
 
     console.log('🔵 On-chain totalDebt:', totalDebt ? formatEther(totalDebt) : 'undefined', 'orUSD');
     console.log('🔵 On-chain accumulatedCredit:', accumulatedCredit ? formatEther(accumulatedCredit) : 'undefined', 'orUSD');
 
-    // Sync with on-chain values ONLY when localStorage is empty or 0
+    // Initialize from localStorage or on-chain values
     useEffect(() => {
-        if (!accountAddress || !totalDebt) return;
+        if (!accountAddress || initialized) return;
+        if (!totalDebt && !accumulatedCredit) return; // Wait for on-chain data
 
         const debtKey = getStorageKey('uiDebt');
-        if (!debtKey) return;
-
-        const storedDebt = localStorage.getItem(debtKey);
-        const storedValue = storedDebt ? BigInt(storedDebt) : 0n;
-
-        // Only sync if stored is 0 but on-chain has debt
-        if (storedValue === 0n && totalDebt > 0n) {
-            console.log('🔄 Syncing uiDebt with on-chain debt:', formatEther(totalDebt), 'orUSD');
-            setUiDebt(totalDebt);
-            localStorage.setItem(debtKey, totalDebt.toString());
-            setUpdateCount(0);
-        }
-    }, [totalDebt, accountAddress]);
-
-    useEffect(() => {
-        if (!accountAddress || !accumulatedCredit) return;
-
         const creditKey = getStorageKey('uiCredit');
-        if (!creditKey) return;
 
+        if (!debtKey || !creditKey) return;
+
+        // Try to load from localStorage
+        const storedDebt = localStorage.getItem(debtKey);
         const storedCredit = localStorage.getItem(creditKey);
-        const storedValue = storedCredit ? BigInt(storedCredit) : 0n;
 
-        // Only sync if stored is 0 but on-chain has credit
-        if (storedValue === 0n && accumulatedCredit > 0n) {
-            console.log('🔄 Syncing uiCredit with on-chain credit:', formatEther(accumulatedCredit), 'orUSD');
-            setUiCredit(accumulatedCredit);
-            localStorage.setItem(creditKey, accumulatedCredit.toString());
+        if (storedDebt && BigInt(storedDebt) > 0n) {
+            // Use stored values if they exist and are > 0
+            const debtValue = BigInt(storedDebt);
+            const creditValue = storedCredit ? BigInt(storedCredit) : 0n;
+            console.log('🟢 Loading from localStorage - debt:', formatEther(debtValue), 'credit:', formatEther(creditValue));
+            setUiDebt(debtValue);
+            setUiCredit(creditValue);
+        } else if (totalDebt && totalDebt > 0n) {
+            // Initialize from on-chain if no valid localStorage
+            console.log('🔄 Initializing from on-chain - debt:', formatEther(totalDebt));
+            setUiDebt(totalDebt);
+            setUiCredit(accumulatedCredit || 0n);
+            localStorage.setItem(debtKey, totalDebt.toString());
+            localStorage.setItem(creditKey, (accumulatedCredit || 0n).toString());
         }
-    }, [accumulatedCredit, accountAddress]);
+
+        setInitialized(true);
+        setUpdateCount(0);
+    }, [totalDebt, accumulatedCredit, accountAddress, initialized]);
 
     // Persist UI values to localStorage whenever they change
     useEffect(() => {
-        if (!accountAddress || uiDebt === 0n) return;
+        if (!accountAddress || !initialized || uiDebt === 0n) return;
         const key = getStorageKey('uiDebt');
         if (key) {
             localStorage.setItem(key, uiDebt.toString());
             console.log('💾 Saved uiDebt to localStorage:', formatEther(uiDebt), 'orUSD');
         }
-    }, [uiDebt, accountAddress]);
+    }, [uiDebt, accountAddress, initialized]);
 
     useEffect(() => {
-        if (!accountAddress) return;
+        if (!accountAddress || !initialized) return;
         const key = getStorageKey('uiCredit');
         if (key) {
             localStorage.setItem(key, uiCredit.toString());
             console.log('💾 Saved uiCredit to localStorage:', formatEther(uiCredit), 'orUSD');
         }
-    }, [uiCredit, accountAddress]);
+    }, [uiCredit, accountAddress, initialized]);
 
     // Generate yield at intervals: 10s updates with realistic 5% APY
     useEffect(() => {
+        if (!initialized) {
+            console.log('⏰ Waiting for initialization...');
+            return;
+        }
+
         console.log('⏰ Yield timer effect triggered. uiDebt:', formatEther(uiDebt), 'orUSD');
 
         if (!uiDebt || uiDebt === 0n) {
@@ -138,8 +127,7 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
             console.log('🔄 updateYield called! Current debt:', debtNumber, 'orUSD');
 
             // Realistic 5% APY calculation
-            // 5% per year = 0.05 / 31536000 seconds per year
-            const secondsElapsed = 10; // Update every 10 seconds
+            const secondsElapsed = 10;
             const yieldPerSecond = debtNumber * 0.05 / 31536000;
             const yieldAmount = BigInt(Math.floor(yieldPerSecond * secondsElapsed * 1e18));
 
@@ -147,49 +135,37 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
 
             if (yieldAmount > 0n) {
                 console.log('✨ Applying yield update:');
-                console.log('  - Decreasing debt by:', formatEther(yieldAmount), 'orUSD');
-                console.log('  - Increasing credit by:', formatEther(yieldAmount), 'orUSD');
 
                 setPendingYield(prev => prev + yieldAmount);
                 setUiDebt(prev => {
                     const newDebt = prev > yieldAmount ? prev - yieldAmount : 0n;
-                    console.log('  - New debt will be:', formatEther(newDebt), 'orUSD');
+                    console.log('  - New debt:', formatEther(newDebt), 'orUSD');
                     return newDebt;
                 });
                 setUiCredit(prev => {
                     const newCredit = prev + yieldAmount;
-                    console.log('  - New credit will be:', formatEther(newCredit), 'orUSD');
+                    console.log('  - New credit:', formatEther(newCredit), 'orUSD');
                     return newCredit;
                 });
                 setUpdateCount(prev => prev + 1);
-            } else {
-                console.log('⚠️ yieldAmount is 0, no update applied');
             }
         };
 
-        // First update after 10 seconds, then every 10 seconds
         console.log('⏱️ Starting 10-second timer...');
         const firstTimeout = setTimeout(() => {
             console.log('⏰ 10 seconds elapsed! Running first update...');
             updateYield();
-            console.log('🔁 Setting up recurring 10-second interval...');
             const interval = setInterval(() => {
                 console.log('⏰ 10-second interval triggered!');
                 updateYield();
             }, 10000);
-            return () => {
-                console.log('🛑 Clearing interval');
-                clearInterval(interval);
-            };
+            return () => clearInterval(interval);
         }, 10000);
 
-        return () => {
-            console.log('🛑 Clearing timeout');
-            clearTimeout(firstTimeout);
-        };
-    }, [uiDebt, updateCount]);
+        return () => clearTimeout(firstTimeout);
+    }, [uiDebt, updateCount, initialized]);
 
-    console.log('📊 Current state - uiDebt:', formatEther(uiDebt), 'uiCredit:', formatEther(uiCredit));
+    console.log('📊 Current state - uiDebt:', formatEther(uiDebt), 'uiCredit:', formatEther(uiCredit), 'initialized:', initialized);
 
     return {
         pendingYield,
