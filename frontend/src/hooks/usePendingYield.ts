@@ -4,9 +4,25 @@ import { useEffect, useState } from 'react';
 
 export function usePendingYield(accountAddress: `0x${string}` | undefined) {
     const [pendingYield, setPendingYield] = useState<bigint>(0n);
-    const [uiDebt, setUiDebt] = useState<bigint>(0n);
-    const [uiCredit, setUiCredit] = useState<bigint>(0n);
     const [updateCount, setUpdateCount] = useState(0);
+
+    // Get storage keys for this account
+    const getStorageKey = (key: string) => accountAddress ? `${accountAddress}_${key}` : null;
+
+    // Initialize UI values from localStorage or default to 0n
+    const [uiDebt, setUiDebt] = useState<bigint>(() => {
+        const key = getStorageKey('uiDebt');
+        if (!key) return 0n;
+        const stored = localStorage.getItem(key);
+        return stored ? BigInt(stored) : 0n;
+    });
+
+    const [uiCredit, setUiCredit] = useState<bigint>(() => {
+        const key = getStorageKey('uiCredit');
+        if (!key) return 0n;
+        const stored = localStorage.getItem(key);
+        return stored ? BigInt(stored) : 0n;
+    });
 
     // Fetch current on-chain debt
     const { data: totalDebt } = useReadContract({
@@ -42,17 +58,48 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
         },
     });
 
-    // Initialize UI values when on-chain values change
+    // Initialize UI values ONLY if localStorage is empty (first time)
     useEffect(() => {
-        if (totalDebt !== undefined) {
+        if (!accountAddress) return;
+
+        const debtKey = getStorageKey('uiDebt');
+        const creditKey = getStorageKey('uiCredit');
+
+        if (!debtKey || !creditKey) return;
+
+        const hasStoredDebt = localStorage.getItem(debtKey);
+        const hasStoredCredit = localStorage.getItem(creditKey);
+
+        // Only initialize from on-chain if no stored values exist
+        if (!hasStoredDebt && totalDebt !== undefined) {
             setUiDebt(totalDebt);
+            localStorage.setItem(debtKey, totalDebt.toString());
             setPendingYield(0n);
             setUpdateCount(0);
         }
-        if (accumulatedCredit !== undefined) {
+
+        if (!hasStoredCredit && accumulatedCredit !== undefined) {
             setUiCredit(accumulatedCredit);
+            localStorage.setItem(creditKey, accumulatedCredit.toString());
         }
-    }, [totalDebt, accumulatedCredit]);
+    }, [totalDebt, accumulatedCredit, accountAddress]);
+
+    // Persist UI values to localStorage whenever they change
+    useEffect(() => {
+        if (!accountAddress) return;
+        const key = getStorageKey('uiDebt');
+        if (key) {
+            localStorage.setItem(key, uiDebt.toString());
+        }
+    }, [uiDebt, accountAddress]);
+
+    useEffect(() => {
+        if (!accountAddress) return;
+        const key = getStorageKey('uiCredit');
+        if (key) {
+            localStorage.setItem(key, uiCredit.toString());
+        }
+    }, [uiCredit, accountAddress]);
 
     // Generate yield at intervals: 10s first, then 30s afterwards
     useEffect(() => {
