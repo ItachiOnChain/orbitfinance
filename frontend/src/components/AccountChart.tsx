@@ -69,60 +69,63 @@ export function AccountChart({ totalDeposit, debtLimit, withdrawable, debt, inte
                         dataKey="name"
                         axisLine={false}
                         tickLine={false}
-                        tick={({ x, y, payload }) => (
-                            <g transform={`translate(${x},${y})`}>
-                                <text x={0} y={0} dy={20} textAnchor="middle" fill="#71717a" fontSize={11} fontFamily="var(--font-outfit)" className="uppercase tracking-[0.1em]">
-                                    {payload.value}
-                                </text>
-                                <text x={0} y={0} dy={40} textAnchor="middle" fill="#d4af37" fontSize={13} fontFamily="var(--font-outfit)" fontWeight={500}>
-                                    ETH {data.find(d => d.name === payload.value)?.value.toFixed(2)}
-                                </text>
-                            </g>
-                        )}
+                        tick={({ x, y, payload }) => {
+                            const item = data.find(d => d.name === payload.value);
+                            return (
+                                <g transform={`translate(${x},${y})`}>
+                                    <text x={0} y={0} dy={20} textAnchor="middle" fill="#71717a" fontSize={11} fontFamily="var(--font-outfit)" className="uppercase tracking-[0.1em]">
+                                        {payload.value}
+                                    </text>
+                                    <text x={0} y={0} dy={40} textAnchor="middle" fill="#d4af37" fontSize={13} fontFamily="var(--font-outfit)" fontWeight={500}>
+                                        {item?.displayValue || ''}
+                                    </text>
+                                </g>
+                            );
+                        }}
                         height={70}
                     />
                     <YAxis
                         hide={true}
                         domain={[0, maxValue]}
                     />
-                    
+
                     {/* Total Deposit Line */}
-                    <ReferenceLine 
-                        y={totalDeposit} 
-                        stroke="#f97316" 
+                    <ReferenceLine
+                        y={totalDeposit}
+                        stroke="#f97316"
                         strokeDasharray="3 3"
                         strokeOpacity={0.5}
-                        label={{ 
-                            position: 'left', 
-                            value: `ETH ${totalDeposit.toFixed(2)}`, 
-                            fill: '#f97316', 
+                        label={{
+                            position: 'left',
+                            value: `ETH ${totalDeposit.toFixed(2)}`,
+                            fill: '#f97316',
                             fontSize: 10,
                             fontFamily: 'var(--font-outfit)',
                             dx: -10
-                        }} 
+                        }}
                     />
-                    
+
                     {/* Debt Limit Line */}
-                    <ReferenceLine 
-                        y={debtLimit} 
-                        stroke="#d4af37" 
+                    <ReferenceLine
+                        y={debtLimit}
+                        stroke="#d4af37"
                         strokeDasharray="3 3"
                         strokeOpacity={0.5}
-                        label={{ 
-                            position: 'left', 
-                            value: `ETH ${debtLimit.toFixed(2)}`, 
-                            fill: '#d4af37', 
+                        label={{
+                            position: 'left',
+                            value: `ETH ${debtLimit.toFixed(2)}`,
+                            fill: '#d4af37',
                             fontSize: 10,
                             fontFamily: 'var(--font-outfit)',
                             dx: -10
-                        }} 
+                        }}
                     />
 
                     <Bar dataKey="value" radius={[4, 4, 0, 0]}>
                         {data.map((entry, index) => (
-                            <Cell 
-                                key={`cell-${index}`} 
-                                fill={entry.color} 
+                            <Cell
+                                key={`cell-${index}`}
+                                fill={entry.color}
                                 style={{ filter: `drop-shadow(0 0 10px ${entry.color}40)` }}
                             />
                         ))}
