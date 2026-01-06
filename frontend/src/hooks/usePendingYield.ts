@@ -101,7 +101,7 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
         }
     }, [uiCredit, accountAddress]);
 
-    // Generate yield at intervals: 10s first, then 30s afterwards
+    // Generate yield at intervals: 10s updates for visibility
     useEffect(() => {
         if (!uiDebt || uiDebt === 0n) {
             return;
@@ -109,10 +109,11 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
 
         const updateYield = () => {
             const debtNumber = Number(formatEther(uiDebt));
-            const secondsElapsed = updateCount === 0 ? 10 : 30;
 
-            const yieldPerSecond = debtNumber * 0.05 / 31536000;
-            const yieldAmount = BigInt(Math.floor(yieldPerSecond * secondsElapsed * 1e18));
+            // Increased rate for visibility: 1% of debt every 10 seconds
+            // This simulates earning yield that pays down debt
+            const yieldPercentage = 0.01; // 1% per update
+            const yieldAmount = BigInt(Math.floor(debtNumber * yieldPercentage * 1e18));
 
             if (yieldAmount > 0n) {
                 setPendingYield(prev => prev + yieldAmount);
@@ -122,9 +123,10 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
             }
         };
 
+        // First update after 10 seconds, then every 10 seconds
         const firstTimeout = setTimeout(() => {
             updateYield();
-            const interval = setInterval(updateYield, 30000);
+            const interval = setInterval(updateYield, 10000); // Every 10 seconds
             return () => clearInterval(interval);
         }, 10000);
 
