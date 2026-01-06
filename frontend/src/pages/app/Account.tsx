@@ -46,6 +46,18 @@ export default function AccountPage() {
     const maxBorrowableUSD = (totalDepositsUSD * 0.5) - (totalDebt ? parseFloat(formatEther(totalDebt)) : 0);
     const maxBorrowable = maxBorrowableUSD > 0 ? BigInt(Math.floor(maxBorrowableUSD * 1e18)) : 0n;
 
+    // Calculate weighted average interest rate based on deposit composition
+    // WETH interest rate: 5.2%, USDC interest rate: 8.5%
+    const WETH_INTEREST_RATE = 5.2;
+    const USDC_INTEREST_RATE = 8.5;
+
+    let weightedInterestRate = 0;
+    if (totalDepositsUSD > 0) {
+        const wethWeight = wethValue / totalDepositsUSD;
+        const usdcWeight = usdcValue / totalDepositsUSD;
+        weightedInterestRate = (wethWeight * WETH_INTEREST_RATE) + (usdcWeight * USDC_INTEREST_RATE);
+    }
+
     // Chart Data
     const totalDepositsETH = totalDepositsUSD / WETH_PRICE;
     const debtETH = totalDebt ? parseFloat(formatEther(totalDebt)) / WETH_PRICE : 0;
@@ -139,12 +151,12 @@ export default function AccountPage() {
                     <div className="rounded-3xl p-[1px] bg-gradient-to-b from-zinc-800 to-zinc-950 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
                         <div className="rounded-[23px] bg-zinc-950/80 backdrop-blur-xl p-1 overflow-hidden relative">
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-gold/50 blur-[100px] pointer-events-none"></div>
-                            <AccountChart 
+                            <AccountChart
                                 totalDeposit={totalDepositsETH}
                                 debtLimit={debtLimitETH}
                                 withdrawable={withdrawableETH}
                                 debt={debtETH}
-                                interest={interestETH}
+                                interestRate={weightedInterestRate}
                             />
                         </div>
                     </div>
@@ -167,8 +179,8 @@ export default function AccountPage() {
                                             <p className="text-lg text-zinc-400 font-light mt-1"></p>
                                         </div>
                                     </div>
-                                    
-                                  
+
+
                                 </div>
                                 <br />
 

@@ -5,30 +5,33 @@ interface AccountChartProps {
     debtLimit: number;
     withdrawable: number;
     debt: number;
-    interest: number;
+    interestRate: number; // Changed from interest to interestRate (percentage)
 }
 
-export function AccountChart({ totalDeposit, debtLimit, withdrawable, debt, interest }: AccountChartProps) {
+export function AccountChart({ totalDeposit, debtLimit, withdrawable, debt, interestRate }: AccountChartProps) {
     const data = [
         {
             name: 'Withdrawable',
             value: withdrawable,
             color: '#d4af37', // Gold
+            displayValue: `ETH ${withdrawable.toFixed(2)}`,
         },
         {
             name: 'Debt',
             value: debt,
             color: '#c2410c', // Dark Orange/Red
+            displayValue: `ETH ${debt.toFixed(2)}`,
         },
         {
-            name: 'Interest',
-            value: interest,
-            color: '#d4af37', // Gold
+            name: 'Interest Rate',
+            value: interestRate / 10, // Scale down for visual representation
+            color: '#10b981', // Green
+            displayValue: `${interestRate.toFixed(2)}%`,
         },
     ];
 
     // Calculate max value for Y axis domain to ensure reference lines are visible
-    const maxValue = Math.max(totalDeposit, debtLimit, withdrawable, debt, interest) * 1.2;
+    const maxValue = Math.max(totalDeposit, debtLimit, withdrawable, debt, interestRate / 10) * 1.2;
 
     return (
         <div className="w-full h-[350px] bg-zinc-900/40 rounded-2xl p-6 relative overflow-hidden border border-zinc-800/50 shadow-[0_0_40px_rgba(0,0,0,0.3)] group">
