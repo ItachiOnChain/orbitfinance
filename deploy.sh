@@ -1,54 +1,99 @@
 #!/bin/bash
 
-# Orbit Finance - Deploy to Anvil and Sync Frontend
+# ============================================================================
+# Orbit Finance - Unified Deployment Script
+# ============================================================================
+# Deploys both Crypto and RWA contracts, updates all ABIs and addresses
 # Usage: ./deploy.sh
+# ============================================================================
 
 set -e
 
-echo "🚀 Deploying Orbit Finance to Anvil..."
+echo "🚀 Orbit Finance - Unified Deployment"
+echo "======================================"
 echo ""
 
-# 1. Deploy contracts
-echo "📝 Deploying contracts..."
+# Colors for output
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
 # Export private key for the script to use
 export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 
+# ============================================================================
+# STEP 1: Deploy Crypto Contracts
+# ============================================================================
+echo -e "${BLUE}📝 Step 1/6: Deploying Crypto Contracts...${NC}"
 forge script scripts/Deploy.s.sol --tc DeployOrbitFinance \
   --rpc-url http://localhost:8545 \
   --broadcast
 
-echo ""
-echo "✅ Contracts deployed!"
+echo -e "${GREEN}✅ Crypto contracts deployed!${NC}"
 echo ""
 
-# 2. Copy ABIs to frontend
-echo "📋 Copying ABIs to frontend..."
+# ============================================================================
+# STEP 2: Deploy RWA Contracts
+# ============================================================================
+echo -e "${BLUE}📝 Step 2/6: Deploying RWA Contracts...${NC}"
+forge script script/DeployRWA.s.sol:DeployRWA \
+  --rpc-url http://localhost:8545 \
+  --broadcast \
+  --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+
+echo -e "${GREEN}✅ RWA contracts deployed!${NC}"
+echo ""
+
+# ============================================================================
+# STEP 3: Copy Crypto ABIs to Frontend
+# ============================================================================
+echo -e "${BLUE}📋 Step 3/6: Copying Crypto ABIs to frontend...${NC}"
 mkdir -p frontend/src/contracts/abis
 cp out/AccountFactory.sol/AccountFactory.json frontend/src/contracts/abis/
 cp out/OrbitAccount.sol/OrbitAccount.json frontend/src/contracts/abis/
 cp out/ERC4626Vault.sol/ERC4626Vault.json frontend/src/contracts/abis/
 cp out/orUSD.sol/orUSD.json frontend/src/contracts/abis/
 
-echo "✅ ABIs copied!"
+echo -e "${GREEN}✅ Crypto ABIs copied!${NC}"
 echo ""
 
-# 3. Extract and update contract addresses
-echo "🔗 Updating contract addresses..."
-python3 << 'PYTHON_SCRIPT'
+# ============================================================================
+# STEP 4: Copy RWA ABIs to Frontend
+# ============================================================================
+echo -e "${BLUE}📋 Step 4/6: Copying RWA ABIs to frontend...${NC}"
+mkdir -p frontend/src/contracts/rwa-abis
+cp out/IdentityRegistry.sol/IdentityRegistry.json frontend/src/contracts/rwa-abis/
+cp out/RWAIncomeNFT.sol/RWAIncomeNFT.json frontend/src/contracts/rwa-abis/
+cp out/OrbitRWAPool.sol/OrbitRWAPool.json frontend/src/contracts/rwa-abis/
+cp out/SPVManager.sol/SPVManager.json frontend/src/contracts/rwa-abis/
+cp out/SeniorTranche.sol/SeniorTranche.json frontend/src/contracts/rwa-abis/
+cp out/JuniorTranche.sol/JuniorTranche.json frontend/src/contracts/rwa-abis/
+cp out/WaterfallDistributor.sol/WaterfallDistributor.json frontend/src/contracts/rwa-abis/
+cp out/MockUSDC.sol/MockUSDC.json frontend/src/contracts/rwa-abis/
+
+echo -e "${GREEN}✅ RWA ABIs copied!${NC}"
+echo ""
+
+# ============================================================================
+# STEP 5: Update Contract Addresses
+# ============================================================================
+echo -e "${BLUE}🔗 Step 5/6: Updating contract addresses...${NC}"
+
+# Update Crypto addresses
+python3 <<'CRYPTO_ADDRESSES'
 import json
 
-# Read deployment output
+# Read Crypto deployment output
 with open('broadcast/Deploy.s.sol/31337/run-latest.json', 'r') as f:
     data = json.load(f)
 
-# Extract addresses in order of deployment
+# Extract addresses
 addresses = {}
 for tx in data['transactions']:
     if tx.get('contractName'):
         name = tx['contractName']
         addr = tx['contractAddress']
-        
-        # Map contract names to our naming convention
         if name not in addresses:
             addresses[name] = addr
 
@@ -103,23 +148,86 @@ export const TEST_ACCOUNT = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 with open('frontend/src/contracts/addresses.ts', 'w') as f:
     f.write(output)
 
-print('✅ Addresses updated!')
+print('✅ Crypto addresses updated!')
+CRYPTO_ADDRESSES
+
+# Update RWA addresses
+python3 <<'RWA_ADDRESSES'
+import json
+
+# Read RWA deployment output
+with open('broadcast/DeployRWA.s.sol/31337/run-latest.json', 'r') as f:
+    data = json.load(f)
+
+# Extract RWA contract addresses
+rwa_addresses = {}
+for tx in data['transactions']:
+    if tx.get('contractName') and tx.get('contractAddress'):
+        name = tx['contractName']
+        addr = tx['contractAddress']
+        # Only store first occurrence of each contract name
+        if name not in rwa_addresses:
+            rwa_addresses[name] = addr
+
+# Create RWA addresses JSON
+rwa_json = {
+    "MockUSDC": rwa_addresses.get("MockUSDC", ""),
+    "IdentityRegistry": rwa_addresses.get("IdentityRegistry", ""),
+    "RWAIncomeNFT": rwa_addresses.get("RWAIncomeNFT", ""),
+    "OrbitRWAPool": rwa_addresses.get("OrbitRWAPool", ""),
+    "SPVManager": rwa_addresses.get("SPVManager", ""),
+    "SeniorTranche": rwa_addresses.get("SeniorTranche", ""),
+    "JuniorTranche": rwa_addresses.get("JuniorTranche", ""),
+    "WaterfallDistributor": rwa_addresses.get("WaterfallDistributor", ""),
+    "TestUser": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "SPVWallet": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+}
+
+with open('deployments/anvil-rwa.json', 'w') as f:
+    json.dump(rwa_json, f, indent=2)
+
+print('✅ RWA addresses updated!')
 print('')
-print('📍 Contract Addresses:')
-print(f'  AccountFactory: {addresses.get("AccountFactory", "")}')
-print(f'  DebtManager: {addresses.get("DebtManager", "")}')
-print(f'  VaultRegistry: {addresses.get("VaultRegistry", "")}')
-print(f'  PriceOracle: {addresses.get("MockPriceOracle", "")}')
-print(f'  orUSD: {addresses.get("orUSD", "")}')
-print(f'  WETH: {weth}')
-print(f'  USDC: {usdc}')
-print(f'  WETH Vault: {weth_vault}')
-print(f'  USDC Vault: {usdc_vault}')
-PYTHON_SCRIPT
+print('📍 RWA Contract Addresses:')
+print(f'  IdentityRegistry: {rwa_json["IdentityRegistry"]}')
+print(f'  RWAIncomeNFT: {rwa_json["RWAIncomeNFT"]}')
+print(f'  OrbitRWAPool: {rwa_json["OrbitRWAPool"]}')
+print(f'  SPVManager: {rwa_json["SPVManager"]}')
+print(f'  SeniorTranche: {rwa_json["SeniorTranche"]}')
+print(f'  JuniorTranche: {rwa_json["JuniorTranche"]}')
+print(f'  WaterfallDistributor: {rwa_json["WaterfallDistributor"]}')
+print(f'  MockUSDC: {rwa_json["MockUSDC"]}')
+RWA_ADDRESSES
 
 echo ""
-echo "🎉 Deployment complete!"
+
+# ============================================================================
+# STEP 6: Mint Test Funds
+# ============================================================================
+echo -e "${BLUE}💰 Step 6/6: Minting test funds...${NC}"
 echo ""
-echo "Frontend will auto-reload with new addresses."
-echo "Test account: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+echo -e "${YELLOW}Test funds already minted during deployment:${NC}"
+echo "  - 50,000 USDC (RWA testing)"
+echo "  - Test tokens for Crypto vaults"
+echo "  - Account: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+echo ""
+
+# ============================================================================
+# DEPLOYMENT COMPLETE
+# ============================================================================
+echo -e "${GREEN}🎉 Deployment Complete!${NC}"
+echo "======================================"
+echo ""
+echo -e "${GREEN}✅ All contracts deployed${NC}"
+echo -e "${GREEN}✅ All ABIs copied to frontend${NC}"
+echo -e "${GREEN}✅ All addresses updated${NC}"
+echo -e "${GREEN}✅ Test funds minted${NC}"
+echo ""
+echo -e "${BLUE}📝 Next Steps:${NC}"
+echo "  1. Frontend will auto-reload with new addresses"
+echo "  2. Test account ready: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+echo "  3. Clear localStorage for fresh KYC testing:"
+echo "     localStorage.removeItem('kyc_submissions');"
+echo ""
+echo -e "${YELLOW}⚠️  Note: KYC is NOT auto-verified. Users must complete KYC flow.${NC}"
 echo ""

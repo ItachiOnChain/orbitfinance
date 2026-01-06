@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { AppNavbar } from '../components/layout/AppNavbar';
 import { Sidebar } from '../components/layout/Sidebar';
+import { RWASidebar } from '../components/rwa/RWASidebar';
 import { Footer } from '../components/ui/Footer';
 import { useAppStore } from '../store/appStore';
 
@@ -20,39 +21,23 @@ export default function AppLayout() {
 
   return (
     <div
-      className={`min-h-screen flex flex-col transition-colors duration-300 ${
-        theme === 'light' ? 'bg-[#f0f2f5]' : 'bg-dark-bg'
-      }`}
+      className={`min-h-screen flex flex-col transition-colors duration-300 ${theme === 'light' ? 'bg-[#f0f2f5]' : 'bg-dark-bg'
+        }`}
     >
       {/* Top Navbar */}
       <AppNavbar />
 
       {/* Body */}
       <div className="flex flex-1">
-        {/* Sidebar */}
-        {mode !== 'rwa' && <Sidebar />}
+        {/* Sidebar - Conditional based on mode */}
+        {mode === 'rwa' ? <RWASidebar /> : <Sidebar />}
 
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col min-w-0">
-          {mode === 'rwa' ? (
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center">
-                <h1 className="text-6xl font-bold tracking-tight text-white mb-8 text-glow font-outfit">
-                  RWA Module
-                </h1>
-                <p className="text-2xl text-zinc-500 font-medium tracking-wide">
-                  Coming Soon
-                </p>
-              </div>
-            </div>
-          ) : (
-            <main className={`flex-1 overflow-y-auto ${isLandingPage ? '' : 'p-16'}`}>
-              <div className={isLandingPage ? '' : 'max-w-7xl mx-auto'}>
-                <Outlet />
-              </div>
-            </main>
-          )}
-        </div>
+        {/* Main Content - Always use Outlet for routes */}
+        <main className={`flex-1 overflow-y-auto ${isLandingPage ? '' : 'p-16'}`}>
+          <div className={isLandingPage ? '' : 'max-w-7xl mx-auto'}>
+            <Outlet />
+          </div>
+        </main>
       </div>
 
       {/* Footer - Full Width */}
