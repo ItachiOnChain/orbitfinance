@@ -36,36 +36,47 @@ export const kycService = {
         address: string;
         idDocument: File;
     }): Promise<KYCSubmission> => {
-        // Convert file to base64
-        const fileData = await new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = reject;
-            reader.readAsDataURL(data.idDocument);
-        });
+        try {
+            // Convert file to base64
+            const fileData = await new Promise<string>((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    if (reader.result) {
+                        resolve(reader.result as string);
+                    } else {
+                        reject(new Error('Failed to read file'));
+                    }
+                };
+                reader.onerror = () => reject(new Error('File reading error'));
+                reader.readAsDataURL(data.idDocument);
+            });
 
-        const submission: KYCSubmission = {
-            userAddress: data.userAddress,
-            fullName: data.fullName,
-            country: data.country,
-            address: data.address,
-            idDocumentName: data.idDocument.name,
-            idDocumentData: fileData,
-            status: 'pending',
-            submittedAt: Date.now(),
-        };
+            const submission: KYCSubmission = {
+                userAddress: data.userAddress,
+                fullName: data.fullName,
+                country: data.country,
+                address: data.address,
+                idDocumentName: data.idDocument.name,
+                idDocumentData: fileData,
+                status: 'pending',
+                submittedAt: Date.now(),
+            };
 
-        const submissions = getSubmissions();
+            const submissions = getSubmissions();
 
-        // Remove any existing submission for this address
-        const filtered = submissions.filter(
-            s => s.userAddress.toLowerCase() !== data.userAddress.toLowerCase()
-        );
+            // Remove any existing submission for this address
+            const filtered = submissions.filter(
+                s => s.userAddress.toLowerCase() !== data.userAddress.toLowerCase()
+            );
 
-        filtered.push(submission);
-        saveSubmissions(filtered);
+            filtered.push(submission);
+            saveSubmissions(filtered);
 
-        return submission;
+            return submission;
+        } catch (error) {
+            console.error('KYC submission error:', error);
+            throw new Error('Failed to submit KYC application');
+        }
     },
 
     /**
