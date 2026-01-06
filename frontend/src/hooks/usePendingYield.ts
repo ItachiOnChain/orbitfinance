@@ -6,6 +6,7 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
     const [pendingYield, setPendingYield] = useState<bigint>(0n);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const initializedRef = useRef(false);
 
     // Get storage keys for this account
     const getStorageKey = (key: string) => accountAddress ? `${accountAddress}_${key}` : null;
@@ -44,63 +45,53 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
         },
     });
 
-    // Initialize from localStorage FIRST, then on-chain if needed
-    const [uiDebt, setUiDebt] = useState<bigint>(() => {
-        if (!accountAddress) return 0n;
-        const key = getStorageKey('uiDebt');
-        if (!key) return 0n;
-        const stored = localStorage.getItem(key);
-        if (stored && BigInt(stored) > 0n) {
-            console.log('🟢 Loaded uiDebt from localStorage:', formatEther(BigInt(stored)));
-            return BigInt(stored);
-        }
-        return 0n;
-    });
+    const [uiDebt, setUiDebt] = useState<bigint>(0n);
+    const [uiCredit, setUiCredit] = useState<bigint>(0n);
 
-    const [uiCredit, setUiCredit] = useState<bigint>(() => {
-        if (!accountAddress) return 0n;
-        const key = getStorageKey('uiCredit');
-        if (!key) return 0n;
-        const stored = localStorage.getItem(key);
-        if (stored) {
-            console.log('🟢 Loaded uiCredit from localStorage:', formatEther(BigInt(stored)));
-            return BigInt(stored);
-        }
-        return 0n;
-    });
-
-    // Only sync with on-chain if localStorage is empty
+    // Initialize ONCE from localStorage or on-chain
     useEffect(() => {
-        if (!accountAddress || !totalDebt) return;
-        if (uiDebt > 0n) return; // Already have localStorage value
+        if (!accountAddress || initializedRef.current) return;
 
-        console.log('🔄 No localStorage, initializing from on-chain:', formatEther(totalDebt));
-        setUiDebt(totalDebt);
-        setUiCredit(accumulatedCredit || 0n);
-    }, [totalDebt, accumulatedCredit, accountAddress, uiDebt]);
+        const debtKey = getStorageKey('uiDebt');
+        const creditKey = getStorageKey('uiCredit');
+        if (!debtKey || !creditKey) return;
 
-    // Persist to localStorage
+        // Try localStorage first
+        const storedDebt = localStorage.getItem(debtKey);
+        const storedCredit = localStorage.getItem(creditKey);
+
+        if (storedDebt && BigInt(storedDebt) > 0n) {
+            // Use localStorage values
+            setUiDebt(BigInt(storedDebt));
+            setUiCredit(storedCredit ? BigInt(storedCredit) : 0n);
+            initializedRef.current = true;
+        } else if (totalDebt && totalDebt > 0n) {
+            // First time: use on-chain
+            setUiDebt(totalDebt);
+            setUiCredit(accumulatedCredit || 0n);
+            localStorage.setItem(debtKey, totalDebt.toString());
+            localStorage.setItem(creditKey, (accumulatedCredit || 0n).toString());
+            initializedRef.current = true;
+        }
+    }, [accountAddress, totalDebt, accumulatedCredit]);
+
+    // Save to localStorage when values change
     useEffect(() => {
         if (!accountAddress || uiDebt === 0n) return;
         const key = getStorageKey('uiDebt');
-        if (key) {
-            localStorage.setItem(key, uiDebt.toString());
-        }
+        if (key) localStorage.setItem(key, uiDebt.toString());
     }, [uiDebt, accountAddress]);
 
     useEffect(() => {
         if (!accountAddress) return;
         const key = getStorageKey('uiCredit');
-        if (key) {
-            localStorage.setItem(key, uiCredit.toString());
-        }
+        if (key) localStorage.setItem(key, uiCredit.toString());
     }, [uiCredit, accountAddress]);
 
-    // Yield timer - ONLY runs once, no dependencies on uiDebt
+    // Start timer ONCE when initialized
     useEffect(() => {
-        if (!accountAddress || uiDebt === 0n) return;
-
-        console.log('✅ Setting up ONE-TIME yield timer');
+        if (!initializedRef.current || uiDebt === 0n) return;
+        if (timerRef.current) return; // Already started
 
         const updateYield = () => {
             setUiDebt(currentDebt => {
@@ -128,7 +119,7 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
             if (timerRef.current) clearTimeout(timerRef.current);
             if (intervalRef.current) clearInterval(intervalRef.current);
         };
-    }, [accountAddress]); // Only depends on accountAddress!
+    }, [initializedRef.current, uiDebt]);
 
     return {
         pendingYield,

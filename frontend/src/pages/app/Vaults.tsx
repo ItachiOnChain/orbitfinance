@@ -40,6 +40,9 @@ export default function VaultsPage() {
         return `$${value.toFixed(2)}`;
     };
 
+    // Format debt with full precision to show decreasing values
+    const currentDebtDisplay = uiDebt ? `${formatEther(uiDebt)} orUSD` : (totalDebt ? `${formatEther(totalDebt)} orUSD` : '$0.00');
+
     const filteredVaults = vaults.filter(vault => {
         if (activeTab === 'all') return true;
         if (activeTab === 'weth') return vault.asset.toLowerCase().includes('weth') || vault.name.toLowerCase().includes('weth');
@@ -122,7 +125,7 @@ export default function VaultsPage() {
                 </div>
                 <div>
                     <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">Current Debt</p>
-                    <p className="text-2xl font-light text-gold drop-shadow-[0_0_5px_rgba(251,191,36,0.3)]">{formatCurrency(currentDebtUSD)}</p>
+                    <p className="text-xl font-light text-gold drop-shadow-[0_0_5px_rgba(251,191,36,0.3)]">{currentDebtDisplay}</p>
                 </div>
                 <div>
                     <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">Accumulated Credit</p>
