@@ -15,8 +15,6 @@ import AssetOrigination from './pages/rwa/AssetOrigination';
 import CapitalMarkets from './pages/rwa/CapitalMarkets';
 import Portfolio from './pages/rwa/Portfolio';
 import SPVDashboard from './pages/rwa/admin/SPVDashboard';
-import '@rainbow-me/rainbowkit/styles.css';
-import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import './index.css';
 import { useAppStore } from './store/appStore';
 
@@ -50,30 +48,28 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={darkTheme()}>
-          <BrowserRouter>
-            <Routes>
-              <Route element={<AppLayout />}>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/app">
-                  <Route index element={<AppIndexRoute />} />
-                  <Route path="account" element={<AccountPage />} />
-                  <Route path="vaults" element={<VaultsPage />} />
-                  <Route path="kyc" element={<KYC />} />
-                  <Route path="origination" element={<RWARouteGuard><AssetOrigination /></RWARouteGuard>} />
-                  <Route path="markets" element={<RWARouteGuard><CapitalMarkets /></RWARouteGuard>} />
-                  <Route path="portfolio" element={<RWARouteGuard><Portfolio /></RWARouteGuard>} />
-                  <Route path="admin/spv" element={<RWARouteGuard><SPVDashboard /></RWARouteGuard>} />
-                  <Route path="transmuter" element={<ComingSoon />} />
-                  <Route path="farms" element={<ComingSoon />} />
-                  <Route path="bridge" element={<ComingSoon />} />
-                  <Route path="governance" element={<ComingSoon />} />
-                  <Route path="utilities" element={<ComingSoon />} />
-                </Route>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/app">
+                <Route index element={<AppIndexRoute />} />
+                <Route path="account" element={<AccountPage />} />
+                <Route path="vaults" element={<VaultsPage />} />
+                <Route path="kyc" element={<KYC />} />
+                <Route path="origination" element={<RWARouteGuard><AssetOrigination /></RWARouteGuard>} />
+                <Route path="markets" element={<RWARouteGuard><CapitalMarkets /></RWARouteGuard>} />
+                <Route path="portfolio" element={<RWARouteGuard><Portfolio /></RWARouteGuard>} />
+                <Route path="admin/spv" element={<RWARouteGuard><SPVDashboard /></RWARouteGuard>} />
+                <Route path="transmuter" element={<ComingSoon />} />
+                <Route path="farms" element={<ComingSoon />} />
+                <Route path="bridge" element={<ComingSoon />} />
+                <Route path="governance" element={<ComingSoon />} />
+                <Route path="utilities" element={<ComingSoon />} />
               </Route>
-            </Routes>
-          </BrowserRouter>
-        </RainbowKitProvider>
+            </Route>
+          </Routes>
+        </BrowserRouter>
       </QueryClientProvider>
     </WagmiProvider>
   </React.StrictMode>

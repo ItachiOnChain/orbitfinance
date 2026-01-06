@@ -5,7 +5,6 @@ import { WithdrawForm } from './WithdrawForm';
 import { VaultStats } from './VaultStats';
 import { Plus, Minus } from 'lucide-react';
 import { useAccount } from 'wagmi';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import type { Vault } from '../hooks/useVaults';
 
 interface VaultCardProps {
@@ -112,11 +111,10 @@ export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab.toLowerCase() as any)}
-                                className={`px-6 py-3 text-base font-medium rounded-md transition-colors ${
-                                    activeTab === tab.toLowerCase()
+                                className={`px-6 py-3 text-base font-medium rounded-md transition-colors ${activeTab === tab.toLowerCase()
                                         ? 'bg-zinc-800 text-white'
                                         : 'text-zinc-500 hover:text-zinc-300'
-                                }`}
+                                    }`}
                             >
                                 {tab}
                             </button>
@@ -147,7 +145,7 @@ export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
                             {/* Connect Wallet Button */}
                             <div className="space-y-4">
                                 {!isConnected && (
-                                    <button 
+                                    <button
                                         onClick={openConnectModal}
                                         className="w-full py-4 bg-emerald-900/20 border border-emerald-900/50 text-emerald-500 rounded-lg hover:bg-emerald-900/30 transition-colors font-medium"
                                     >
