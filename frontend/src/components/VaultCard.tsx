@@ -5,6 +5,8 @@ import { WithdrawForm } from './WithdrawForm';
 import { VaultStats } from './VaultStats';
 import { Plus, Minus } from 'lucide-react';
 import { useAccount, useConnect } from 'wagmi';
+import { useOrbitAccount } from '../hooks/useOrbitAccount';
+import { formatEther, formatUnits } from 'viem';
 import type { Vault } from '../hooks/useVaults';
 
 interface VaultCardProps {
@@ -16,8 +18,40 @@ interface VaultCardProps {
 
 export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
     const [activeTab, setActiveTab] = useState<'deposit' | 'withdraw' | 'migrate' | 'info'>('deposit');
-    const { isConnected } = useAccount();
+    const { address, isConnected } = useAccount();
     const { connect, connectors } = useConnect();
+    const { accountAddress, totalDebt, wethShares, usdcShares } = useOrbitAccount(address);
+
+    // Calculate user deposits
+    const isWETH = vault.name.toLowerCase().includes('weth') || vault.asset.toLowerCase().includes('weth');
+    const WETH_PRICE = 3000;
+    const USDC_PRICE = 1;
+
+    const userDepositAmount = isWETH
+        ? (wethShares ? parseFloat(formatEther(wethShares)) : 0)
+        : (usdcShares ? parseFloat(formatUnits(usdcShares, 6)) : 0);
+
+    const userDepositUSD = isWETH
+        ? userDepositAmount * WETH_PRICE
+        : userDepositAmount * USDC_PRICE;
+
+    // Calculate health factor
+    const wethValue = wethShares ? parseFloat(formatEther(wethShares)) * WETH_PRICE : 0;
+    const usdcValue = usdcShares ? parseFloat(formatUnits(usdcShares, 6)) * USDC_PRICE : 0;
+    const totalDepositsUSD = wethValue + usdcValue;
+    const currentDebtUSD = totalDebt ? parseFloat(formatEther(totalDebt)) : 0;
+
+    let healthFactor = '∞';
+    if (currentDebtUSD > 0 && totalDepositsUSD > 0) {
+        const maxBorrowable = totalDepositsUSD * 0.5; // 50% LTV
+        const hf = maxBorrowable / currentDebtUSD;
+        healthFactor = hf.toFixed(2);
+    }
+
+    // TVL values (hardcoded as requested)
+    const TVL_OCCUPIED = 733000; // $733K occupied
+    const TVL_TOTAL = 1000000; // $1M total cap
+    const tvlPercentage = (TVL_OCCUPIED / TVL_TOTAL) * 100;
 
     // Helper to get icon/subtitle based on vault name/asset
     const getVaultDetails = (vault: Vault) => {
@@ -78,17 +112,21 @@ export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
                 {/* Deposit */}
                 <div>
                     <p className="text-sm text-zinc-500 mb-1">Deposit</p>
-                    <p className="text-base font-medium text-white">0.00 {vault.asset.includes('WETH') ? 'WETH' : 'USDC'}</p>
-                    <p className="text-sm text-zinc-500">$0.00</p>
+                    <p className="text-base font-medium text-white">
+                        {userDepositAmount.toFixed(isWETH ? 4 : 2)} {isWETH ? 'WETH' : 'USDC'}
+                    </p>
+                    <p className="text-sm text-zinc-500">${userDepositUSD.toFixed(2)}</p>
                 </div>
 
                 {/* TVL / Cap */}
                 <div>
                     <p className="text-sm text-zinc-500 mb-1">TVL / Cap</p>
                     <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden mb-1">
-                        <div className="h-full bg-gold/50 w-[75%] rounded-full" />
+                        <div className="h-full bg-gold/50 rounded-full" style={{ width: `${tvlPercentage}%` }} />
                     </div>
-                    <p className="text-sm text-zinc-500">7.40K/9.05K {vault.asset.includes('WETH') ? 'WETH' : 'USDC'}</p>
+                    <p className="text-sm text-zinc-500">
+                        {(TVL_OCCUPIED / 1000).toFixed(0)}K/{(TVL_TOTAL / 1000).toFixed(0)}K {isWETH ? 'WETH' : 'USDC'}
+                    </p>
                 </div>
 
                 {/* APY */}
@@ -97,10 +135,16 @@ export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
                     <p className="text-xl font-medium text-white">{vault.apy}%</p>
                 </div>
 
-                {/* Bonus */}
+                {/* Health Factor */}
                 <div>
-                    <p className="text-sm text-zinc-500 mb-1">Bonus</p>
-                    <p className="text-base font-medium text-zinc-400">-</p>
+                    <p className="text-sm text-zinc-500 mb-1">Health Factor</p>
+                    <p className={`text-base font-medium ${healthFactor === '∞' ? 'text-zinc-400' :
+                            parseFloat(healthFactor) >= 2 ? 'text-green-400' :
+                                parseFloat(healthFactor) >= 1.5 ? 'text-yellow-400' :
+                                    'text-red-400'
+                        }`}>
+                        {healthFactor}
+                    </p>
                 </div>
             </div>
 
