@@ -1,16 +1,16 @@
 export const CONTRACTS = {
     anvil: {
-        AccountFactory: '0x75c68e69775fa3e9dd38ea32e554f6bf259c1135',
-        DebtManager: '0xe8f7d98be6722d42f29b50500b0e318ef2be4fc8',
-        VaultRegistry: '0xb932c8342106776e73e39d695f3ffc3a9624ece0',
-        PriceOracle: '0x9fd16ea9e31233279975d99d5e8fc91dd214c7da',
-        orUSD: '0xe38b6847e611e942e6c80ed89ae867f522402e80',
-        WETH: '0xd3ffd73c53f139cebb80b6a524be280955b3f4db',
-        USDC: '0x512f7469bcc83089497506b5df64c6e246b39925',
-        WETH_Vault: '0x8ac87219a0f5639bc01b470f87ba2b26356cb2b9',
-        USDC_Vault: '0x94ffa1c7330845646ce9128450f8e6c3b5e44f86',
-        WETH_Strategy: '0x572316ac11cb4bc5daf6bdae68f43ea3cce3ae0e',
-        USDC_Strategy: '0x975ab64f4901af5f0c96636dea0b9de3419d0c2f',
+        AccountFactory: '0x610178da211fef7d417bc0e6fed39f05609ad788',
+        DebtManager: '0x0165878a594ca255338adfa4d48449f69242eb8f',
+        VaultRegistry: '0x5fc8d32690cc91d4c39d9d3abcbd16989f875707',
+        PriceOracle: '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0',
+        orUSD: '0xa513e6e4b8f2a923d98304ec87f64353c4d5c853',
+        WETH: '0x5fbdb2315678afecb367f032d93f642f64180aa3',
+        USDC: '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
+        WETH_Vault: '0x0b306bf915c4d645ff596e518faf3f9669b97016',
+        USDC_Vault: '0x959922be3caee4b8cd9a407cc3ac1c251c2007b1',
+        WETH_Strategy: '0xb7f8bc63bbcad18155201308c8f3540b07f84f5e',
+        USDC_Strategy: '0xa51c1fc2f0d1a1b8494ed1fe312d7c3a78ed91c0',
     }
 };
 

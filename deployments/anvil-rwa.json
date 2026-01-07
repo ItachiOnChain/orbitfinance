@@ -1,12 +1,12 @@
 {
-  "MockUSDC": "0xb22c255250d74b0add1bfb936676d2a299bf48bd",
-  "IdentityRegistry": "0x666d0c3da3dbc946d5128d06115bb4eed4595580",
-  "RWAIncomeNFT": "0x742489f22807ebb4c36ca6cd95c3e1c044b7b6c8",
-  "OrbitRWAPool": "0x1d8d70ad07c8e7e442ad78e4ac0a16f958eba7f0",
-  "SPVManager": "0xa9e6bfa2bf53de88feb19761d9b2ee2e821bf1bf",
-  "SeniorTranche": "0x1e3b98102e19d3a164d239bdd190913c2f02e756",
-  "JuniorTranche": "0x3fdc08d815cc4ed3b7f69ee246716f2c8bcd6b07",
-  "WaterfallDistributor": "0x286b8decd5ed79c962b2d8f4346cd97ff0e2c352",
+  "MockUSDC": "0x59b670e9fa9d0a427751af201d676719a970857b",
+  "IdentityRegistry": "0x4ed7c70f96b99c776995fb64377f0d4ab3b0e1c1",
+  "RWAIncomeNFT": "0x322813fd9a801c5507c9de605d63cea4f2ce6c44",
+  "OrbitRWAPool": "0xa85233c63b9ee964add6f2cffe00fd84eb32338f",
+  "SPVManager": "0x4a679253410272dd5232b3ff7cf5dbb88f295319",
+  "SeniorTranche": "0x7a2088a1bfc9d81c55368ae168c2c02570cb814f",
+  "JuniorTranche": "0x09635f643e140090a9a8dcd712ed6285858cebef",
+  "WaterfallDistributor": "0xc5a5c42992decbae36851359345fe25997f5c42d",
   "TestUser": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
   "SPVWallet": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 }
