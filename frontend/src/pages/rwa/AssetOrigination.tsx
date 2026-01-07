@@ -19,6 +19,8 @@ import {
     RWAContractCalls,
 } from '../../hooks/rwa/useRWAContracts';
 import { getContractConfig, RWA_ADDRESSES } from '../../config/rwaContracts';
+import { bundlePoolLoanTracker } from '../../services/rwa/bundlePoolLoanTracker';
+
 
 interface NFTAsset {
     tokenId: number;
@@ -135,14 +137,37 @@ export default function AssetOrigination() {
         setMintedAssets(assets);
     }, [nftData]); // Remove uniqueNFTIds from dependencies to prevent infinite loop
 
+    // Auto-refetch after successful repayment
+    useEffect(() => {
+        if (repaySuccess) {
+            refetchDebt();
+
+            // Record loan repayment for Bundle Pool NAV
+            if (pendingRepay) {
+                const amount = Number(formatUnits(pendingRepay, 6));
+                bundlePoolLoanTracker.recordLoanRepayment(amount);
+                console.log(`[Bundle Pool] Recorded loan repayment: $${amount}`);
+            }
+
+            setPendingRepay(null);
+        }
+    }, [repaySuccess, refetchDebt, pendingRepay]);
+
     // Auto-refetch after successful transactions
     useEffect(() => {
         if (borrowSuccess) {
             refetchDebt();
             refetchNFTs();
-            setPendingBorrow(null);
+
+            // Record loan disbursement for Bundle Pool NAV
+            if (pendingBorrow) {
+                const amount = Number(formatUnits(pendingBorrow.amount, 6));
+                bundlePoolLoanTracker.recordLoanDisbursement(amount);
+                console.log(`[Bundle Pool] Recorded loan disbursement: $${amount}`);
+            }
         }
-    }, [borrowSuccess, refetchDebt, refetchNFTs]);
+    }, [borrowSuccess, refetchDebt, refetchNFTs, pendingBorrow]);
+
 
     // After all NFTs withdrawn, refetch and close modal
     useEffect(() => {

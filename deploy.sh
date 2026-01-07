@@ -36,7 +36,7 @@ echo ""
 # ============================================================================
 # STEP 2: Deploy RWA Contracts
 # ============================================================================
-echo -e "${BLUE}📝 Step 2/6: Deploying RWA Contracts...${NC}"
+echo -e "${BLUE}📝 Step 2/7: Deploying RWA Contracts...${NC}"
 forge script script/DeployRWA.s.sol:DeployRWA \
   --rpc-url http://localhost:8545 \
   --broadcast \
@@ -46,9 +46,23 @@ echo -e "${GREEN}✅ RWA contracts deployed!${NC}"
 echo ""
 
 # ============================================================================
+# STEP 2.5: Deploy Bundle Pool Contract
+# ============================================================================
+echo -e "${BLUE}📝 Step 2.5/7: Deploying Bundle Pool Contract...${NC}"
+export USDT_ADDRESS=0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+forge script script/DeployBundlePool.s.sol:DeployBundlePool \
+  --rpc-url http://localhost:8545 \
+  --broadcast \
+  --legacy
+
+echo -e "${GREEN}✅ Bundle Pool contract deployed!${NC}"
+echo ""
+
+
+# ============================================================================
 # STEP 3: Copy Crypto ABIs to Frontend
 # ============================================================================
-echo -e "${BLUE}📋 Step 3/6: Copying Crypto ABIs to frontend...${NC}"
+echo -e "${BLUE}📋 Step 3/7: Copying Crypto ABIs to frontend...${NC}"
 mkdir -p frontend/src/contracts/abis
 cp out/AccountFactory.sol/AccountFactory.json frontend/src/contracts/abis/
 cp out/OrbitAccount.sol/OrbitAccount.json frontend/src/contracts/abis/
@@ -61,7 +75,7 @@ echo ""
 # ============================================================================
 # STEP 4: Copy RWA ABIs to Frontend
 # ============================================================================
-echo -e "${BLUE}📋 Step 4/6: Copying RWA ABIs to frontend...${NC}"
+echo -e "${BLUE}📋 Step 4/7: Copying RWA ABIs to frontend...${NC}"
 mkdir -p frontend/src/contracts/rwa-abis
 cp out/IdentityRegistry.sol/IdentityRegistry.json frontend/src/contracts/rwa-abis/
 cp out/RWAIncomeNFT.sol/RWAIncomeNFT.json frontend/src/contracts/rwa-abis/
@@ -71,6 +85,7 @@ cp out/SeniorTranche.sol/SeniorTranche.json frontend/src/contracts/rwa-abis/
 cp out/JuniorTranche.sol/JuniorTranche.json frontend/src/contracts/rwa-abis/
 cp out/WaterfallDistributor.sol/WaterfallDistributor.json frontend/src/contracts/rwa-abis/
 cp out/MockUSDC.sol/MockUSDC.json frontend/src/contracts/rwa-abis/
+cp out/BundlePool.sol/BundlePool.json frontend/src/contracts/rwa-abis/
 
 echo -e "${GREEN}✅ RWA ABIs copied!${NC}"
 echo ""
@@ -78,7 +93,7 @@ echo ""
 # ============================================================================
 # STEP 5: Update Contract Addresses
 # ============================================================================
-echo -e "${BLUE}🔗 Step 5/6: Updating contract addresses...${NC}"
+echo -e "${BLUE}🔗 Step 5/7: Updating contract addresses...${NC}"
 
 # Update Crypto addresses
 python3 <<'CRYPTO_ADDRESSES'
@@ -197,6 +212,34 @@ print(f'  SeniorTranche: {rwa_json["SeniorTranche"]}')
 print(f'  JuniorTranche: {rwa_json["JuniorTranche"]}')
 print(f'  WaterfallDistributor: {rwa_json["WaterfallDistributor"]}')
 print(f'  MockUSDC: {rwa_json["MockUSDC"]}')
+
+# Read BundlePool deployment
+try:
+    with open('broadcast/DeployBundlePool.s.sol/31337/run-latest.json', 'r') as f:
+        bundle_data = json.load(f)
+        for tx in bundle_data['transactions']:
+            if tx.get('contractName') == 'BundlePool':
+                rwa_json['BundlePool'] = tx['contractAddress']
+                # Update bundlePoolConfig.ts
+                import re
+                with open('frontend/src/contracts/bundlePoolConfig.ts', 'r') as cf:
+                    config = cf.read()
+                config = re.sub(
+                    r"export const BUNDLE_POOL_ADDRESS = '[^']*';",
+                    f"export const BUNDLE_POOL_ADDRESS = '{tx['contractAddress']}';",
+                    config
+                )
+                with open('frontend/src/contracts/bundlePoolConfig.ts', 'w') as cf:
+                    cf.write(config)
+                break
+    # Re-save with BundlePool
+    with open('deployments/anvil-rwa.json', 'w') as f:
+        json.dump(rwa_json, f, indent=2)
+except:
+    pass
+
+if 'BundlePool' in rwa_json:
+    print(f'  BundlePool: {rwa_json["BundlePool"]}')
 RWA_ADDRESSES
 
 echo ""
@@ -204,7 +247,7 @@ echo ""
 # ============================================================================
 # STEP 6: Mint Test Funds
 # ============================================================================
-echo -e "${BLUE}💰 Step 6/6: Minting test funds...${NC}"
+echo -e "${BLUE}💰 Step 6/7: Minting test funds...${NC}"
 echo ""
 echo -e "${YELLOW}Test funds already minted during deployment:${NC}"
 echo "  - 50,000 USDC (RWA testing)"

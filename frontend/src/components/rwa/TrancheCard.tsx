@@ -1,11 +1,10 @@
 interface TrancheCardProps {
     type: 'senior' | 'junior';
-    apy: number;
-    tvl: number;
-    userPosition: number;
-    riskLevel: 'low' | 'high';
+    apy: string;
+    tvl: string;
+    userPosition: string;
+    riskLevel: string;
     priority: number;
-    lockupPeriod?: number;
     onDeposit: () => void;
     onWithdraw: () => void;
 }
@@ -17,108 +16,78 @@ export function TrancheCard({
     userPosition,
     riskLevel,
     priority,
-    lockupPeriod,
     onDeposit,
-    onWithdraw,
+    onWithdraw
 }: TrancheCardProps) {
     const isSenior = type === 'senior';
-    const bgColor = isSenior ? 'bg-[#00D4FF]/5' : 'bg-[#FFB800]/5';
-    const borderColor = isSenior ? 'border-[#00D4FF]' : 'border-[#FFB800]';
-    const accentColor = isSenior ? 'text-[#00D4FF]' : 'text-[#FFB800]';
-    const glowColor = isSenior ? 'hover:shadow-[0_0_30px_rgba(0,212,255,0.2)]' : 'hover:shadow-[0_0_30px_rgba(255,184,0,0.2)]';
+    const accentColor = isSenior ? '#00D4FF' : '#FFB800';
+    const bgGradient = isSenior
+        ? 'from-[#00D4FF]/10 to-blue-900/10'
+        : 'from-[#FFB800]/10 to-orange-900/10';
 
     return (
-        <div className={`${bgColor} border-2 ${borderColor} rounded-2xl p-8 transition-all duration-300 ${glowColor} hover:-translate-y-1`}>
+        <div className={`bg-gradient-to-br ${bgGradient} border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-all`}>
             {/* Header */}
-            <div className="mb-6">
-                <h3 className={`text-2xl font-bold ${accentColor} mb-1 tracking-wide`}>
-                    {type.toUpperCase()} TRANCHE
-                </h3>
-                <p className="text-zinc-500 text-sm">
-                    {isSenior ? '(Protected Capital)' : '(First-Loss Capital)'}
-                </p>
-            </div>
-
-            {/* APY */}
-            <div className="mb-6">
-                <div className="flex items-baseline gap-2">
-                    <span className={`text-5xl font-bold font-mono ${accentColor}`}>
-                        {apy}%
-                    </span>
-                    <span className="text-zinc-400 text-sm">APY</span>
-                    {!isSenior && (
-                        <span className="text-xs text-zinc-500 ml-2">(variable)</span>
-                    )}
+            <div className="flex items-center justify-between mb-6">
+                <div>
+                    <h3 className="text-2xl font-bold text-white mb-1" style={{ color: accentColor }}>
+                        {isSenior ? 'Senior' : 'Junior'} Tranche
+                    </h3>
+                    <p className="text-sm text-zinc-400">
+                        {isSenior ? 'Lower risk, stable returns' : 'Higher risk, higher returns'}
+                    </p>
+                </div>
+                <div className={`px-3 py-1 rounded-full text-xs font-semibold ${riskLevel === 'low' ? 'bg-green-500/20 text-green-400' : 'bg-orange-500/20 text-orange-400'
+                    }`}>
+                    {riskLevel.toUpperCase()} RISK
                 </div>
             </div>
 
             {/* Stats Grid */}
-            <div className="space-y-4 mb-6">
-                <div className="flex justify-between items-center">
-                    <span className="text-zinc-400 text-sm">Total Value Locked</span>
-                    <span className="text-white font-mono font-semibold">
-                        ${tvl.toLocaleString()}
-                    </span>
+            <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-zinc-900/50 rounded-lg p-4">
+                    <p className="text-xs text-zinc-500 mb-1">APY</p>
+                    <p className="text-2xl font-bold text-white">{apy}</p>
                 </div>
-
-                <div className="flex justify-between items-center">
-                    <span className="text-zinc-400 text-sm">Your Position</span>
-                    <span className={`font-mono font-semibold ${userPosition > 0 ? accentColor : 'text-zinc-500'}`}>
-                        ${userPosition.toLocaleString()}
-                    </span>
+                <div className="bg-zinc-900/50 rounded-lg p-4">
+                    <p className="text-xs text-zinc-500 mb-1">Total Value Locked</p>
+                    <p className="text-xl font-semibold text-white">${tvl}</p>
                 </div>
-
-                <div className="flex justify-between items-center">
-                    <span className="text-zinc-400 text-sm">Risk Level</span>
-                    <div className="flex items-center gap-2">
-                        <div className="flex gap-1">
-                            {Array.from({ length: riskLevel === 'low' ? 1 : 3 }).map((_, i) => (
-                                <div
-                                    key={i}
-                                    className={`w-2 h-2 rounded-full ${riskLevel === 'low' ? 'bg-[#00F5A0]' : 'bg-[#FFB800]'
-                                        }`}
-                                />
-                            ))}
-                        </div>
-                        <span className={`text-sm font-semibold ${riskLevel === 'low' ? 'text-[#00F5A0]' : 'text-[#FFB800]'
-                            }`}>
-                            {riskLevel === 'low' ? 'Low' : 'High'}
-                        </span>
-                    </div>
+                <div className="bg-zinc-900/50 rounded-lg p-4">
+                    <p className="text-xs text-zinc-500 mb-1">Your Position</p>
+                    <p className="text-xl font-semibold" style={{ color: accentColor }}>
+                        ${userPosition}
+                    </p>
                 </div>
-
-                <div className="flex justify-between items-center">
-                    <span className="text-zinc-400 text-sm">Payment Priority</span>
-                    <span className="text-white font-semibold">
-                        {priority === 1 ? '1st' : '2nd'}
-                    </span>
+                <div className="bg-zinc-900/50 rounded-lg p-4">
+                    <p className="text-xs text-zinc-500 mb-1">Payment Priority</p>
+                    <p className="text-xl font-semibold text-white">#{priority}</p>
                 </div>
-
-                {lockupPeriod && (
-                    <div className="flex justify-between items-center">
-                        <span className="text-zinc-400 text-sm">Lockup Period</span>
-                        <span className="text-white font-semibold">
-                            {lockupPeriod} days
-                        </span>
-                    </div>
-                )}
             </div>
 
             {/* Action Buttons */}
             <div className="flex gap-3">
                 <button
                     onClick={onDeposit}
-                    className={`flex-1 py-3 ${isSenior ? 'bg-[#00D4FF]' : 'bg-[#FFB800]'} hover:opacity-90 text-[#0A2342] font-bold rounded-lg transition-opacity`}
+                    className="flex-1 bg-gradient-to-r from-gold to-gold/80 hover:from-gold/90 hover:to-gold/70 text-dark-bg font-semibold py-3 px-6 rounded-lg transition-all shadow-lg hover:shadow-gold/20"
                 >
                     Deposit
                 </button>
                 <button
                     onClick={onWithdraw}
-                    disabled={userPosition === 0}
-                    className="flex-1 py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold py-3 px-6 rounded-lg transition-all"
                 >
                     Withdraw
                 </button>
+            </div>
+
+            {/* Info Footer */}
+            <div className="mt-4 pt-4 border-t border-zinc-800">
+                <p className="text-xs text-zinc-500">
+                    {isSenior
+                        ? 'Senior tranche holders receive fixed returns and are paid first in the waterfall distribution.'
+                        : 'Junior tranche holders absorb first losses but receive higher variable returns from excess yields.'}
+                </p>
             </div>
         </div>
     );

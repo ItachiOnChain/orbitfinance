@@ -4,6 +4,7 @@ import { useSyncYield } from '../../hooks/useSyncYield';
 import { usePendingYield } from '../../hooks/usePendingYield';
 import { MetricCard } from '../../components/ui/MetricCard';
 import { CreateAccountButton } from '../../components/CreateAccountButton';
+import { TokenFaucet } from '../../components/TokenFaucet';
 import { DollarSign, TrendingDown, Coins, Target, RefreshCw, User } from 'lucide-react';
 import { formatEther, formatUnits } from 'viem';
 import { AccountChart } from '../../components/AccountChart';
@@ -261,6 +262,9 @@ export default function AccountPage() {
                     )}
                 </div>
             </div>
+
+            {/* Token Faucet */}
+            <TokenFaucet mode="crypto" />
         </div>
     );
 }

@@ -15,6 +15,7 @@ import AssetOrigination from './pages/rwa/AssetOrigination';
 import CapitalMarkets from './pages/rwa/CapitalMarkets';
 import Portfolio from './pages/rwa/Portfolio';
 import SPVDashboard from './pages/rwa/admin/SPVDashboard';
+import BundlePool from './pages/rwa/BundlePool';
 import './index.css';
 import { useAppStore } from './store/appStore';
 
@@ -57,6 +58,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Route path="account" element={<AccountPage />} />
                 <Route path="vaults" element={<VaultsPage />} />
                 <Route path="kyc" element={<KYC />} />
+                <Route path="bundle-pool" element={<BundlePool />} />
                 <Route path="origination" element={<RWARouteGuard><AssetOrigination /></RWARouteGuard>} />
                 <Route path="markets" element={<RWARouteGuard><CapitalMarkets /></RWARouteGuard>} />
                 <Route path="portfolio" element={<RWARouteGuard><Portfolio /></RWARouteGuard>} />

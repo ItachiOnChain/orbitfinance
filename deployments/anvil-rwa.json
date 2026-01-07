@@ -8,5 +8,6 @@
   "JuniorTranche": "0x09635f643e140090a9a8dcd712ed6285858cebef",
   "WaterfallDistributor": "0xc5a5c42992decbae36851359345fe25997f5c42d",
   "TestUser": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-  "SPVWallet": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+  "SPVWallet": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "BundlePool": "0x851356ae760d987e095750cceb3bc6014560891c"
 }

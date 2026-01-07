@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useAccount } from 'wagmi';
-import { Home, FileText, TrendingUp, Briefcase, Settings, Shield, Lock } from 'lucide-react';
+import { Home, FileText, Wallet, Briefcase, Settings, Shield, Lock } from 'lucide-react';
+
 import { isAdmin } from '../../utils/rwa/adminCheck';
 import { useKYCStatus } from '../../hooks/rwa/useKYC';
 
@@ -41,6 +42,25 @@ export function RWASidebar() {
                 </NavLink>
 
                 <NavLink
+                    to="/app/bundle-pool"
+                    className={({ isActive }) =>
+                        `group flex items-center gap-4 px-6 py-4 rounded-xl transition-all duration-200 ${isActive
+                            ? 'bg-gold/10 text-gold border border-gold/20'
+                            : 'text-zinc-400 hover:text-white hover:bg-zinc-900/50'
+                        } ${!isVerified ? 'opacity-50' : ''}`
+                    }
+                    onClick={(e) => {
+                        if (!isVerified) {
+                            e.preventDefault();
+                        }
+                    }}
+                >
+                    <Briefcase size={20} className="flex-shrink-0" />
+                    <span className="font-medium text-sm tracking-wide">Bundle Pool</span>
+                    {!isVerified && <Lock size={14} className="ml-auto text-zinc-600" />}
+                </NavLink>
+
+                <NavLink
                     to="/app/origination"
                     className={({ isActive }) =>
                         `group flex items-center gap-4 px-6 py-4 rounded-xl transition-all duration-200 ${isActive
@@ -60,25 +80,6 @@ export function RWASidebar() {
                 </NavLink>
 
                 <NavLink
-                    to="/app/markets"
-                    className={({ isActive }) =>
-                        `group flex items-center gap-4 px-6 py-4 rounded-xl transition-all duration-200 ${isActive
-                            ? 'bg-gold/10 text-gold border border-gold/20'
-                            : 'text-zinc-400 hover:text-white hover:bg-zinc-900/50'
-                        } ${!isVerified ? 'opacity-50' : ''}`
-                    }
-                    onClick={(e) => {
-                        if (!isVerified) {
-                            e.preventDefault();
-                        }
-                    }}
-                >
-                    <TrendingUp size={20} className="flex-shrink-0" />
-                    <span className="font-medium text-sm tracking-wide">Capital Markets</span>
-                    {!isVerified && <Lock size={14} className="ml-auto text-zinc-600" />}
-                </NavLink>
-
-                <NavLink
                     to="/app/portfolio"
                     className={({ isActive }) =>
                         `group flex items-center gap-4 px-6 py-4 rounded-xl transition-all duration-200 ${isActive
@@ -92,10 +93,11 @@ export function RWASidebar() {
                         }
                     }}
                 >
-                    <Briefcase size={20} className="flex-shrink-0" />
+                    <Wallet size={20} className="flex-shrink-0" />
                     <span className="font-medium text-sm tracking-wide">My Portfolio</span>
                     {!isVerified && <Lock size={14} className="ml-auto text-zinc-600" />}
                 </NavLink>
+
 
                 {/* Admin Only - SPV Simulator */}
                 {showAdminLink && (

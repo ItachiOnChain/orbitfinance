@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Shield, Upload, CheckCircle, AlertTriangle, FileText } from 'lucide-react';
 import { useKYCStatus } from '../../hooks/rwa/useKYC';
 import { kycService, type KYCSubmission } from '../../services/rwa/kycService';
+import { TokenFaucet } from '../../components/TokenFaucet';
 
 const COUNTRIES = [
     'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany',
@@ -126,7 +127,7 @@ export default function KYC() {
     // Already verified
     if (isVerified) {
         return (
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-2xl mx-auto space-y-6">
                 <div className="bg-green-500/10 border-2 border-green-500/30 rounded-xl p-8 text-center">
                     <CheckCircle className="mx-auto mb-4 text-green-400" size={64} />
                     <h2 className="text-3xl font-bold text-white mb-2">KYC Verified!</h2>
@@ -134,12 +135,15 @@ export default function KYC() {
                         Your identity has been verified. You now have full access to all RWA features.
                     </p>
                     <button
-                        onClick={() => navigate('/rwa/asset-origination')}
+                        onClick={() => navigate('/app/origination')}
                         className="px-6 py-3 bg-[#00D4FF] hover:bg-[#00D4FF]/90 text-[#0A2342] font-bold rounded-lg transition-colors"
                     >
                         Start Tokenizing Assets
                     </button>
                 </div>
+
+                {/* Token Faucet */}
+                <TokenFaucet mode="rwa" />
             </div>
         );
     }
