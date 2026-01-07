@@ -37,27 +37,15 @@ export const kycService = {
         idDocument: File;
     }): Promise<KYCSubmission> => {
         try {
-            // Convert file to base64
-            const fileData = await new Promise<string>((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    if (reader.result) {
-                        resolve(reader.result as string);
-                    } else {
-                        reject(new Error('Failed to read file'));
-                    }
-                };
-                reader.onerror = () => reject(new Error('File reading error'));
-                reader.readAsDataURL(data.idDocument);
-            });
-
+            // Don't store the actual file data to avoid localStorage quota issues
+            // In production, this would upload to a backend server
             const submission: KYCSubmission = {
                 userAddress: data.userAddress,
                 fullName: data.fullName,
                 country: data.country,
                 address: data.address,
                 idDocumentName: data.idDocument.name,
-                idDocumentData: fileData,
+                idDocumentData: '', // Empty to avoid quota issues
                 status: 'pending',
                 submittedAt: Date.now(),
             };
