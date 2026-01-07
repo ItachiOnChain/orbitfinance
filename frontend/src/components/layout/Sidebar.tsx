@@ -12,7 +12,8 @@ import {
   DollarSign,
   FileText,
   Twitter,
-  User
+  User,
+  Home
 } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
 
@@ -82,6 +83,14 @@ export function Sidebar() {
 
             {/* Navigation */}
             <nav className="flex flex-col gap-3">
+              <NavLink to="/" end className={linkClass}>
+                <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
+                  <span />
+                  <span className="text-sm font-medium tracking-wide">Home</span>
+                  <Home size={18} className="text-gold/60" />
+                </div>
+              </NavLink>
+
               <NavLink to="/app/account" className={linkClass}>
                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                   <span />

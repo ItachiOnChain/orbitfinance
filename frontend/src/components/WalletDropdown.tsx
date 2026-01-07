@@ -7,7 +7,7 @@ interface WalletDropdownProps {
   theme: 'light' | 'dark';
 }
 
-export function WalletDropdown({ address, onDisconnect, theme }: WalletDropdownProps) {
+export function WalletDropdown({ address, onDisconnect }: WalletDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);

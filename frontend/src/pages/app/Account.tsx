@@ -64,7 +64,6 @@ export default function AccountPage() {
     const debtETH = totalDebt ? parseFloat(formatEther(totalDebt)) / WETH_PRICE : 0;
     const debtLimitETH = totalDepositsETH * 0.5;
     const withdrawableETH = Math.max(0, totalDepositsETH - debtETH);
-    const interestETH = accumulatedCredit ? parseFloat(formatEther(accumulatedCredit)) / WETH_PRICE : 0;
 
     if (!address) {
         return (

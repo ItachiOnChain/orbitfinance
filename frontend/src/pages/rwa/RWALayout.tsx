@@ -60,7 +60,7 @@ export default function RWALayout() {
                 <RWASidebar />
 
                 {/* Main Content with Route Protection */}
-                <main className="flex-1 ml-60 p-8">
+                <main className="flex-1 ml-80 p-8">
                     <div className="max-w-7xl mx-auto">
                         <ProtectedRoute>
                             <Outlet />

@@ -30,7 +30,6 @@ export default function VaultsPage() {
     const wethValue = wethShares ? parseFloat(formatEther(wethShares)) * WETH_PRICE : 0;
     const usdcValue = usdcShares ? parseFloat(formatUnits(usdcShares, 6)) * USDC_PRICE : 0;
     const totalDepositsUSD = wethValue + usdcValue;
-    const currentDebtUSD = uiDebt ? parseFloat(formatEther(uiDebt)) : (totalDebt ? parseFloat(formatEther(totalDebt)) : 0);
     const accumulatedCreditUSD = uiCredit ? parseFloat(formatEther(uiCredit)) : (accumulatedCredit ? parseFloat(formatEther(accumulatedCredit)) : 0);
 
     const formatCurrency = (value: number) => {

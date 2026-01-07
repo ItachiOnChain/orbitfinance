@@ -20,7 +20,7 @@ export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
     const [activeTab, setActiveTab] = useState<'deposit' | 'withdraw' | 'info'>('deposit');
     const { address, isConnected } = useAccount();
     const { connect, connectors } = useConnect();
-    const { accountAddress, totalDebt, wethShares, usdcShares } = useOrbitAccount(address);
+    const { totalDebt, wethShares, usdcShares } = useOrbitAccount(address);
 
     // Calculate user deposits
     const isWETH = vault.name.toLowerCase().includes('weth') || vault.asset.toLowerCase().includes('weth');

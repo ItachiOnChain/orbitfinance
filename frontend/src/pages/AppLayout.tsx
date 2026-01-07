@@ -39,9 +39,10 @@ export default function AppLayout() {
           </div>
         </main>
       </div>
+      <br />
 
       {/* Footer - Full Width */}
-      {isLandingPage && <Footer />}
+      {(isLandingPage || mode === 'rwa') && <Footer />}
     </div>
   );
 }
