@@ -8,6 +8,7 @@ import { Mesh } from "three";
 import { useAccount, useConnect } from 'wagmi';
 import { useNavigate } from 'react-router-dom';
 import { Play } from 'lucide-react';
+import { useAppStore } from '../../store/appStore';
 
 function Shape() {
     const meshRef = useRef<Mesh>(null);
@@ -95,6 +96,7 @@ function Scene() {
     );
 }
 
+
 interface OrbitHeroProps {
     onConnectWallet?: () => void;
 }
@@ -102,16 +104,24 @@ interface OrbitHeroProps {
 export const OrbitHero: React.FC<OrbitHeroProps> = () => {
     const { isConnected } = useAccount();
     const { connect, connectors } = useConnect();
+    const { setMode } = useAppStore();
     const navigate = useNavigate();
 
-    const handleConnect = () => {
+    const handleConnect = async () => {
         if (connectors[0]) {
-            connect({ connector: connectors[0] });
+            try {
+                await connect({ connector: connectors[0] });
+                setMode('crypto');
+                navigate('/app/crypto');
+            } catch (error) {
+                console.error('Connection failed:', error);
+            }
         }
     };
 
     const handleLaunchApp = () => {
-        navigate('/app');
+        setMode('crypto');
+        navigate('/app/crypto');
     };
 
     return (

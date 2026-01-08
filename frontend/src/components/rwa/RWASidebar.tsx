@@ -1,14 +1,9 @@
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAccount } from 'wagmi';
-<<<<<<< HEAD
-import { Home, FileText, Wallet, Briefcase, Settings, Shield, Lock } from 'lucide-react';
-
-=======
 import {
     Home,
     FileText,
-    TrendingUp,
     Briefcase,
     Settings,
     Shield,
@@ -16,9 +11,9 @@ import {
     Moon,
     Sun,
     DollarSign,
-    Twitter
+    Twitter,
+    LayoutGrid
 } from 'lucide-react';
->>>>>>> 3a1b6bf (rwa section implementation)
 import { isAdmin } from '../../utils/rwa/adminCheck';
 import { useKYCStatus } from '../../hooks/rwa/useKYC';
 import { useAppStore } from '../../store/appStore';
@@ -90,82 +85,6 @@ export function RWASidebar() {
                             </p>
                         </header>
 
-<<<<<<< HEAD
-                <NavLink
-                    to="/app/bundle-pool"
-                    className={({ isActive }) =>
-                        `group flex items-center gap-4 px-6 py-4 rounded-xl transition-all duration-200 ${isActive
-                            ? 'bg-gold/10 text-gold border border-gold/20'
-                            : 'text-zinc-400 hover:text-white hover:bg-zinc-900/50'
-                        } ${!isVerified ? 'opacity-50' : ''}`
-                    }
-                    onClick={(e) => {
-                        if (!isVerified) {
-                            e.preventDefault();
-                        }
-                    }}
-                >
-                    <Briefcase size={20} className="flex-shrink-0" />
-                    <span className="font-medium text-sm tracking-wide">Bundle Pool</span>
-                    {!isVerified && <Lock size={14} className="ml-auto text-zinc-600" />}
-                </NavLink>
-
-                <NavLink
-                    to="/app/origination"
-                    className={({ isActive }) =>
-                        `group flex items-center gap-4 px-6 py-4 rounded-xl transition-all duration-200 ${isActive
-                            ? 'bg-gold/10 text-gold border border-gold/20'
-                            : 'text-zinc-400 hover:text-white hover:bg-zinc-900/50'
-                        } ${!isVerified ? 'opacity-50' : ''}`
-                    }
-                    onClick={(e) => {
-                        if (!isVerified) {
-                            e.preventDefault();
-                        }
-                    }}
-                >
-                    <FileText size={20} className="flex-shrink-0" />
-                    <span className="font-medium text-sm tracking-wide">Asset Origination</span>
-                    {!isVerified && <Lock size={14} className="ml-auto text-zinc-600" />}
-                </NavLink>
-
-                <NavLink
-                    to="/app/portfolio"
-                    className={({ isActive }) =>
-                        `group flex items-center gap-4 px-6 py-4 rounded-xl transition-all duration-200 ${isActive
-                            ? 'bg-gold/10 text-gold border border-gold/20'
-                            : 'text-zinc-400 hover:text-white hover:bg-zinc-900/50'
-                        } ${!isVerified ? 'opacity-50' : ''}`
-                    }
-                    onClick={(e) => {
-                        if (!isVerified) {
-                            e.preventDefault();
-                        }
-                    }}
-                >
-                    <Wallet size={20} className="flex-shrink-0" />
-                    <span className="font-medium text-sm tracking-wide">My Portfolio</span>
-                    {!isVerified && <Lock size={14} className="ml-auto text-zinc-600" />}
-                </NavLink>
-
-
-                {/* Admin Only - SPV Simulator */}
-                {showAdminLink && (
-                    <NavLink
-                        to="/app/admin/spv"
-                        className={({ isActive }) =>
-                            `group flex items-center gap-4 px-6 py-4 rounded-xl transition-all duration-200 ${isActive
-                                ? 'bg-red-500/10 text-red-400 border border-red-500/20'
-                                : 'text-zinc-400 hover:text-white hover:bg-zinc-900/50'
-                            }`
-                        }
-                    >
-                        <Settings size={20} className="flex-shrink-0" />
-                        <span className="font-medium text-sm tracking-wide">SPV Simulator</span>
-                    </NavLink>
-                )}
-            </div>
-=======
                         {/* Navigation */}
                         <nav className="flex flex-col gap-3">
                             <NavLink to="/app" end className={linkClass}>
@@ -200,17 +119,16 @@ export function RWASidebar() {
                             </NavLink>
 
                             <NavLink
-                                to="/app/markets"
+                                to="/app/bundle-pool"
                                 className={({ isActive }) => `${linkClass({ isActive })} ${!isVerified ? 'opacity-50' : ''}`}
                                 onClick={(e) => !isVerified && e.preventDefault()}
                             >
                                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                                     <span />
-                                    <span className="text-sm font-medium tracking-wide">Capital Markets</span>
-                                    {!isVerified ? <Lock size={14} className="text-zinc-600" /> : <TrendingUp size={18} className="text-gold/60" />}
+                                    <span className="text-sm font-medium tracking-wide">Bundle Pool</span>
+                                    {!isVerified ? <Lock size={14} className="text-zinc-600" /> : <LayoutGrid size={18} className="text-gold/60" />}
                                 </div>
                             </NavLink>
->>>>>>> 3a1b6bf (rwa section implementation)
 
                             <NavLink
                                 to="/app/portfolio"

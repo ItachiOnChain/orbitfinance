@@ -128,6 +128,56 @@ export default function RWAHome() {
 
     return (
         <div className="space-y-8 max-w-7xl mx-auto pb-12 w-full px-4 lg:px-8">
+            
+
+            {/* Header */}
+            <div className="flex items-start gap-6">
+                <div className="p-4 rounded-full border border-gold/20 bg-gold/5 shadow-[0_0_15px_rgba(251,191,36,0.1)]">
+                    <Globe className="w-8 h-8 text-gold drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
+                </div>
+                <div>
+                    <h1 className="text-3xl font-light tracking-tight text-gold/100 mb-2 drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] font-outfit">
+                        Real-World Assets
+                    </h1>
+                </div>
+            </div>
+            <br />
+            
+            <br />
+
+            {/* Hero Section with Exact Orbit Animation */}
+            <div className="relative h-[600px] w-full rounded-3xl overflow-hidden border border-zinc-800/50 bg-zinc-950/50 backdrop-blur-sm">
+                <div className="absolute inset-0 opacity-60">
+                    <Scene />
+                </div>
+                <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6 max-w-4xl mx-auto translate-x-8 md:translate-x-40">
+                    <h2 className="text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-8 font-outfit leading-tight drop-shadow-[0_0_30px_rgba(0,0,0,0.8)]">
+                                   Unlock Capital from<br />
+                        <span className="text-gold">Real-World Income</span>
+                    </h2>
+                    <p className="text-xl text-zinc-300 max-w-2xl mx-auto leading-relaxed mb-12 font-light drop-shadow-[0_0_10px_rgba(0,0,0,0.5)]">
+                        Tokenize your rent, invoices, or bonds. Borrow against them with self-repaying loans powered by Orbit's yield engine.
+                    </p>
+                    <br />
+                    <div className="flex flex-col md:flex-row gap-6">
+                        <button
+                            onClick={() => navigate('/app/origination')}
+                            className="group relative z-10 inline-flex h-16 cursor-pointer items-center justify-center rounded-xl border-0 px-12 py-4 font-outfit text-[13px] font-bold tracking-[0.3em] uppercase text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] blur-0 opacity-100 before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)] before:transition-opacity hover:before:animate-[buttonMovingGradientBg_3s_linear_infinite] hover:before:opacity-70 shadow-[0_0_40px_rgba(212,175,55,0.25)] hover:scale-105 transition-all"
+                        >
+                            <span className="relative z-10">TOKENIZE ASSET</span>
+                        </button>
+                        <button
+                            onClick={() => navigate('/app/bundle-pool')}
+                            className="px-12 py-4 text-[13px] font-bold tracking-[0.3em] uppercase border border-zinc-700 rounded-xl text-zinc-400 hover:text-white hover:border-gold/50 transition-all backdrop-blur-md bg-zinc-900/20"
+                        >
+                            BUNDLE POOLS
+                        </button>
+                    </div>
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-zinc-950 to-transparent pointer-events-none" />
+            </div>
+            <br />
+            <br />
             {/* KYC Banner */}
             {address && !isVerified && (
                 <div className="relative overflow-hidden rounded-3xl p-[1px] bg-gradient-to-br from-yellow-500/30 via-zinc-800 to-zinc-900 shadow-[0_0_50px_rgba(234,179,8,0.1)]">
@@ -160,51 +210,6 @@ export default function RWAHome() {
                     </div>
                 </div>
             )}
-
-            {/* Header */}
-            <div className="flex items-start gap-6">
-                <div className="p-4 rounded-full border border-gold/20 bg-gold/5 shadow-[0_0_15px_rgba(251,191,36,0.1)]">
-                    <Globe className="w-8 h-8 text-gold drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
-                </div>
-                <div>
-                    <h1 className="text-3xl font-light tracking-tight text-gold/100 mb-2 drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] font-outfit">
-                        Real-World Assets
-                    </h1>
-                </div>
-            </div>
-            <br />
-
-            {/* Hero Section with Exact Orbit Animation */}
-            <div className="relative h-[600px] w-full rounded-3xl overflow-hidden border border-zinc-800/50 bg-zinc-950/50 backdrop-blur-sm">
-                <div className="absolute inset-0 opacity-60">
-                    <Scene />
-                </div>
-                <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6 max-w-4xl mx-auto translate-x-8 md:translate-x-40">
-                    <h2 className="text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-8 font-outfit leading-tight drop-shadow-[0_0_30px_rgba(0,0,0,0.8)]">
-                                   Unlock Capital from<br />
-                        <span className="text-gold">Real-World Income</span>
-                    </h2>
-                    <p className="text-xl text-zinc-300 max-w-2xl mx-auto leading-relaxed mb-12 font-light drop-shadow-[0_0_10px_rgba(0,0,0,0.5)]">
-                        Tokenize your rent, invoices, or bonds. Borrow against them with self-repaying loans powered by Orbit's yield engine.
-                    </p>
-                    <br />
-                    <div className="flex flex-col md:flex-row gap-6">
-                        <button
-                            onClick={() => navigate('/app/origination')}
-                            className="group relative z-10 inline-flex h-16 cursor-pointer items-center justify-center rounded-xl border-0 px-12 py-4 font-outfit text-[13px] font-bold tracking-[0.3em] uppercase text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] blur-0 opacity-100 before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)] before:transition-opacity hover:before:animate-[buttonMovingGradientBg_3s_linear_infinite] hover:before:opacity-70 shadow-[0_0_40px_rgba(212,175,55,0.25)] hover:scale-105 transition-all"
-                        >
-                            <span className="relative z-10">TOKENIZE ASSET</span>
-                        </button>
-                        <button
-                            onClick={() => navigate('/app/markets')}
-                            className="px-12 py-4 text-[13px] font-bold tracking-[0.3em] uppercase border border-zinc-700 rounded-xl text-zinc-400 hover:text-white hover:border-gold/50 transition-all backdrop-blur-md bg-zinc-900/20"
-                        >
-                            BROWSE MARKETS
-                        </button>
-                    </div>
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-zinc-950 to-transparent pointer-events-none" />
-            </div>
             <br />
             <br />
 
@@ -236,11 +241,11 @@ export default function RWAHome() {
             <div className="py-20">
                 <div className="flex items-center justify-between mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold text-gold font-outfit drop-shadow-[0_0_15px_rgba(212,175,55,0.4)] translate-x-6 md:translate-x-80">
-                        Active Asset Pools
+                        Active Bundle Pools
                     </h2>
                     
                     <button
-                        onClick={() => navigate('/app/markets')}
+                        onClick={() => navigate('/app/bundle-pool')}
                         className="group flex items-center gap-3 text-gold hover:text-white transition-all text-sm font-bold tracking-[0.3em] uppercase"
                     >
                         View All <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
@@ -253,7 +258,7 @@ export default function RWAHome() {
                     {assetPools.map((pool) => (
                         <div
                             key={pool.id}
-                            onClick={() => navigate('/app/markets')}
+                            onClick={() => navigate('/app/bundle-pool')}
                             className="relative group cursor-pointer"
                         >
                             {/* Animated Border/Glow */}

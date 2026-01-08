@@ -5,7 +5,7 @@ import { usePendingYield } from '../../hooks/usePendingYield';
 import { MetricCard } from '../../components/ui/MetricCard';
 import { CreateAccountButton } from '../../components/CreateAccountButton';
 import { TokenFaucet } from '../../components/TokenFaucet';
-import { DollarSign, TrendingDown, Coins, Target, RefreshCw, User } from 'lucide-react';
+import { DollarSign, TrendingDown, Coins, Target, RefreshCw, User, Shield, Zap, Globe } from 'lucide-react';
 import { formatEther, formatUnits } from 'viem';
 import { AccountChart } from '../../components/AccountChart';
 
@@ -75,25 +75,51 @@ export default function AccountPage() {
 
     if (!accountAddress || accountAddress === '0x0000000000000000000000000000000000000000') {
         return (
-            <div className="space-y-6">
-                <h1 className="text-3xl font-bold tracking-tight text-white font-outfit">
-                    My Account
-                </h1>
-                <div className="max-w-2xl mx-auto mt-16">
-                    <div className="p-12 rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 border border-zinc-800/50 text-center space-y-6 backdrop-blur-sm">
-                        <div className="w-20 h-20 mx-auto rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.1)]">
-                            <DollarSign className="w-10 h-10 text-gold" />
-                        </div>
-                        <div>
-                            <h2 className="text-2xl font-light text-white mb-3 font-outfit">
-                                Create an Account to Get Started
-                            </h2>
-                            <p className="text-zinc-400 font-light max-w-md mx-auto">
-                                Create your Orbit Account to access your dashboard, deposit collateral, and borrow against your future yield.
-                            </p>
-                        </div>
-                        <div className="max-w-xs mx-auto">
-                            <CreateAccountButton />
+            <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-12 w-full">
+                <div className="text-center space-y-4">
+                    <h1 className="text-5xl font-bold text-yellow-200 font-outfit tracking-tight" style={{ textShadow: '0 0 15px rgba(234,179,8,0.3)' }}>
+                        My Account
+                    </h1>
+                    <p className="text-zinc-400 text-lg font-light max-w-xl mx-auto">
+                        Initialize your institutional Orbit Account to begin managing your decentralized assets.
+                    </p>
+                </div>
+
+                <div className="max-w-4xl w-full px-4">
+                    <div className="relative overflow-hidden rounded-[2.5rem] p-[1px] bg-gradient-to-br from-yellow-500/30 via-zinc-800 to-zinc-900 shadow-[0_0_50px_rgba(234,179,8,0.1)]">
+                        <div className="absolute inset-0 bg-yellow-500/5 blur-3xl pointer-events-none" />
+                        <div className="relative rounded-[2.4rem] bg-zinc-950/90 backdrop-blur-2xl p-16 flex flex-col items-center text-center">
+                            <div className="w-24 h-24 rounded-full bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center mb-10 shadow-[0_0_40px_rgba(234,179,8,0.15)]">
+                                <User className="w-12 h-12 text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]" />
+                            </div>
+                            
+                            <div className="space-y-4 mb-12">
+                                <h2 className="text-4xl font-bold text-white font-outfit tracking-tight">
+                                    Initialize Account
+                                </h2>
+                                <p className="text-zinc-400 text-lg font-light max-w-lg leading-relaxed">
+                                    Your Orbit Account is a secure, smart-contract based vault that enables self-repaying loans and automated yield management.
+                                </p>
+                            </div>
+
+                            <div className="w-full max-w-md">
+                                <CreateAccountButton />
+                            </div>
+
+                            <div className="mt-12 pt-12 border-t border-zinc-800/50 w-full grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <div className="flex flex-col items-center gap-2">
+                                    <Shield className="w-5 h-5 text-yellow-500/60" />
+                                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Secure Vault</span>
+                                </div>
+                                <div className="flex flex-col items-center gap-2">
+                                    <Zap className="w-5 h-5 text-yellow-500/60" />
+                                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Instant Setup</span>
+                                </div>
+                                <div className="flex flex-col items-center gap-2">
+                                    <Globe className="w-5 h-5 text-yellow-500/60" />
+                                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Global Access</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

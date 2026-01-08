@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { AppNavbar } from '../components/layout/AppNavbar';
 import { Sidebar } from '../components/layout/Sidebar';
 import { RWASidebar } from '../components/rwa/RWASidebar';
@@ -8,8 +8,6 @@ import { useAppStore } from '../store/appStore';
 
 export default function AppLayout() {
   const { mode, theme } = useAppStore();
-  const location = useLocation();
-  const isLandingPage = location.pathname === '/';
 
   useEffect(() => {
     if (theme === 'light') {
@@ -33,16 +31,16 @@ export default function AppLayout() {
         {mode === 'rwa' ? <RWASidebar /> : <Sidebar />}
 
         {/* Main Content - Always use Outlet for routes */}
-        <main className={`flex-1 overflow-y-auto ${isLandingPage ? '' : 'p-16'}`}>
-          <div className={isLandingPage ? '' : 'max-w-7xl mx-auto'}>
+        <main className="flex-1 overflow-y-auto p-16">
+          <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>
         </main>
       </div>
       <br />
 
-      {/* Footer - Full Width */}
-      {(isLandingPage || mode === 'rwa') && <Footer />}
+      {/* Footer - Only for RWA mode in app if needed, or remove if it was only for landing */}
+      {mode === 'rwa' && <Footer />}
     </div>
   );
 }

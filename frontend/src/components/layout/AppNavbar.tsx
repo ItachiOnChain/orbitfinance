@@ -81,7 +81,10 @@ export function AppNavbar() {
           {isConnected && address ? (
             <WalletDropdown
               address={address}
-              onDisconnect={() => disconnect()}
+              onDisconnect={() => {
+                disconnect();
+                navigate('/');
+              }}
               theme={theme}
             />
           ) : (

@@ -7,7 +7,7 @@ import { FilterTabs } from '../../components/rwa/FilterTabs';
 import { EmptyState } from '../../components/rwa/EmptyState';
 
 export default function BundlePoolPage() {
-    const { address, isConnected } = useAccount();
+    useAccount();
     const [activeFilter, setActiveFilter] = useState<'all' | 'upcoming' | 'raising' | 'staking' | 'finalRedemption' | 'ended'>('all');
     const [pools, setPools] = useState<any[]>([]);
 
