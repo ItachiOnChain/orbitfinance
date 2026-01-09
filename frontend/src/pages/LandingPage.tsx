@@ -98,7 +98,7 @@ export default function LandingPage() {
       <LandingNavbar />
 
       {/* ================= HERO ================= */}
-      <section className="relative min-h-screen flex items-center">
+      <section className="relative min-h-screen flex items-center translate-x-7 translate-y-7">
         <div className="absolute inset-0 z-0">
           <Canvas dpr={[1, 2]}>
             <Suspense fallback={null}>
@@ -129,13 +129,15 @@ export default function LandingPage() {
             </Reveal>
 
             <Reveal delay={0.2}>
-              <p className="mt-8 max-w-xl text-lg text-white/80">
+              <p className="mt-8 max-w-xl text-lg text-white/80 translate-x-5 translate-y-7">
                 A self-repaying lending protocol powered by institutional-grade RWA infrastructure.
               </p>
             </Reveal>
+            <br />
+            <br />
 
             <Reveal delay={0.3}>
-              <div className="mt-10 flex gap-6 justify-center lg:justify-start">
+              <div className="mt-10 flex gap-6 justify-center lg:justify-start translate-x-3 translate-y-3">
                 <button
                   onClick={() => navigate(isConnected ? "/app/crypto" : "/")}
                   className="px-8 py-4 bg-gold text-black font-bold rounded-xl uppercase tracking-widest text-xs flex items-center gap-2"
@@ -161,9 +163,10 @@ export default function LandingPage() {
         label="WHAT IS ORBIT"
         title="A new primitive for"
         subtitle="decentralized credit"
+        
       >
         <Reveal>
-          <p className="max-w-3xl mx-auto text-lg text-white/70 leading-relaxed text-center">
+          <p className="max-w-3xl mx-auto text-lg text-white/70 leading-relaxed text-center translate-x-85 translate-y-7">
             Deposit assets, borrow against them, and let your yields repay your debt automatically.
             No liquidations. No manual repayments.
           </p>
@@ -178,7 +181,7 @@ export default function LandingPage() {
         title="Self-Repaying Credit"
         subtitle="In Three Steps"
       >
-        <div className="grid md:grid-cols-3 gap-10">
+        <div className="grid md:grid-cols-3 gap-10 translate-x-20 translate-y-7">
           {["Deposit Collateral", "Generate Yield", "Automatic Repayment"].map((t, i) => (
             <Reveal key={t} delay={i * 0.15}>
               <div className="p-10 rounded-3xl border border-white/10 bg-white/5">
@@ -201,7 +204,7 @@ export default function LandingPage() {
         title="Built for everyone"
         subtitle="who values their assets"
       >
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 translate-x-10">
           {[ShieldCheck, Palette, Activity, Terminal, Lightbulb, Gamepad2].map((Icon, i) => (
             <Reveal key={i} delay={i * 0.1}>
               <div className="p-8 rounded-2xl bg-white/5 border border-white/10">
@@ -220,7 +223,7 @@ export default function LandingPage() {
       <section className="relative z-10">
         <div className="max-w-5xl mx-auto px-6">
           <Reveal>
-            <div className="p-20 rounded-[2.5rem] bg-white/5 border border-white/10 text-center">
+            <div className="p-20 rounded-[2.5rem] bg-white/5 border border-white/10 text-center translate-x-50">
               <h2 className="text-4xl font-black mb-6">
                 Ready to unlock <span className="text-gold">capital efficiency?</span>
               </h2>
