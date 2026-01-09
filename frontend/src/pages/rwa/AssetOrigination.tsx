@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAccount, useWaitForTransactionReceipt, useReadContracts } from 'wagmi';
 import { parseUnits, formatUnits } from 'viem';
-import { Plus, DollarSign, Clock } from 'lucide-react';
+import { Plus, Clock, CheckCircle } from 'lucide-react';
 import { TokenizeAssetModal, type AssetFormData } from '../../components/rwa/TokenizeAssetModal';
 import { ManageAssetModal } from '../../components/rwa/ManageAssetModal';
 import { ActiveFinancingTable } from '../../components/rwa/ActiveFinancingTable';
@@ -338,11 +338,13 @@ export default function AssetOrigination() {
 
             {/* Success Toast */}
             {showSuccessToast && (
-                <div className="fixed top-24 right-8 z-50 bg-[#00F5A0] text-[#0A2342] px-6 py-4 rounded-lg shadow-2xl flex items-center gap-3 animate-slide-in">
-                    <span className="text-2xl">✅</span>
+                <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-[#FFD36A] to-[#E6B84F] text-black px-8 py-4 rounded-xl shadow-[0_0_30px_rgba(255,211,106,0.4)] flex items-center gap-4 animate-slide-down border border-white/20">
+                    <div className="bg-black/10 p-2 rounded-full">
+                        <CheckCircle size={24} className="text-black" />
+                    </div>
                     <div>
-                        <p className="font-bold">Asset Submitted!</p>
-                        <p className="text-sm">Waiting for SPV approval</p>
+                        <p className="font-bold text-lg leading-tight">Asset Submitted!</p>
+                        <p className="text-sm opacity-80">Waiting for SPV approval</p>
                     </div>
                 </div>
             )}
@@ -350,8 +352,9 @@ export default function AssetOrigination() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Asset Origination</h1>
-                    <p className="text-zinc-400">Tokenize your assets and access liquidity</p>
+                    <h1 className="text-3xl font-bold text-gold/100 mb-2 translate-x-90">Asset Origination</h1>
+                    <br />
+                    <p className="text-zinc-400 translate-x-82">Tokenize your assets and access liquidity</p>
                 </div>
                 <button
                     onClick={() => setShowTokenizeModal(true)}
@@ -402,56 +405,72 @@ export default function AssetOrigination() {
                 </div>
             )}
 
+            <br />
+
             {/* My Tokenized Assets */}
-            <div>
-                <h2 className="text-xl font-bold text-white mb-4">My Tokenized Assets</h2>
-                <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden">
-                    {availableAssets.length > 0 ? (
-                        <table className="w-full">
-                            <thead className="bg-zinc-900/80">
-                                <tr>
-                                    <th className="px-6 py-4 text-left text-xs font-semibold text-zinc-400 uppercase">Asset Name</th>
-                                    <th className="px-6 py-4 text-left text-xs font-semibold text-zinc-400 uppercase">Type</th>
-                                    <th className="px-6 py-4 text-left text-xs font-semibold text-zinc-400 uppercase">Monthly Income</th>
-                                    <th className="px-6 py-4 text-left text-xs font-semibold text-zinc-400 uppercase">Total Value</th>
-                                    <th className="px-6 py-4 text-left text-xs font-semibold text-zinc-400 uppercase">Max Financing (50%)</th>
-                                    <th className="px-6 py-4 text-left text-xs font-semibold text-zinc-400 uppercase">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-zinc-800">
-                                {availableAssets.map((asset) => (
-                                    <tr key={asset.tokenId} className="hover:bg-zinc-900/50 transition-colors">
-                                        <td className="px-6 py-4 text-white font-medium">{asset.name}</td>
-                                        <td className="px-6 py-4 text-zinc-400">{asset.type}</td>
-                                        <td className="px-6 py-4 text-[#00F5A0] font-mono">
-                                            ${asset.monthlyIncome.toLocaleString()}/mo
+            <div className="bg-black border border-yellow-500/30 rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(234,179,8,0.1)]">
+                <div className="px-8 py-6 border-b border-yellow-500/20 bg-zinc-950/50">
+                    <h2 className="text-xl font-bold text-white font-outfit tracking-tight">My Tokenized Assets</h2>
+                </div>
+                <div className="overflow-x-auto">
+                    <table className="w-full">
+                        <thead>
+                            <tr className="bg-zinc-900/50">
+                                <th className="px-8 py-4 text-left text-[10px] font-bold text-yellow-500/70 uppercase tracking-[0.2em]">Asset</th>
+                                <th className="px-8 py-4 text-left text-[10px] font-bold text-yellow-500/70 uppercase tracking-[0.2em]">Type</th>
+                                <th className="px-8 py-4 text-left text-[10px] font-bold text-yellow-500/70 uppercase tracking-[0.2em]">Monthly Income</th>
+                                <th className="px-8 py-4 text-left text-[10px] font-bold text-yellow-500/70 uppercase tracking-[0.2em]">Value</th>
+                                <th className="px-8 py-4 text-left text-[10px] font-bold text-yellow-500/70 uppercase tracking-[0.2em]">Status</th>
+                                <th className="px-8 py-4 text-right text-[10px] font-bold text-yellow-500/70 uppercase tracking-[0.2em]">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-yellow-500/10">
+                            {availableAssets.length > 0 ? (
+                                availableAssets.map((asset) => (
+                                    <tr key={asset.tokenId} className="hover:bg-yellow-500/5 transition-colors group">
+                                        <td className="px-8 py-5">
+                                            <p className="font-bold text-white font-outfit">{asset.name}</p>
+                                            <p className="text-[10px] text-zinc-500 mt-0.5 font-mono">ID: {asset.tokenId.toString()}</p>
                                         </td>
-                                        <td className="px-6 py-4 text-white font-mono">
-                                            ${asset.totalValue.toLocaleString()}
+                                        <td className="px-8 py-5">
+                                            <span className="px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded-full text-[10px] font-bold text-yellow-500 uppercase tracking-wider">
+                                                {asset.type}
+                                            </span>
                                         </td>
-                                        <td className="px-6 py-4 text-gold font-mono font-semibold">
-                                            ${(asset.totalValue * 0.5).toLocaleString()}
+                                        <td className="px-8 py-5 text-zinc-300 font-medium">${asset.monthlyIncome.toLocaleString()}</td>
+                                        <td className="px-8 py-5 text-white font-bold">${asset.totalValue.toLocaleString()}</td>
+                                        <td className="px-8 py-5">
+                                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${asset.status === 'minted'
+                                                    ? 'bg-green-500/10 text-green-400 border border-green-500/20'
+                                                    : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
+                                                }`}>
+                                                <span className={`w-1.5 h-1.5 rounded-full ${asset.status === 'minted' ? 'bg-green-400' : 'bg-yellow-400'}`} />
+                                                {asset.status === 'locked' ? 'LOCKED' : 'ACTIVE'}
+                                            </span>
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-8 py-5 text-right">
                                             <button
                                                 onClick={() => handleFinanceAsset(asset)}
-                                                className="px-3 py-1.5 bg-gold/10 hover:bg-gold/20 text-gold text-sm rounded transition-colors flex items-center gap-1"
+                                                className="text-yellow-500 hover:text-yellow-400 font-bold text-[11px] uppercase tracking-widest transition-colors"
                                             >
-                                                <DollarSign size={14} />
-                                                Finance
+                                                Manage
                                             </button>
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    ) : (
-                        <div className="px-6 py-12 text-center text-zinc-500">
-                            No assets yet. Tokenize your first asset above.
-                        </div>
-                    )}
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={6} className="px-6 py-12 text-center text-zinc-500">
+                                        No assets yet. Tokenize your first asset above.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
+
+            <br />
 
             {/* Active Financing */}
             <div>

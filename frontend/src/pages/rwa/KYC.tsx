@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Upload, CheckCircle, AlertTriangle, FileText } from 'lucide-react';
+import { Shield, Upload, CheckCircle, AlertTriangle, FileText, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useKYCStatus } from '../../hooks/rwa/useKYC';
 import { kycService, type KYCSubmission } from '../../services/rwa/kycService';
 import { TokenFaucet } from '../../components/TokenFaucet';
@@ -32,6 +33,7 @@ export default function KYC() {
 
   const [submission, setSubmission] = useState<KYCSubmission | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
 
   // Form state
   const [fullName, setFullName] = useState('');
@@ -58,6 +60,15 @@ export default function KYC() {
     const interval = setInterval(loadSubmission, 5000);
     return () => clearInterval(interval);
   }, [address]);
+
+  // Show popup when submission is pending
+  useEffect(() => {
+    if (submission?.status === 'pending') {
+      setShowPopup(true);
+      const timer = setTimeout(() => setShowPopup(false), 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [submission?.status]);
 
   // Refetch KYC status when submission changes
   useEffect(() => {
@@ -177,58 +188,91 @@ export default function KYC() {
   // PENDING STATE
   if (submission?.status === 'pending') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="max-w-xl w-full px-4">
-          <div className="bg-yellow-500/5 border-2 border-yellow-400/30 rounded-xl p-10 backdrop-blur-2xl shadow-[0_0_50px_rgba(234,179,8,0.25)]">
-            <div className="flex items-center gap-6 mb-10">
-              <div className="p-4 rounded-xl bg-yellow-500/15 border border-yellow-400/40">
-                <AlertTriangle className="text-yellow-300" size={40} />
+      <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden">
+        {/* Popup Modal */}
+        <AnimatePresence>
+          {showPopup && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="fixed inset-0 z-50 flex items-center justify-center px-4 pointer-events-none"
+            >
+              <div className="bg-zinc-950/90 border border-yellow-500/50 rounded-2xl p-8 max-w-sm w-full backdrop-blur-xl shadow-[0_0_40px_rgba(255,200,60,0.2)] pointer-events-auto relative">
+                <button
+                  onClick={() => setShowPopup(false)}
+                  className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors p-1"
+                >
+                  <X size={18} />
+                </button>
+                <div className="flex flex-col items-center text-center gap-4">
+                  <div className="text-3xl animate-bounce">⏳</div>
+                  <h3 className="text-xl font-bold text-yellow-400 font-outfit tracking-tight">
+                    KYC Under Review
+                  </h3>
+                  <div className="space-y-3">
+                    <p className="text-zinc-300 text-sm leading-relaxed">
+                      Your KYC has been successfully submitted.
+                    </p>
+                    <p className="text-zinc-300 text-sm leading-relaxed">
+                      Verification will be completed within 4–5 working days.
+                    </p>
+                    <p className="text-zinc-300 text-sm leading-relaxed">
+                      You’ll be notified once approval is complete.
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <h2 className="text-2xl font-bold text-white mb-1 font-outfit tracking-tight">
-                  KYC Pending Approval
-                </h2>
-                <p className="text-zinc-300 text-sm font-light leading-relaxed">
-                  Your KYC submission is being reviewed by our compliance team. You will
-                  be notified once your verification is complete.
-                </p>
-              </div>
-            </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-            <div className="bg-zinc-950/60 border border-zinc-800/60 rounded-xl p-8 space-y-6">
-              <h3 className="font-bold text-zinc-500 text-[10px] font-outfit tracking-[0.3em] uppercase">
+        <div className="max-w-xl w-full px-4 relative z-10">
+          <div className="bg-black/60 border border-yellow-500/60 rounded-2xl p-10 md:p-12 backdrop-blur-[12px] shadow-[0_0_24px_rgba(255,200,60,0.25)] transition-all duration-300">
+            <div className="flex flex-col items-center text-center mb-10">
+              <div className="p-5 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 mb-6 animate-pulse-gold">
+                
+              </div>
+              <h2 className="text-2xl md:text-3xl font-semibold text-[#FFD36A] mb-3 font-outfit tracking-[0.3px]">
+                KYC Pending Approval
+              </h2>
+              <br />
+              <p className="text-[rgba(255,255,255,0.8)] text-sm md:text-base font-light leading-[1.6] max-w-[420px]">
+                Your KYC submission is being reviewed by our compliance team. You will
+                be notified once your verification is complete.
+              </p>
+            </div>
+            <br />
+
+            <div className="bg-zinc-950/40 border border-zinc-800/50 rounded-xl p-8 space-y-8">
+              <h3 className="font-bold text-zinc-500 text-[10px] font-outfit tracking-[0.3em] uppercase translate-x-45 md:text-[12px]">
                 Submission Details
               </h3>
+
               <br />
-              <div className="grid grid-cols-2 gap-8 text-sm">
-                
-                <div className="space-y-1">
-                  <p className="text-zinc-500 uppercase tracking-[0.25em] text-[9px] font-bold">
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+                <div className="space-y-1.5">
+                  <p className="text-[rgba(255,200,60,0.7)] uppercase tracking-[1.2px] text-[11px] font-bold translate-x-10">
                     Full Name
                   </p>
-                  <br />
-                  <br />
-                  <p className="text-white font-medium text-lg font-outfit">
+                  <p className="text-white font-medium text-lg font-outfit text-left translate-x-10">
                     {submission?.fullName}
                   </p>
                 </div>
-                <div className="space-y-1">
-                  <p className="text-zinc-500 uppercase tracking-[0.25em] text-[9px] font-bold">
+                <div className="space-y-1.5">
+                  <p className="text-[rgba(255,200,60,0.7)] uppercase tracking-[1.2px] text-[11px] font-bold">
                     Country
                   </p>
-                  <br />
-                  <br />
-                  <p className="text-white font-medium text-lg font-outfit">
+                  <p className="text-white font-medium text-lg font-outfit text-left">
                     {submission?.country}
                   </p>
                 </div>
-                <div className="col-span-2 space-y-1">
-                  <p className="text-zinc-500 uppercase tracking-[0.25em] text-[9px] font-bold">
+                <div className="sm:col-span-2 space-y-1.5">
+                  <p className="text-[rgba(255,200,60,0.7)] uppercase tracking-[1.2px] text-[11px] font-bold translate-x-10">
                     Submitted At
                   </p>
-                  <br />
-                  <br />
-                  <p className="text-white font-medium text-lg font-outfit">
+                  <p className="text-white font-medium text-lg font-outfit text-left translate-x-10">
                     {submission?.submittedAt
                       ? new Date(submission.submittedAt).toLocaleString()
                       : 'N/A'}
@@ -237,9 +281,11 @@ export default function KYC() {
               </div>
             </div>
 
-            <p className="text-zinc-500 text-[10px] mt-8 text-center font-bold tracking-[0.35em] uppercase">
-              Verification typically takes 1–2 business days
-            </p>
+            <div className="mt-10">
+              <p className="text-zinc-500/60 text-[10px] text-center font-bold tracking-[0.35em] uppercase">
+                
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -149,84 +149,99 @@ export function PoolCard({ pool, poolId, onInvestmentSuccess }: PoolCardProps) {
 
     return (
         <>
-            <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+        <br />
+        <div className="bg-zinc-900/40 border border-yellow-500/10 rounded-3xl overflow-hidden backdrop-blur-sm shadow-[0_0_40px_rgba(0,0,0,0.3)]">
                 {/* Pool Header */}
-                <div className="p-8 border-b border-gray-100">
-                    <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-12 h-12 bg-gradient-to-br from-[#5B5FED] to-purple-600 rounded-lg flex items-center justify-center shadow-md">
-                                <span className="text-white text-xl font-bold">O</span>
+                <div className="p-10 border-b border-yellow-500/5 bg-zinc-950/30">
+                    <div className="flex items-start justify-between mb-8">
+                        <div className="flex items-center space-x-4">
+                            <div className="flex items-center -space-x-3">
+                               
+                               
                             </div>
-                            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center shadow-md">
-                                <span className="text-white text-lg font-bold">M</span>
+                            <div>
+                                <h2 className="text-3xl font-bold text-white font-outfit tracking-tight translate-x-1"></h2>
+                                <div className="flex items-center space-x-3 mt-2 translate-x-2">
+                                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] flex items-center space-x-2 border ${
+                                        pool.status === 2 ? 'bg-green-500/10 text-green-400 border-green-500/20' : 
+                                        pool.status === 1 ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
+                                        'bg-zinc-800 text-zinc-400 border-zinc-700 translate-x-1'
+                                    }`}>
+                                        <div className={`w-1.5 h-1.5 rounded-full ${
+                                            pool.status === 2 ? 'bg-green-400 animate-pulse' : 
+                                            pool.status === 1 ? 'bg-yellow-400 animate-pulse' :
+                                            'bg-zinc-500 translate-x-1'
+                                        }`}></div>
+                                        <span>{statusBadge.label}</span>
+                                    </span>
+                                    <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] bg-zinc-800/50 text-zinc-400 border border-zinc-700/50 flex items-center space-x-2">
+                                        <Clock className="w-3 h-3" />
+                                        <span>{timeRemaining.months} months left</span>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <span className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center space-x-1 ${statusBadge.color}`}>
-                                <div className="w-2 h-2 bg-current rounded-full"></div>
-                                <span>{statusBadge.label}</span>
-                            </span>
-                            <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 flex items-center space-x-1">
-                                <Clock className="w-3 h-3" />
-                                <span>{timeRemaining.months} months left</span>
-                            </span>
                         </div>
                     </div>
 
-                    <h2 className="text-2xl font-bold text-gray-900 mb-3">{pool.name}</h2>
-                    <p className="text-gray-600 leading-relaxed">
-                        Providing revenue-based financing to portfolio companies through tokenized
-                        real-world asset collateralization on Mantel blockchain. This pool enables
-                        liquidity for verified borrowers who have completed KYC and submitted
-                        collateral NFTs on Mantel network.
-                    </p>
+                   
                 </div>
 
                 {/* Pool Statistics - 4 Columns */}
-                <div className="grid grid-cols-4 gap-6 p-8 bg-gray-50 border-b border-gray-100">
-                    <div>
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                <div className="grid grid-cols-4 gap-12 p-10 bg-black/20 border-b border-yellow-500/5">
+                    <div className="space-y-2">
+                        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.25em]">
                             Final APY
                         </p>
-                        <p className="text-2xl font-bold text-green-500">
-                            {RWA_ACCURATE_APYS.BLENDED.toFixed(2)}%
-                        </p>
-                        <p className="text-sm text-gray-500 mt-1">(16% expected)</p>
+                        <div className="flex items-baseline space-x-2">
+                            <p className="text-3xl font-bold text-yellow-400 font-outfit">
+                                {RWA_ACCURATE_APYS.BLENDED.toFixed(2)}%
+                            </p>
+                            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">(16% Target)</p>
+                        </div>
                     </div>
 
-                    <div>
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                    <div className="space-y-2">
+                        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.25em]">
                             Total Investment
                         </p>
-                        <p className="text-2xl font-bold text-gray-900">
-                            {formatCurrency(displayValues.totalInvestment)}
-                        </p>
-                        <p className="text-sm text-gray-500 mt-1">USDT</p>
+                        <div className="flex items-baseline space-x-2">
+                            <p className="text-3xl font-bold text-white font-outfit">
+                                {formatCurrency(displayValues.totalInvestment)}
+                            </p>
+                            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">USDT</p>
+                        </div>
                     </div>
 
-                    <div>
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                    <div className="space-y-2">
+                        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.25em]">
                             Net Asset Value
                         </p>
-                        <p className="text-2xl font-bold text-[#5B5FED]">
-                            {formatCurrency(displayValues.totalNAV)}
-                        </p>
-                        <p className="text-sm text-gray-500 mt-1">USDT</p>
+                        <div className="flex items-baseline space-x-2">
+                            <p className="text-3xl font-bold text-yellow-400 font-outfit">
+                                {formatCurrency(displayValues.totalNAV)}
+                            </p>
+                            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">USDT</p>
+                        </div>
                     </div>
 
-                    <div>
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                    <div className="space-y-2">
+                        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.25em]">
                             Final Redemption
                         </p>
-                        <p className="text-xl font-semibold text-gray-900">
+                        <p className="text-2xl font-bold text-white font-outfit">
                             {formatDate(pool.redemptionDate)}
                         </p>
                     </div>
                 </div>
 
                 {/* Tranche Cards */}
-                <div className="p-8 space-y-6">
-                    {juniorData && Array.isArray(juniorData) && (
+                <div className="p-10 space-y-8 bg-zinc-950/20">
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.3em]">Available Tranches</h3>
+                        <div className="h-px flex-grow mx-8 bg-yellow-500/10"></div>
+                    </div>
+                    
+                    {(juniorData as any) && Array.isArray(juniorData) && (
                         <TrancheCard
                             type="junior"
                             data={{
@@ -241,7 +256,7 @@ export function PoolCard({ pool, poolId, onInvestmentSuccess }: PoolCardProps) {
                         />
                     )}
 
-                    {seniorData && Array.isArray(seniorData) && (
+                    {(seniorData as any) && Array.isArray(seniorData) && (
                         <TrancheCard
                             type="senior"
                             data={{

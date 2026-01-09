@@ -40,62 +40,64 @@ export default function BundlePoolPage() {
     });
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="min-h-screen bg-zinc-950 text-white">
             {/* Header Section */}
-            <div className="bg-white border-b border-gray-200">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                            <div className="flex items-center space-x-2">
-                                <LayoutGrid className="w-8 h-8 text-[#5B5FED]" />
-                                <h1 className="text-3xl font-bold text-gray-900">Bundle Pool</h1>
-                            </div>
-                        </div>
+            <div className="border-b border-yellow-500/10 bg-black/40 backdrop-blur-xl">
+                <div className="max-w-7xl mx-auto px-8 py-12">
+                    <div className="flex flex-col items-start space-y-4">
                         <div className="flex items-center space-x-3">
-                            <div className="flex items-center space-x-2 bg-[#5B5FED]/10 px-4 py-2 rounded-lg">
-                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                <span className="text-sm font-medium text-gray-700">Mantel Network</span>
+                            <div className="p-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20 translate-x-90">
+                                <LayoutGrid className="w-6 h-6 text-yellow-500" />
                             </div>
+                            <h1 className="text-6xl font-bold text-yellow-200 font-outfit tracking-tight shadow-yellow-500/20 text-glow translate-x-90">
+                                Bundle Pool
+                            </h1>
                         </div>
-                    </div>
+                        
+                        
+                        <div className="space-y-2">
+                            <h2 className="text-xl font-semibold text-white font-outfit translate-x-105">
+                                Orbit Finance × Mantle
+                            </h2>
+                            <br />
+                            
+                        </div>
 
-                    {/* Co-branded Badge */}
-                    <div className="mt-4 flex items-center justify-between bg-gradient-to-r from-[#5B5FED]/10 to-purple-100 rounded-xl p-4">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                                <span className="text-2xl font-bold text-[#5B5FED]">O</span>
+                        <div className="flex items-center space-x-3 pt-2">
+                            <div className="flex items-center space-x-2 bg-yellow-500/10 border border-yellow-500/20 px-4 py-1.5 rounded-full">
+                                <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(234,179,8,0.8)]"></div>
+                                <span className="text-3xl font-bold text-yellow-500 uppercase tracking-[0.2em]">Mantle Network</span>
                             </div>
-                            <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                                <span className="text-2xl font-bold text-purple-600">M</span>
+                            <div className="flex items-center space-x-2 bg-zinc-900 border border-zinc-800 px-4 py-1.5 rounded-full">
+                                <span className="text-3xl font-bold text-zinc-500 uppercase tracking-[0.2em]">Powered by Mantle Blockchain</span>
                             </div>
-                            <div>
-                                <h2 className="text-lg font-semibold text-gray-900">Orbit Finance × Mantel</h2>
-                                <p className="text-sm text-gray-600">Institutional DeFi Investment Pools</p>
-                            </div>
-                        </div>
-                        <div className="text-right">
-                            <p className="text-xs text-gray-500 uppercase tracking-wider">Powered by</p>
-                            <p className="text-sm font-semibold text-[#5B5FED]">Mantel Blockchain</p>
                         </div>
                     </div>
                 </div>
             </div>
+            <br />
 
             {/* Filter Tabs */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <FilterTabs activeFilter={activeFilter} onFilterChange={setActiveFilter} />
+            <div className="max-w-10xl mx-auto px-8 py-10">
+                <div className="bg-zinc-900/30 backdrop-blur-md border border-yellow-500/5 rounded-2xl p-1">
+                    <FilterTabs activeFilter={activeFilter} onFilterChange={setActiveFilter} />
+                </div>
             </div>
 
+
             {/* Pool Cards */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+            <div className="max-w-10xl mx-auto px-8 pb-24">
                 {isLoading ? (
-                    <div className="flex items-center justify-center py-20">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#5B5FED]"></div>
+                    <div className="flex flex-col items-center justify-center py-32 space-y-4">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
+                        <p className="text-zinc-500 text-xs uppercase tracking-widest font-bold">Loading Pools...</p>
                     </div>
                 ) : filteredPools.length === 0 ? (
-                    <EmptyState />
+                    <div className="py-20">
+                        <EmptyState />
+                    </div>
                 ) : (
-                    <div className="space-y-6">
+                    <div className="space-y-12">
                         {filteredPools.map((pool, index) => (
                             <PoolCard key={index} pool={pool} poolId={index} onInvestmentSuccess={refetch} />
                         ))}

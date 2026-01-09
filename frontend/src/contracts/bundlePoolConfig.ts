@@ -141,4 +141,4 @@ export const BUNDLE_POOL_ABI = [
         ],
         "anonymous": false
     }
-];
+] as const;

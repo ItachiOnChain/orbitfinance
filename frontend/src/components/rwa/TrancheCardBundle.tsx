@@ -15,9 +15,7 @@ interface TrancheCardProps {
 }
 
 export function TrancheCard({ type, data, onInvest }: TrancheCardProps) {
-    const isJunior = type === 'junior';
-    const iconBg = isJunior ? 'bg-gradient-to-br from-orange-400 to-yellow-500' : 'bg-gradient-to-br from-blue-500 to-purple-600';
-    const iconLetter = isJunior ? 'J' : 'S';
+    const iconLetter = type === 'junior' ? 'J' : 'S';
 
     const formatCurrency = (value: bigint) => {
         return new Intl.NumberFormat('en-US', {
@@ -28,46 +26,55 @@ export function TrancheCard({ type, data, onInvest }: TrancheCardProps) {
     };
 
     return (
-        <div className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow bg-white">
-            <div className="flex items-start justify-between mb-6">
-                <div className="flex items-center space-x-4">
-                    <div className={`w-16 h-16 ${iconBg} rounded-full flex items-center justify-center shadow-lg`}>
-                        <span className="text-white text-2xl font-bold">{iconLetter}</span>
+        
+        <div className="border border-yellow-500/10 rounded-2xl p-8 transition-all bg-zinc-900/60 hover:bg-zinc-900/80 hover:border-yellow-500/30 group">
+            <br />
+            <div className="flex items-start justify-between mb-10">
+                <div className="flex items-center space-x-6">
+                    <br />
+                    <div className={`w-16 h-16 bg-zinc-950 border border-yellow-500/20 rounded-2xl flex items-center justify-center shadow-xl group-hover:border-yellow-500/40 transition-colors`}>
+                        <span className="text-yellow-500 text-2xl font-black font-outfit">{iconLetter}</span>
                     </div>
                     <div>
-                        <h3 className="text-lg font-semibold text-gray-900">{data.name}</h3>
-                        <p className="text-2xl font-bold text-gray-900 mt-1">{formatCurrency(data.pricePerUnit)}</p>
-                        <p className="text-sm text-gray-500">Per Token</p>
+                        <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.3em] mb-1 translate-x-1">{data.name}</h3>
+                        <div className="flex items-baseline space-x-2">
+                            <p className="text-3xl font-bold text-white font-outfit tracking-tight">{formatCurrency(data.pricePerUnit)}</p>
+                            <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Per Token</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-4">
-                <div>
-                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Distribution</p>
-                    <p className="text-xl font-bold text-gray-900">{Number(data.distributionPercentage)}%</p>
+            <div className="grid grid-cols-4 gap-8 items-end">
+                <div className="space-y-2">
+                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.25em] translate-x-1">Distribution</p>
+                    <p className="text-2xl font-bold text-white font-outfit translate-x-1">{Number(data.distributionPercentage)}%</p>
                 </div>
 
-                <div>
-                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Total Investment</p>
-                    <p className="text-lg font-semibold text-gray-900">{formatCurrency(data.totalInvested)}</p>
-                    <p className="text-xs text-gray-500">USDT</p>
+                <div className="space-y-2">
+                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.25em] translate-x-1">Total Investment</p>
+                    <div className="flex items-baseline space-x-1">
+                        <p className="text-xl font-bold text-white font-outfit">{formatCurrency(data.totalInvested)}</p>
+                        <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">USDT</p>
+                    </div>
                 </div>
 
-                <div>
-                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">NAV</p>
-                    <p className="text-lg font-semibold text-[#5B5FED]">{formatCurrency(data.currentNAV)}</p>
-                    <p className="text-xs text-gray-500">USDT</p>
+                <div className="space-y-2">
+                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.25em]">NAV</p>
+                    <div className="flex items-baseline space-x-1">
+                        <p className="text-xl font-bold text-yellow-500 font-outfit">{formatCurrency(data.currentNAV)}</p>
+                        <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">USDT</p>
+                    </div>
                 </div>
 
-                <div className="flex flex-col justify-between">
-                    <div className="flex items-center space-x-1 text-gray-500 mb-2">
-                        <Info className="w-4 h-4" />
-                        <span className="text-xs">Current APY: {(Number(data.currentAPY) / 100).toFixed(1)}%</span>
+                <div className="space-y-4">
+                    <div className="flex items-center space-x-2 text-zinc-500">
+                        <Info className="w-3.5 h-3.5 text-yellow-500/50" />
+                        <span className="text-[10px] font-bold uppercase tracking-widest">APY: {(Number(data.currentAPY) / 100).toFixed(1)}%</span>
                     </div>
                     <button
                         onClick={onInvest}
-                        className="w-full bg-[#5B5FED] hover:bg-[#4A4ED4] text-white font-semibold py-2 px-4 rounded-lg transition-colors shadow-md hover:shadow-lg"
+                        className="w-full bg-gradient-to-r from-[#FFD36A] to-[#E6B84F] hover:from-[#FFE082] hover:to-[#F5C860] text-black font-black py-3 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(234,179,8,0.15)] hover:shadow-[0_0_30px_rgba(234,179,8,0.3)] hover:scale-[1.02] active:scale-[0.98] text-[11px] uppercase tracking-[0.2em]"
                     >
                         Invest Now
                     </button>

@@ -41,7 +41,7 @@ const USDT_ABI = [
         "outputs": [{ "name": "", "type": "uint256" }],
         "stateMutability": "view"
     }
-];
+] as const;
 
 export function InvestmentModal({ poolId, tranche, trancheData, onClose, onSuccess }: InvestmentModalProps) {
     const { address } = useAccount();
@@ -53,7 +53,10 @@ export function InvestmentModal({ poolId, tranche, trancheData, onClose, onSucce
         address: USDT_ADDRESS as `0x${string}`,
         abi: USDT_ABI,
         functionName: 'balanceOf',
-        args: [address],
+        args: address ? [address] : undefined,
+        query: {
+            enabled: !!address
+        }
     });
 
     // Get USDT allowance
@@ -61,7 +64,10 @@ export function InvestmentModal({ poolId, tranche, trancheData, onClose, onSucce
         address: USDT_ADDRESS as `0x${string}`,
         abi: USDT_ABI,
         functionName: 'allowance',
-        args: [address, BUNDLE_POOL_ADDRESS],
+        args: address ? [address, BUNDLE_POOL_ADDRESS] : undefined,
+        query: {
+            enabled: !!address
+        }
     }) as { data: bigint | undefined };
 
     // Approve USDT
@@ -107,7 +113,7 @@ export function InvestmentModal({ poolId, tranche, trancheData, onClose, onSucce
         console.log('Approving USDT spending...');
 
         try {
-            approveUSDT({
+            (approveUSDT as any)({
                 address: USDT_ADDRESS as `0x${string}`,
                 abi: USDT_ABI,
                 functionName: 'approve',
@@ -126,12 +132,21 @@ export function InvestmentModal({ poolId, tranche, trancheData, onClose, onSucce
         const amountBigInt = parseUnits(amount, 6);
 
         try {
-            invest({
-                address: BUNDLE_POOL_ADDRESS as `0x${string}`,
-                abi: BUNDLE_POOL_ABI,
-                functionName: tranche === 'junior' ? 'investJuniorTranche' : 'investSeniorTranche',
-                args: [BigInt(poolId), amountBigInt],
-            });
+            if (tranche === 'junior') {
+                (invest as any)({
+                    address: BUNDLE_POOL_ADDRESS as `0x${string}`,
+                    abi: BUNDLE_POOL_ABI,
+                    functionName: 'investJuniorTranche',
+                    args: [BigInt(poolId), amountBigInt],
+                });
+            } else {
+                (invest as any)({
+                    address: BUNDLE_POOL_ADDRESS as `0x${string}`,
+                    abi: BUNDLE_POOL_ABI,
+                    functionName: 'investSeniorTranche',
+                    args: [BigInt(poolId), amountBigInt],
+                });
+            }
         } catch (error) {
             console.error('Investment error:', error);
             setStep('input');
@@ -160,88 +175,93 @@ export function InvestmentModal({ poolId, tranche, trancheData, onClose, onSucce
     const currentNAV = trancheData ? Number(formatUnits(trancheData[3], 6)) : 0;
     const investmentAmount = parseFloat(amount || '0');
     const newNAV = currentNAV + investmentAmount;
-    const totalInvested = trancheData ? Number(formatUnits(trancheData[2], 6)) : 0;
-    const userShare = totalInvested > 0 ? ((investmentAmount / (totalInvested + investmentAmount)) * 100).toFixed(2) : '100.00';
     const expectedAPY = trancheData ? Number(trancheData[4]) : 0;
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-zinc-950 border border-yellow-500/20 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] max-w-md w-full overflow-hidden">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                    <h2 className="text-xl font-bold text-gray-900">
-                        Invest in {tranche === 'junior' ? 'Junior' : 'Senior'} Tranche
+                <div className="flex items-center justify-between p-8 border-b border-yellow-500/10 bg-black/40">
+                    <h2 className="text-xl font-bold text-white font-outfit tracking-tight translate-x-1 translate-y-2">
+                        Invest in <span className="text-yellow-500">{tranche === 'junior' ? 'Junior' : 'Senior'} Tranche</span>
                     </h2>
+                    
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
+                        className="p-2 rounded-full hover:bg-zinc-900 text-zinc-500 hover:text-white transition-all"
                     >
-                        <X className="w-6 h-6" />
+                        <X className="w-5 h-5" />
                     </button>
                 </div>
+                <br />
 
                 {/* Content */}
-                <div className="p-6 space-y-6">
+                <div className="p-8 space-y-8">
                     {/* Amount Input */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="space-y-3">
+                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] translate-x-1">
                             Investment Amount (USDT)
                         </label>
-                        <div className="relative">
+                        <br />
+                        <div className="relative group">
                             <input
                                 type="number"
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
-                                placeholder="Enter amount"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#5B5FED] focus:border-transparent"
+                                placeholder="0.00"
+                                className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl px-5 py-4 text-white font-outfit text-lg focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500/40 transition-all outline-none placeholder:text-zinc-700"
                                 disabled={step !== 'input'}
                             />
                             <button
                                 onClick={handleMaxClick}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5B5FED] font-semibold text-sm hover:text-[#4A4ED4]"
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-yellow-500 font-bold text-[10px] uppercase tracking-widest hover:text-yellow-400 transition-colors"
                                 disabled={step !== 'input'}
                             >
                                 MAX
                             </button>
                         </div>
-                        <p className="text-sm text-gray-500 mt-1">
-                            Your Balance: {usdtBalance ? formatCurrency(formatUnits(usdtBalance as bigint, 6)) : '$0.00'} USDT
-                        </p>
+                        <br />
+                        <div className="flex justify-between items-center px-1">
+                            <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">
+                                Available Balance
+                            </p>
+                            <p className="text-[10px] text-white font-bold">
+                                {usdtBalance ? formatCurrency(formatUnits(usdtBalance as bigint, 6)) : '$0.00'} USDT
+                            </p>
+                        </div>
                     </div>
 
                     {/* Investment Preview */}
                     {amount && parseFloat(amount) > 0 && (
-                        <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                            <h3 className="font-semibold text-gray-900 mb-3">Investment Preview</h3>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-gray-600">Your Investment:</span>
-                                <span className="font-semibold text-gray-900">{formatCurrency(amount)}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-gray-600">Current Tranche NAV:</span>
-                                <span className="font-semibold text-gray-900">{formatCurrency(currentNAV.toString())}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-gray-600">New Tranche NAV:</span>
-                                <span className="font-semibold text-[#5B5FED]">{formatCurrency(newNAV.toString())}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-gray-600">Your Share:</span>
-                                <span className="font-semibold text-gray-900">{userShare}%</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-gray-600">Expected APY:</span>
-                                <span className="font-semibold text-green-600">{expectedAPY}%</span>
+                        <div className="bg-black/40 border border-yellow-500/5 rounded-2xl p-6 space-y-4">
+                            <h3 className="text-[10px] font-bold text-yellow-500/70 uppercase tracking-[0.3em] mb-4">Investment Summary</h3>
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider">Your Investment</span>
+                                    <span className="text-sm font-bold text-white font-outfit">{formatCurrency(amount)}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider">Current Tranche NAV</span>
+                                    <span className="text-sm font-bold text-zinc-400 font-outfit">{formatCurrency(currentNAV.toString())}</span>
+                                </div>
+                                <div className="flex justify-between items-center pt-2 border-t border-yellow-500/5">
+                                    <span className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider">New Tranche NAV</span>
+                                    <span className="text-sm font-bold text-yellow-500 font-outfit">{formatCurrency(newNAV.toString())}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider">Expected APY</span>
+                                    <span className="text-sm font-bold text-green-400 font-outfit">{expectedAPY}%</span>
+                                </div>
                             </div>
                         </div>
                     )}
                 </div>
 
                 {/* Footer */}
-                <div className="flex space-x-3 p-6 border-t border-gray-200">
+                <div className="flex space-x-4 p-8 bg-black/40 border-t border-yellow-500/10">
                     <button
                         onClick={onClose}
-                        className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors"
+                        className="flex-1 px-6 py-4 border border-zinc-800 text-zinc-500 font-bold text-[11px] uppercase tracking-[0.2em] rounded-xl hover:bg-zinc-900 hover:text-white transition-all"
                         disabled={step !== 'input'}
                     >
                         Cancel
@@ -249,9 +269,9 @@ export function InvestmentModal({ poolId, tranche, trancheData, onClose, onSucce
                     <button
                         onClick={handleSubmit}
                         disabled={!amount || parseFloat(amount) <= 0 || step !== 'input'}
-                        className="flex-1 px-6 py-3 bg-[#5B5FED] text-white font-semibold rounded-lg hover:bg-[#4A4ED4] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-1 px-6 py-4 bg-gradient-to-r from-[#FFD36A] to-[#E6B84F] text-black font-black text-[11px] uppercase tracking-[0.2em] rounded-xl hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all disabled:opacity-30 disabled:grayscale"
                     >
-                        {step === 'approving' ? 'Approving...' : step === 'investing' ? 'Investing...' : 'Confirm Investment'}
+                        {step === 'approving' ? 'Approving...' : step === 'investing' ? 'Investing...' : 'Confirm'}
                     </button>
                 </div>
             </div>

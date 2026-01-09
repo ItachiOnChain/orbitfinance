@@ -1,4 +1,3 @@
-import React from 'react';
 
 interface FilterTabsProps {
     activeFilter: 'all' | 'upcoming' | 'raising' | 'staking' | 'finalRedemption' | 'ended';
@@ -16,17 +15,17 @@ export function FilterTabs({ activeFilter, onFilterChange }: FilterTabsProps) {
     ];
 
     return (
-        <div className="flex space-x-2 border-b border-gray-200">
+        <div className="flex items-center gap-2">
             {tabs.map((tab) => (
                 <button
                     key={tab.id}
                     onClick={() => onFilterChange(tab.id as any)}
-                    className={`px-6 py-3 text-sm font-medium transition-all relative ${activeFilter === tab.id
-                            ? 'text-[#5B5FED] border-b-2 border-[#5B5FED]'
-                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                        }`}
+                    className={`px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.25em] transition-all relative group ${activeFilter === tab.id
+                            ? 'text-yellow-500 bg-yellow-500/10 shadow-[0_0_20px_rgba(234,179,8,0.1)]'
+                            : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50'
+                        } rounded-xl`}
                 >
-                    {tab.label}
+                    <span className="relative z-10">{tab.label}</span>
                 </button>
             ))}
         </div>

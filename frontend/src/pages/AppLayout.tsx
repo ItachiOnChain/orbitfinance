@@ -39,8 +39,8 @@ export default function AppLayout() {
       </div>
       <br />
 
-      {/* Footer - Only for RWA mode in app if needed, or remove if it was only for landing */}
-      {mode === 'rwa' && <Footer />}
+      {/* Footer - Full width, spanning sidebar space */}
+      <Footer />
     </div>
   );
 }

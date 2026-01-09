@@ -57,76 +57,77 @@ export function ManageAssetModal({ isOpen, onClose, onBorrow, asset }: ManageAss
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
 
-            <div className="relative bg-[#0A2342] border border-zinc-800 rounded-2xl p-8 max-w-2xl w-full mx-4 shadow-2xl max-h-[90vh] overflow-y-auto">
-                <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-white">Manage Asset</h2>
-                    <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors">
-                        <X size={24} />
+            <div className="relative bg-zinc-950 border border-yellow-500/20 rounded-3xl p-10 max-w-2xl w-full mx-4 shadow-[0_0_50px_rgba(0,0,0,0.5)] max-h-[90vh] overflow-y-auto">
+                <div className="flex items-center justify-between mb-10">
+                    <h2 className="text-2xl font-bold text-white font-outfit tracking-tight">Manage <span className="text-yellow-500">Asset</span></h2>
+                    <button onClick={onClose} className="p-2 rounded-full hover:bg-zinc-900 text-zinc-500 hover:text-white transition-all">
+                        <X size={20} />
                     </button>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-8">
                     {/* Asset Details */}
-                    <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-6">
-                        <h3 className="text-lg font-semibold text-white mb-4">Asset Details</h3>
-                        <div className="space-y-3">
-                            <div className="flex justify-between">
-                                <span className="text-zinc-400 text-sm">Asset Name</span>
-                                <span className="text-white font-medium">{asset.name}</span>
+                    <div className="bg-black/40 border border-yellow-500/5 rounded-2xl p-8 space-y-6">
+                        <h3 className="text-[10px] font-bold text-yellow-500/70 uppercase tracking-[0.3em]">Asset Information</h3>
+                        <div className="grid grid-cols-2 gap-8">
+                            <div className="space-y-1">
+                                <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Asset Name</span>
+                                <p className="text-white font-outfit font-medium text-lg">{asset.name}</p>
                             </div>
-                            <div className="flex justify-between">
-                                <span className="text-zinc-400 text-sm">Token ID</span>
-                                <span className="text-white font-mono">#{asset.tokenId}</span>
+                            <div className="space-y-1">
+                                <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Token ID</span>
+                                <p className="text-white font-mono text-lg">#{asset.tokenId}</p>
                             </div>
-                            <div className="flex justify-between">
-                                <span className="text-zinc-400 text-sm">Total Value</span>
-                                <span className="text-[#00F5A0] font-mono font-semibold">
+                            <div className="space-y-1">
+                                <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Total Value</span>
+                                <p className="text-yellow-500 font-outfit font-bold text-xl">
                                     ${asset.totalValue.toLocaleString()}
-                                </span>
+                                </p>
                             </div>
-                            <div className="flex justify-between">
-                                <span className="text-zinc-400 text-sm">Monthly Income</span>
-                                <span className="text-[#00D4FF] font-mono">
-                                    ${asset.monthlyIncome.toLocaleString()}/mo
-                                </span>
+                            <div className="space-y-1">
+                                <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Monthly Income</span>
+                                <p className="text-white font-outfit font-bold text-xl">
+                                    ${asset.monthlyIncome.toLocaleString()} <span className="text-[10px] text-zinc-500 uppercase tracking-widest">/mo</span>
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     {/* Borrowing Options */}
-                    <div>
-                        <h3 className="text-lg font-semibold text-white mb-4">Borrowing Options</h3>
+                    <div className="space-y-6">
+                        <h3 className="text-[10px] font-bold text-yellow-500/70 uppercase tracking-[0.3em]">Borrowing Options</h3>
 
                         {/* Amount Slider */}
-                        <div className="space-y-3">
-                            <div className="flex justify-between text-sm">
-                                <span className="text-zinc-400">Amount to Borrow</span>
-                                <span className="text-white font-mono font-semibold">
-                                    ${borrowAmount.toLocaleString()}
+                        <div className="space-y-4">
+                            <div className="flex justify-between items-end">
+                                <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Amount to Borrow</span>
+                                <span className="text-white font-outfit font-bold text-2xl">
+                                    ${Number(borrowAmount).toLocaleString()}
                                 </span>
                             </div>
 
-                            <input
-                                type="range"
-                                min="0"
-                                max={maxBorrowable}
-                                step="1000"
-                                value={borrowAmount}
-                                onChange={(e) => setBorrowAmount(Number(e.target.value))}
-                                className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-gold"
-                            />
-
-                            <div className="flex justify-between text-xs text-zinc-500">
-                                <span>$0</span>
-                                <span>Max: ${maxBorrowable.toLocaleString()} (50% LTV)</span>
+                            <div className="relative pt-2">
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max={maxBorrowable}
+                                    step="1000"
+                                    value={borrowAmount}
+                                    onChange={(e) => setBorrowAmount(e.target.value)}
+                                    className="w-full h-1.5 bg-zinc-900 rounded-lg appearance-none cursor-pointer accent-yellow-500"
+                                />
+                                <div className="flex justify-between text-[10px] text-zinc-600 font-bold uppercase tracking-widest mt-3">
+                                    <span>$0</span>
+                                    <span>Max: ${maxBorrowable.toLocaleString()} (50% LTV)</span>
+                                </div>
                             </div>
 
                             {/* Progress Bar */}
-                            <div className="w-full bg-zinc-800 rounded-full h-2">
+                            <div className="w-full bg-zinc-900 rounded-full h-1.5 overflow-hidden">
                                 <div
-                                    className={`h-2 rounded-full transition-all duration-300 ${borrowPercentage > 90 ? 'bg-red-500' : borrowPercentage > 70 ? 'bg-[#FFB800]' : 'bg-[#00F5A0]'
+                                    className={`h-full transition-all duration-500 ${borrowPercentage > 90 ? 'bg-red-500' : borrowPercentage > 70 ? 'bg-yellow-600' : 'bg-yellow-500'
                                         }`}
                                     style={{ width: `${borrowPercentage}%` }}
                                 />
@@ -134,15 +135,15 @@ export function ManageAssetModal({ isOpen, onClose, onBorrow, asset }: ManageAss
                         </div>
 
                         {/* Manual Input */}
-                        <div className="mt-4">
-                            <label className="block text-sm font-semibold text-zinc-400 mb-2">Or enter amount manually</label>
-                            <div className="relative">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">$</span>
+                        <div className="space-y-3">
+                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Or enter amount manually</label>
+                            <div className="relative group">
+                                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-500 font-outfit font-bold">$</span>
                                 <input
                                     type="number"
                                     value={borrowAmount || ''}
                                     onChange={(e) => setBorrowAmount(String(Math.min(Number(e.target.value), maxBorrowable)))}
-                                    className="w-full pl-8 pr-4 py-3 bg-zinc-900/50 border border-zinc-800 rounded-lg text-white focus:border-gold focus:outline-none transition-colors"
+                                    className="w-full pl-10 pr-5 py-4 bg-zinc-900/50 border border-zinc-800 rounded-xl text-white font-outfit text-lg focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500/40 transition-all outline-none placeholder:text-zinc-700"
                                     placeholder="0"
                                     min="0"
                                     max={maxBorrowable}
@@ -151,27 +152,29 @@ export function ManageAssetModal({ isOpen, onClose, onBorrow, asset }: ManageAss
                         </div>
 
                         {/* Auto-Repayment */}
-                        <div className="mt-6 bg-zinc-900/50 border border-zinc-800 rounded-lg p-4">
-                            <div className="flex items-start gap-3">
-                                <input
-                                    type="checkbox"
-                                    id="autoRepay"
-                                    checked={autoRepay}
-                                    onChange={(e) => setAutoRepay(e.target.checked)}
-                                    className="mt-1 w-4 h-4 accent-gold cursor-pointer"
-                                />
+                        <div className="bg-black/40 border border-yellow-500/5 rounded-2xl p-6">
+                            <div className="flex items-start gap-4">
+                                <div className="relative flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id="autoRepay"
+                                        checked={autoRepay}
+                                        onChange={(e) => setAutoRepay(e.target.checked)}
+                                        className="w-5 h-5 rounded border-zinc-800 bg-zinc-900 text-yellow-500 focus:ring-yellow-500/20 cursor-pointer"
+                                    />
+                                </div>
                                 <div className="flex-1">
-                                    <label htmlFor="autoRepay" className="text-white font-semibold cursor-pointer flex items-center gap-2">
+                                    <label htmlFor="autoRepay" className="text-white font-bold text-sm cursor-pointer flex items-center gap-2 uppercase tracking-wider">
                                         Enable Auto-Repayment
                                         <div className="group relative">
-                                            <Info size={16} className="text-zinc-500 hover:text-gold cursor-help" />
-                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-64 p-3 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-zinc-400 shadow-xl z-10">
+                                            <Info size={14} className="text-zinc-500 hover:text-yellow-500 cursor-help transition-colors" />
+                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 hidden group-hover:block w-72 p-4 bg-zinc-900 border border-zinc-800 rounded-xl text-[11px] text-zinc-400 shadow-2xl z-10 leading-relaxed">
                                                 Your monthly income will automatically be routed to repay this loan. The SPV handles this process seamlessly.
                                             </div>
                                         </div>
                                     </label>
-                                    <p className="text-sm text-zinc-400 mt-1">
-                                        Monthly income of ${asset.monthlyIncome.toLocaleString()} will automatically repay your debt
+                                    <p className="text-[11px] text-zinc-500 mt-2 leading-relaxed">
+                                        Monthly income of <span className="text-white font-bold">${asset.monthlyIncome.toLocaleString()}</span> will automatically repay your debt
                                     </p>
                                 </div>
                             </div>
@@ -182,9 +185,9 @@ export function ManageAssetModal({ isOpen, onClose, onBorrow, asset }: ManageAss
                     <button
                         onClick={handleBorrow}
                         disabled={isProcessing || currentBorrowAmount === 0 || currentBorrowAmount > maxBorrowable}
-                        className="w-full py-4 bg-[#00D4FF] hover:bg-[#00D4FF]/90 text-[#0A2342] font-bold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full py-5 bg-gradient-to-r from-[#FFD36A] to-[#E6B84F] hover:from-[#FFE082] hover:to-[#F5C860] text-black font-black rounded-xl transition-all shadow-[0_0_30px_rgba(234,179,8,0.15)] hover:shadow-[0_0_40px_rgba(234,179,8,0.3)] hover:scale-[1.01] active:scale-[0.99] disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed text-[12px] uppercase tracking-[0.3em]"
                     >
-                        {isProcessing ? 'Processing...' : 'Borrow'}
+                        {isProcessing ? 'Processing...' : 'Confirm Borrow'}
                     </button>
                 </div>
             </div>

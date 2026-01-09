@@ -6,7 +6,7 @@ export function Footer() {
             {/* Subtle Background Glow */}
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[300px] bg-gold/5 blur-[120px] pointer-events-none" />
             
-            <div className="max-w-7xl mx-auto relative z-10 lg:pl-28">
+            <div className="max-w-7xl mx-auto relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
                     {/* Brand Column */}
                     <div className="flex flex-col gap-8">

@@ -169,14 +169,25 @@ export default function Portfolio() {
     };
 
     return (
-        <div className="space-y-8">
-            <div>
-                <h1 className="text-3xl font-bold text-white mb-2">My Portfolio</h1>
-                <p className="text-zinc-400">Track your RWA investments and performance</p>
+        <div className="space-y-12">
+            <div className="flex justify-between items-end">
+                <div>
+                    <h1 className="text-7xl font-bold text-white mb-3 font-outfit tracking-tight translate-y-2 translate-x-100">My <span className="text-yellow-500">Portfolio</span></h1>
+                    <br />
+                    <p className="text-zinc-500 font-medium uppercase tracking-widest text-[11px] translate-x-95"></p>
+                </div>
+                <button
+                    onClick={handleExport}
+                    className="flex items-center gap-2 px-6 py-2.5 bg-zinc-900 border border-yellow-500/20 rounded-xl text-yellow-500 text-[20px] font-bold uppercase tracking-widest hover:bg-yellow-500/5 hover:border-yellow-500/40 transition-all"
+                >
+                    <Download className="w-4 h-4" />
+                    Export Report
+                </button>
             </div>
+            <br />
 
             {/* Metrics Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 translate-y-2 ">
                 <MetricCard
                     label="Net Worth"
                     value={`$${netWorth.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
@@ -188,77 +199,85 @@ export default function Portfolio() {
                 <MetricCard
                     label="Total Earnings"
                     value={`$${totalEarnings.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                    color="#4ADE80"
                 />
                 <MetricCard
                     label="Outstanding Debt"
                     value={`$${debtAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                    color="#F87171"
                 />
             </div>
+            <br />
+            <br />
 
-            {/* Asset Summary */}
-            <div className="bg-[#0A2342] border border-zinc-800 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-white mb-4">Asset Summary</h3>
-                <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                        <span className="text-zinc-400">Total Assets</span>
-                        <span className="text-white font-mono font-semibold">{pendingAssets.length + mintedAssets.length}</span>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Asset Summary */}
+                <div className="bg-zinc-950 border border-yellow-500/10 rounded-3xl p-8 shadow-xl relative overflow-hidden group hover:border-yellow-500/20 transition-all duration-500">
+                    <div className="absolute -top-24 -right-24 w-48 h-48 bg-yellow-500/5 blur-[100px] rounded-full" />
+                    
+                    <h3 className="text-xl font-bold text-white mb-8 font-outfit tracking-tight relative z-10">Asset <span className="text-yellow-500">Summary</span></h3>
+                    
+                    <div className="space-y-6 relative z-10">
+                        <div className="flex justify-between items-center p-4 bg-black/40 border border-yellow-500/5 rounded-2xl">
+                            <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Total Assets</span>
+                            <span className="text-white font-mono font-bold text-lg">{pendingAssets.length + mintedAssets.length}</span>
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-4">
+                            <div className="p-4 bg-black/20 border border-yellow-500/5 rounded-2xl text-center">
+                                <p className="text-zinc-500 text-[9px] font-bold uppercase tracking-widest mb-2">Under Review</p>
+                                <p className="text-yellow-500 font-mono font-bold text-xl">{pendingAssets.length}</p>
+                            </div>
+                            <div className="p-4 bg-black/20 border border-yellow-500/5 rounded-2xl text-center">
+                                <p className="text-zinc-500 text-[9px] font-bold uppercase tracking-widest mb-2">Tokenized</p>
+                                <p className="text-green-400 font-mono font-bold text-xl">{mintedAssets.length}</p>
+                            </div>
+                            <div className="p-4 bg-black/20 border border-yellow-500/5 rounded-2xl text-center">
+                                <p className="text-zinc-500 text-[9px] font-bold uppercase tracking-widest mb-2">Collateral</p>
+                                <p className="text-orange-400 font-mono font-bold text-xl">{lockedAssets.length}</p>
+                            </div>
+                        </div>
+
+                        <div className="pt-6 border-t border-yellow-500/10 flex justify-between items-center">
+                            <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Total Portfolio Value</span>
+                            <span className="text-white font-outfit font-bold text-2xl">
+                                ${netWorth.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                            </span>
+                        </div>
                     </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-zinc-400">Under Review</span>
-                        <span className="text-yellow-400 font-mono font-semibold">{pendingAssets.length}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-zinc-400">Tokenized</span>
-                        <span className="text-[#00F5A0] font-mono font-semibold">{mintedAssets.length}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-zinc-400">Locked as Collateral</span>
-                        <span className="text-[#FFB800] font-mono font-semibold">
-                            {lockedAssets.length}
-                        </span>
-                    </div>
-                    <div className="flex justify-between items-center pt-3 border-t border-zinc-700">
-                        <span className="text-zinc-400 font-semibold">Total Value</span>
-                        <span className="text-white font-mono font-bold">
-                            ${netWorth.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-                        </span>
+                </div>
+
+                {/* Net Worth Breakdown */}
+                <div className="bg-zinc-950 border border-yellow-500/10 rounded-3xl p-8 shadow-xl relative overflow-hidden group hover:border-yellow-500/20 transition-all duration-500">
+                    <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-yellow-500/5 blur-[100px] rounded-full" />
+                    
+                    <h3 className="text-xl font-bold text-white mb-8 font-outfit tracking-tight relative z-10 translate-x-1">Net Worth <span className="text-yellow-500">Breakdown</span></h3>
+                    
+                    <div className="space-y-4 relative z-10 translate-x-1">
+                        {[
+                            { label: 'Pending Assets', value: pendingValue, color: 'text-zinc-400' },
+                            { label: 'Tokenized Assets', value: mintedValue, color: 'text-zinc-400' },
+                            { label: 'Tranche Investments', value: totalTrancheInvestments, color: 'text-zinc-400' },
+                            { label: 'Monthly Earnings', value: totalEarnings, color: 'text-green-400' },
+                            { label: 'Outstanding Debt', value: -debtAmount, color: 'text-red-400' },
+                        ].map((item, i) => (
+                            <div key={i} className="w-full flex justify-between items-center text-sm px-2 py-1 hover:bg-white/5 rounded-lg transition-colors -translate-x-1">
+                                <span className="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">{item.label}</span>
+                                <span className={`${item.color} font-mono font-bold text-right min-w-[100px]`}>
+                                    {item.value >= 0 ? '+' : ''}${Math.abs(item.value).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                                </span>
+                            </div>
+                        ))}
+                        
+                        <div className="pt-6 mt-6 border-t border-yellow-500/20 flex justify-between items-center">
+                            <span className="text-yellow-500 font-black uppercase tracking-[0.2em] text-xs">Total Net Worth</span>
+                            <span className="text-yellow-500 font-outfit font-black text-3xl -translate-x-1">
+                                ${(netWorth - debtAmount).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            {/* Net Worth Breakdown */}
-            <div className="bg-gradient-to-br from-gold/5 to-transparent border border-gold/20 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-white mb-4">Net Worth Calculation</h3>
-                <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                        <span className="text-zinc-400">Pending Assets (Under Review)</span>
-                        <span className="text-white font-mono">+${pendingValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-zinc-400">Tokenized Assets</span>
-                        <span className="text-white font-mono">+${mintedValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-zinc-400">Tranche Investments</span>
-                        <span className="text-white font-mono">+${totalTrancheInvestments.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-zinc-400">Total Earnings (Monthly)</span>
-                        <span className="text-[#00F5A0] font-mono">+${totalEarnings.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-zinc-400">Outstanding Debt</span>
-                        <span className="text-red-400 font-mono">-${debtAmount.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-                    </div>
-                    <div className="flex justify-between pt-3 border-t border-gold/30">
-                        <span className="text-gold font-bold">Net Worth</span>
-                        <span className="text-gold font-mono font-bold text-lg">
-                            ${(netWorth - debtAmount).toLocaleString(undefined, { maximumFractionDigits: 2 })}
-                        </span>
-                    </div>
-                </div>
-            </div>
-
         </div>
     );
 }

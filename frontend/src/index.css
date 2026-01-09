@@ -30,6 +30,36 @@
       background-position: 0% 50%;
     }
   }
+
+  @keyframes pulse-gold {
+
+    0%,
+    100% {
+      box-shadow: 0 0 12px rgba(255, 200, 60, 0.2);
+      transform: scale(1);
+    }
+
+    50% {
+      box-shadow: 0 0 24px rgba(255, 200, 60, 0.4);
+      transform: scale(1.02);
+    }
+  }
+
+  @keyframes slide-down {
+    0% {
+      transform: translate(-50%, -100%);
+      opacity: 0;
+    }
+
+    100% {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+  }
+
+  .animate-slide-down {
+    animation: slide-down 0.5s ease-out forwards;
+  }
 }
 
 @layer base {
