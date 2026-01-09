@@ -1,22 +1,29 @@
 @import "tailwindcss";
 
 @theme {
+  /* ===== COLOR TOKENS ===== */
   --color-gold: #d4af37;
   --color-gold-muted: #b8860b;
-  --color-dark-bg: #0a0d11;
-  /* This might be redundant with --background, but keeping as per original structure */
+  --color-dark-bg: #050505;
   --color-sidebar-bg: #050607;
 
   --color-bronze1: #a87f32;
   --color-bronze2: #8a6528;
   --color-bronze3: #f5e5da;
 
+  /* ===== TYPOGRAPHY ===== */
   --font-inter: "Inter", system-ui, sans-serif;
   --font-outfit: "Outfit", system-ui, sans-serif;
   --font-space: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "Roboto Mono", "SF Mono", monospace;
 
   --letter-spacing-widest: 0.25em;
 
+  /* ===== SPACING SCALE ===== */
+  --section-gap: 10rem;
+  --section-gap-lg: 16rem;
+
+  /* ===== ANIMATIONS ===== */
   @keyframes buttonMovingGradientBg {
     0% {
       background-position: 0% 50%;
@@ -35,13 +42,13 @@
 
     0%,
     100% {
-      box-shadow: 0 0 12px rgba(255, 200, 60, 0.2);
+      box-shadow: 0 0 8px rgba(212, 175, 55, 0.15);
       transform: scale(1);
     }
 
     50% {
-      box-shadow: 0 0 24px rgba(255, 200, 60, 0.4);
-      transform: scale(1.02);
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.25);
+      transform: scale(1.01);
     }
   }
 
@@ -57,8 +64,16 @@
     }
   }
 
-  .animate-slide-down {
-    animation: slide-down 0.5s ease-out forwards;
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
@@ -89,12 +104,99 @@
 }
 
 @layer utilities {
+
+  /* ===== ANIMATION UTILITIES ===== */
+  .animate-slide-down {
+    animation: slide-down 0.5s ease-out forwards;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  /* ===== LAYERZERO-INSPIRED TYPOGRAPHY ===== */
+  .heading-hero {
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  .heading-section {
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .body-large {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .body-calm {
+    font-size: 0.9375rem;
+    line-height: 1.9;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .label-mono {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  /* ===== SECTION SPACING ===== */
+  .section-spacer {
+    padding-top: var(--section-gap);
+    padding-bottom: var(--section-gap);
+  }
+
+  .section-spacer-lg {
+    padding-top: var(--section-gap-lg);
+    padding-bottom: var(--section-gap-lg);
+  }
+
+  /* ===== SUBTLE DIVIDERS ===== */
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+  }
+
+  /* ===== CARD STYLES ===== */
+  .card-calm {
+    background: rgba(24, 24, 27, 0.4);
+    /* Translucent Zinc-900 */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.25rem;
+    backdrop-filter: blur(16px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-calm:hover {
+    border-color: rgba(212, 175, 55, 0.25);
+    background: rgba(39, 39, 42, 0.5);
+    /* Slightly lighter on hover */
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ===== GLOW UTILITIES (REDUCED INTENSITY) ===== */
   .alchemix-gradient {
-    background: radial-gradient(circle at center, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+    background: radial-gradient(circle at center, rgba(212, 175, 55, 0.03) 0%, transparent 70%);
   }
 
   .text-glow {
-    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    text-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+  }
+
+  .text-glow-subtle {
+    text-shadow: 0 0 40px rgba(212, 175, 55, 0.1);
   }
 
   .text-bronze-gradient {
@@ -106,15 +208,63 @@
     filter: drop-shadow(8px 8px 16px rgba(0, 0, 0, 0.8));
   }
 
+  /* ===== BUTTON STYLES ===== */
+  .btn-primary-gold {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: var(--color-gold);
+    color: #050505;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+  }
+
+  .btn-primary-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.35);
+  }
+
+  .btn-secondary-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-secondary-outline:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
   .btn-gold-outline {
-    border: 1px solid #d4af37;
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
-    transition: all 0.3s ease;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+    transition: all 0.2s ease;
   }
 
   .btn-gold-outline:hover {
-    background-color: color-mix(in srgb, var(--color-gold) 10%, transparent);
-    box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+    background-color: rgba(212, 175, 55, 0.08);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
   }
 }
 

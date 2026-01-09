@@ -2,9 +2,9 @@ import { Twitter, Github, Mail, MessageSquare, Newspaper, Globe, ShieldCheck, Or
 
 export function Footer() {
     return (
-        <footer className="bg-dark-bg py-32 px-6 border-t border-zinc-900/50 relative overflow-hidden">
-            {/* Subtle Background Glow */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[300px] bg-gold/5 blur-[120px] pointer-events-none" />
+        <footer className="bg-[#050505] py-24 px-6 border-t border-white/5 relative overflow-hidden">
+            {/* Subtle Background Glow - Reduced */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[200px] bg-gold/[0.03] blur-[80px] pointer-events-none" />
             
             <div className="max-w-7xl mx-auto relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">

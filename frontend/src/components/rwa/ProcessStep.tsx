@@ -6,7 +6,7 @@ interface ProcessStepProps {
     index: number;
 }
 
-export function ProcessStep({ stepNumber, title, description, isLast = false, index }: ProcessStepProps) {
+export function ProcessStep({ stepNumber, title, description, index }: ProcessStepProps) {
     const isEven = index % 2 === 0;
 
     return (

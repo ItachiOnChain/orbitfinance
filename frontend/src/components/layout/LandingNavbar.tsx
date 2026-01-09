@@ -30,7 +30,7 @@ export function LandingNavbar() {
 
   return (
     <nav className="bg-dark-bg/90 backdrop-blur-md border-b border-zinc-900/50 h-20 sticky top-0 z-50 shadow-xl">
-      <div className="w-full h-full px-8 flex items-center justify-between">
+      <div className="container mx-auto h-full px-6 lg:px-12 flex items-center justify-between">
         {/* Left: Logo */}
         <div className="flex items-center gap-4">
           <div className="relative group">
