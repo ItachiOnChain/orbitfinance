@@ -272,7 +272,7 @@ export default function LandingPage() {
                 title="What is Orbit"
                 subtitle="A new primitive for decentralized credit"
             >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto px-4 translate-x-40 translate-y-7">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto px-4">
                     <Reveal delay={0.1}>
                         <div className="p-6 md:p-10 rounded-3xl border border-gold/20 bg-white/5 backdrop-blur-sm hover:border-gold/50 transition-all group relative overflow-hidden">
                             <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

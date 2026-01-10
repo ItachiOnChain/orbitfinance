@@ -27,10 +27,10 @@ export default function AppLayout() {
       {/* Top Navbar */}
       <AppNavbar />
 
-      {/* Mobile Menu Toggle Button */}
+      {/* Mobile Menu Toggle Button - RIGHT SIDE */}
       <button
         onClick={toggle}
-        className="lg:hidden fixed top-6 left-4 z-50 p-3 rounded-xl bg-zinc-900/90 border border-gold/40 text-gold hover:bg-zinc-800 transition-all shadow-lg"
+        className="lg:hidden fixed top-6 right-4 z-50 p-3 rounded-xl bg-zinc-900/90 border border-gold/40 text-gold hover:bg-zinc-800 transition-all shadow-lg"
         aria-label="Toggle menu"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}

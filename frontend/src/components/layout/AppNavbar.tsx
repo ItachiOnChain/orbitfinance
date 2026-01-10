@@ -24,7 +24,7 @@ export function AppNavbar() {
         : 'bg-dark-bg/90 backdrop-blur-md border-zinc-900/50 shadow-xl'
         }`}
     >
-      <div className="w-full h-full px-8 py-0 grid grid-cols-3 items-center">
+      <div className="w-full h-full px-4 md:px-8 py-0 flex lg:grid lg:grid-cols-3 items-center justify-between lg:justify-start">
         {/* Left: Logo */}
         <div className="flex items-center gap-4">
           <div className="relative group">
@@ -44,8 +44,8 @@ export function AppNavbar() {
           </div>
         </div>
 
-        {/* Center: Mode Toggle */}
-        <div className="flex justify-center">
+        {/* Center: Mode Toggle - Hidden on mobile */}
+        <div className="hidden lg:flex justify-center">
           <div
             className={`flex items-center gap-2 p-1 border transition-colors duration-300 rounded-lg ${theme === 'light'
               ? 'bg-zinc-100 border-zinc-200'
@@ -76,8 +76,8 @@ export function AppNavbar() {
           </div>
         </div>
 
-        {/* Right: Wallet Section */}
-        <div className="flex justify-end items-center gap-6">
+        {/* Right: Wallet Section - Hidden on mobile */}
+        <div className="hidden lg:flex justify-end items-center gap-6">
           {isConnected && address ? (
             <WalletDropdown
               address={address}

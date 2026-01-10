@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAccount, useDisconnect, useConnect } from 'wagmi';
 import {
   LayoutDashboard,
   Repeat,
@@ -9,13 +10,11 @@ import {
   Wrench,
   Moon,
   Sun,
-  DollarSign,
-  FileText,
-  Twitter,
   User,
   Home
 } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
+import { WalletDropdown } from '../WalletDropdown';
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -23,8 +22,12 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
-  const { theme, toggleTheme } = useAppStore();
+  const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
+  const { connect, connectors } = useConnect();
+  const { theme, toggleTheme, mode, toggleMode } = useAppStore();
   const [isVisible, setIsVisible] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,6 +40,12 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
   const handleNavClick = () => {
     // Close mobile menu when nav item is clicked
+    if (onClose) onClose();
+  };
+
+  const handleModeToggle = () => {
+    toggleMode();
+    navigate('/app');
     if (onClose) onClose();
   };
 
@@ -166,65 +175,79 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
         {/* Footer */}
         <footer
-          className={`mt-8 px-6 py-6 border-t
+          className={`mt-auto px-6 py-6 border-t space-y-4
           ${theme === 'light'
               ? 'border-zinc-200 bg-zinc-50/50'
               : 'border-zinc-900/60 bg-zinc-900/20'
             }`}
         >
-          <div className="grid grid-cols-4 items-center">
-            {/* Left */}
-            <div className="flex justify-start">
+          {/* Mode Toggle - Mobile Only */}
+          <div className="lg:hidden flex flex-col gap-2">
+            <p className="text-[10px] font-semibold tracking-[0.3em] uppercase text-zinc-500 mb-2">
+              Mode
+            </p>
+            <div className="flex gap-2">
               <button
-                onClick={toggleTheme}
-                className={`p-2.5 rounded-xl transition-all
-                ${theme === 'light'
-                    ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200 hover:bg-zinc-100'
-                    : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:text-gold hover:bg-zinc-800'
+                onClick={handleModeToggle}
+                className={`flex-1 px-4 py-2 rounded-lg text-[10px] font-bold tracking-[0.2em] uppercase transition-all ${mode === 'crypto'
+                  ? 'bg-gold/20 text-gold border border-gold/40'
+                  : 'bg-zinc-800/50 text-zinc-500 border border-zinc-800 hover:text-zinc-400'
                   }`}
               >
-                {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+                Crypto
+              </button>
+              <button
+                onClick={handleModeToggle}
+                className={`flex-1 px-4 py-2 rounded-lg text-[10px] font-bold tracking-[0.2em] uppercase transition-all ${mode === 'rwa'
+                  ? 'bg-gold/20 text-gold border border-gold/40'
+                  : 'bg-zinc-800/50 text-zinc-500 border border-zinc-800 hover:text-zinc-400'
+                  }`}
+              >
+                RWA
               </button>
             </div>
+          </div>
 
-            {/* Center-left */}
-            <div className="flex justify-center">
+          {/* Wallet Controls - Mobile Only */}
+          <div className="lg:hidden">
+            {isConnected && address ? (
+              <WalletDropdown
+                address={address}
+                onDisconnect={() => {
+                  disconnect();
+                  navigate('/');
+                  if (onClose) onClose();
+                }}
+                theme={theme}
+              />
+            ) : (
               <button
-                className={`p-2.5 rounded-xl transition-all
-                ${theme === 'light'
-                    ? 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'
-                    : 'text-zinc-500 hover:text-gold hover:bg-zinc-900'
-                  }`}
+                onClick={() => {
+                  connect({ connector: connectors[0] });
+                  if (onClose) onClose();
+                }}
+                className="w-full px-4 py-3 bg-gold/10 border border-gold/40 rounded-xl text-gold text-[11px] font-bold tracking-[0.2em] uppercase hover:bg-gold/20 transition-all"
               >
-                <DollarSign size={18} />
+                Connect Wallet
               </button>
-            </div>
+            )}
+          </div>
 
-            {/* Center-right */}
-            <div className="flex justify-center">
-              <button
-                className={`p-2.5 rounded-xl transition-all
+          {/* Theme Toggle */}
+          <div className="flex justify-between items-center pt-2">
+            <p className="text-[10px] font-semibold tracking-[0.3em] uppercase text-zinc-500">
+              Theme
+            </p>
+            <button
+              onClick={toggleTheme}
+              className={`p-2.5 rounded-xl transition-all
                 ${theme === 'light'
-                    ? 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'
-                    : 'text-zinc-500 hover:text-gold hover:bg-zinc-900'
-                  }`}
-              >
-                <FileText size={18} />
-              </button>
-            </div>
-
-            {/* Right */}
-            <div className="flex justify-end">
-              <button
-                className={`p-2.5 rounded-xl transition-all
-                ${theme === 'light'
-                    ? 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'
-                    : 'text-zinc-500 hover:text-gold hover:bg-zinc-900'
-                  }`}
-              >
-                <Twitter size={18} />
-              </button>
-            </div>
+                  ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200 hover:bg-zinc-100'
+                  : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:text-gold hover:bg-zinc-800'
+                }`}
+            >
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
           </div>
         </footer>
       </div>
