@@ -7,16 +7,16 @@ import { useAppStore } from '../../store/appStore';
 export function LandingNavbar() {
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
-  const { connect, connectors } = useConnect();
+  const { connectAsync, connectors } = useConnect();
   const { setMode } = useAppStore();
   const navigate = useNavigate();
 
   const handleConnect = async () => {
-    if (connectors[0]) {
+    const connector = connectors.find(c => c.id === 'injected') || connectors[0];
+    if (connector) {
       try {
-        await connect({ connector: connectors[0] });
+        await connectAsync({ connector });
         setMode('crypto');
-        navigate('/app/crypto');
       } catch (error) {
         console.error('Connection failed:', error);
       }
@@ -26,6 +26,13 @@ export function LandingNavbar() {
   const handleLaunchApp = () => {
     setMode('crypto');
     navigate('/app/crypto');
+  };
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -43,10 +50,28 @@ export function LandingNavbar() {
             </div>
           </div>
 
-          <div className="flex flex-col font-outfit text-white">
+          <div className="flex flex-col font-outfit text-white cursor-pointer" onClick={() => scrollToSection('hero')}>
             <span className="text-lg font-black tracking-[0.15em] leading-none uppercase">ORBIT</span>
             <span className="text-[9px] font-bold tracking-[0.4em] text-gold mt-0.5 uppercase">FINANCE</span>
           </div>
+        </div>
+
+        {/* Center: Links */}
+        <div className="hidden md:flex items-center gap-10">
+          {[
+            { name: 'About', id: 'about' },
+            { name: 'How it Works', id: 'how-it-works' },
+            { name: 'Ecosystem', id: 'ecosystem' },
+            { name: 'Docs', id: 'docs' },
+          ].map((link) => (
+            <button
+              key={link.id}
+              onClick={() => scrollToSection(link.id)}
+              className="text-[11px] font-bold tracking-[0.2em] text-white/50 hover:text-gold uppercase transition-colors"
+            >
+              {link.name}
+            </button>
+          ))}
         </div>
 
         {/* Right: Wallet Section */}
