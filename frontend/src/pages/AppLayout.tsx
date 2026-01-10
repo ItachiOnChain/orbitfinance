@@ -25,7 +25,7 @@ export default function AppLayout() {
         }`}
     >
       {/* Top Navbar */}
-      <AppNavbar />
+      <AppNavbar isSidebarOpen={isOpen} />
 
       {/* Mobile Menu Toggle Button - RIGHT SIDE */}
       <button

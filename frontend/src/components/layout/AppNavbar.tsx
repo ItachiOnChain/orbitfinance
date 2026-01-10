@@ -4,7 +4,11 @@ import { useAppStore } from '../../store/appStore';
 import { Orbit, Hexagon } from 'lucide-react';
 import { WalletDropdown } from '../WalletDropdown';
 
-export function AppNavbar() {
+interface AppNavbarProps {
+  isSidebarOpen?: boolean;
+}
+
+export function AppNavbar({ isSidebarOpen = false }: AppNavbarProps) {
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { connect, connectors } = useConnect();
@@ -25,8 +29,9 @@ export function AppNavbar() {
         }`}
     >
       <div className="w-full h-full px-4 md:px-8 py-0 flex lg:grid lg:grid-cols-3 items-center justify-between lg:justify-start">
-        {/* Left: Logo */}
-        <div className="flex items-center gap-4">
+        {/* Left: Logo - Hidden on mobile when sidebar is open */}
+        <div className={`flex items-center gap-4 transition-opacity duration-300 ${isSidebarOpen ? 'lg:flex opacity-0 lg:opacity-100 pointer-events-none lg:pointer-events-auto' : 'flex'
+          }`}>
           <div className="relative group">
             <div className="text-gold animate-[spin_10s_linear_infinite] group-hover:animate-[spin_3s_linear_infinite]">
               <Orbit size={32} strokeWidth={1.5} />
