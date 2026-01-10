@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseUnits } from 'viem';
 import { Droplet, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
-// Anvil deployment removed - using Mantle Sepolia only
+import { CONTRACTS } from '../contracts';
 
 interface TokenFaucetProps {
     mode: 'crypto' | 'rwa';
@@ -23,23 +23,18 @@ export function TokenFaucet({ mode }: TokenFaucetProps) {
     const { writeContract, data: hash, error } = useWriteContract();
     const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
-    // Get contract addresses from deployments
-    const getTokenAddress = (_token: string): `0x${string}` => {
-        try {
-            if (mode === 'crypto') {
-                // Using Mantle Sepolia contracts from CONTRACTS
-//                 return addresses[token as keyof typeof addresses] as `0x${string}`;
-//             } else {
-//                 return rwaAddresses.MockUSDC as `0x${string}`;
-            }
-        } catch {
-            return '0x0000000000000000000000000000000000000000';
-        return '0x0000000000000000000000000000000000000000' as `0x${string}`;
+    // Get contract address from CONTRACTS
+    const getTokenAddress = (token: string): `0x${string}` => {
+        if (mode === 'crypto') {
+            if (token === 'WETH') return CONTRACTS.WETH;
+            if (token === 'USDC') return CONTRACTS.USDC;
+        } else {
+            if (token === 'MockUSDC') return CONTRACTS.MockUSDC;
         }
         return '0x0000000000000000000000000000000000000000' as `0x${string}`;
     };
 
-    // Simple ERC20 ABI for mint function
+    // ERC20 mint ABI (for Crypto tokens - MockERC20)
     const ERC20_MINT_ABI = [
         {
             name: 'mint',
@@ -50,7 +45,11 @@ export function TokenFaucet({ mode }: TokenFaucetProps) {
                 { name: 'amount', type: 'uint256' }
             ],
             outputs: []
-        },
+        }
+    ] as const;
+
+    // MockUSDC mintToSelf ABI (for RWA token)
+    const MINT_TO_SELF_ABI = [
         {
             name: 'mintToSelf',
             type: 'function',
@@ -62,7 +61,7 @@ export function TokenFaucet({ mode }: TokenFaucetProps) {
         }
     ] as const;
 
-    const handleClaim = async (token: string, decimals: number, useMintToSelf: boolean = false) => {
+    const handleClaim = async (token: string, decimals: number) => {
         if (!address) return;
 
         setClaimingToken(token);
@@ -78,24 +77,27 @@ export function TokenFaucet({ mode }: TokenFaucetProps) {
 
             const tokenAddress = getTokenAddress(token);
 
-            if (useMintToSelf) {
-                // RWA MockUSDC uses mintToSelf
+            if (tokenAddress === '0x0000000000000000000000000000000000000000') {
+                console.error('Invalid token address');
+                setClaimingToken(null);
+                return;
+            }
+
+            // RWA mode uses mintToSelf, Crypto mode uses mint(to, amount)
+            if (mode === 'rwa') {
                 writeContract({
                     address: tokenAddress,
-                    abi: ERC20_MINT_ABI,
+                    abi: MINT_TO_SELF_ABI,
                     functionName: 'mintToSelf',
                     args: [amount],
-                    account: address,
-                } as any);
+                });
             } else {
-                // Crypto tokens use mint(address, amount)
                 writeContract({
                     address: tokenAddress,
                     abi: ERC20_MINT_ABI,
                     functionName: 'mint',
                     args: [address, amount],
-                    account: address,
-                } as any);
+                });
             }
         } catch (err) {
             console.error('Claim failed:', err);
@@ -120,7 +122,7 @@ export function TokenFaucet({ mode }: TokenFaucetProps) {
 
     if (!isConnected) {
         return (
-            <div className="bg-black border-2 border-yellow-500/40 rounded-2xl p-10 shadow-[0_0_40px_rgba(234,179,8,0.15)] backdrop-blur-xl flex flex-col items-center justify-center text-center">
+            <div className="bg-black border-2 border-yellow-500/40 rounded-2xl p-10 shadow-[0_0_40px_rgba(234,179,8,0.15)] backdrop-blur-xl min-h-[400px] flex flex-col items-center justify-center text-center">
                 <div className="p-5 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 mb-8 animate-pulse-gold">
                     <Droplet className="w-10 h-10 text-yellow-400" />
                 </div>
@@ -133,8 +135,8 @@ export function TokenFaucet({ mode }: TokenFaucetProps) {
     }
 
     return (
-        <div className="bg-black border-2 border-yellow-500/40 rounded-2xl p-6 shadow-[0_0_40px_rgba(234,179,8,0.15)] backdrop-blur-xl flex flex-col">
-            <div className="flex flex-col items-center text-center gap-4 mb-4">
+        <div className="bg-black border-2 border-yellow-500/40 rounded-2xl p-8 shadow-[0_0_40px_rgba(234,179,8,0.15)] backdrop-blur-xl flex flex-col">
+            <div className="flex flex-col items-center text-center gap-4 mb-6">
                 <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/30">
                     <Droplet className="w-8 h-8 text-yellow-400" />
                 </div>
@@ -145,111 +147,108 @@ export function TokenFaucet({ mode }: TokenFaucetProps) {
                     </p>
                 </div>
             </div>
-            <br />
 
             {/* Success Message */}
             {successMessage && (
-                <div className="mb-4 p-4 bg-yellow-500/10 border border-yellow-500/40 rounded-xl flex items-center gap-3 animate-slide-down">
-                    <CheckCircle className="w-5 h-5 text-yellow-400" />
-                    <span className="text-sm text-yellow-100 font-medium">{successMessage}</span>
+                <div className="mb-4 p-3 bg-green-500/10 border-2 border-green-500/30 rounded-xl flex items-center gap-2 animate-fade-in">
+                    <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
+                    <p className="text-xs text-green-300 font-medium">{successMessage}</p>
                 </div>
             )}
 
             {/* Error Message */}
             {error && (
-                <div className="mb-4 p-4 bg-red-500/10 border border-red-500/40 rounded-xl flex items-center gap-3">
-                    <AlertCircle className="w-5 h-5 text-red-400" />
-                    <span className="text-sm text-red-100 font-medium">
-                        Claim failed. Please try again.
-                    </span>
+                <div className="mb-4 p-3 bg-red-500/10 border-2 border-red-500/30 rounded-xl flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+                    <p className="text-xs text-red-300 font-medium">Failed to claim tokens. Please try again.</p>
                 </div>
             )}
 
-            <br />
             {/* Token Claim Buttons */}
-            <div className="space-y-4 flex-grow">
+            <div className="flex flex-col gap-4">
                 {mode === 'crypto' ? (
                     <>
-                        {/* WETH Faucet */}
-                        <div className="group relative">
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-yellow-500/20 to-yellow-500/0 rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-500" />
-                            <div className="relative flex items-center justify-between p-6 bg-zinc-900/40 border border-yellow-500/20 rounded-xl hover:border-yellow-500/40 transition-all">
-                                <div>
-                                    <p className="font-bold text-white text-lg font-outfit">WETH</p>
-                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">Claim {FAUCET_AMOUNTS.WETH} WETH</p>
+                        {/* WETH */}
+                        <button
+                            onClick={() => handleClaim('WETH', 18)}
+                            disabled={claimingToken === 'WETH' || isConfirming}
+                            className="group relative overflow-hidden bg-gradient-to-br from-yellow-600/20 to-yellow-900/20 hover:from-yellow-600/30 hover:to-yellow-900/30 border-2 border-yellow-500/40 hover:border-yellow-400/60 rounded-xl p-4 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(234,179,8,0.15)] hover:shadow-[0_0_30px_rgba(234,179,8,0.25)]"
+                        >
+                            <div className="flex items-center justify-between relative z-10">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-xl bg-yellow-500/20 border border-yellow-400/40 flex items-center justify-center">
+                                        <span className="text-2xl font-black text-yellow-300">W</span>
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="text-lg font-bold text-white font-outfit">WETH</p>
+                                        <p className="text-xs text-yellow-300/70 font-medium">Wrapped Ether • {FAUCET_AMOUNTS.WETH} tokens</p>
+                                    </div>
                                 </div>
-                                <button
-                                    onClick={() => handleClaim('WETH', 18, false)}
-                                    disabled={claimingToken === 'WETH' || isConfirming}
-                                    className="px-6 py-2.5 bg-yellow-400 hover:bg-yellow-300 disabled:bg-zinc-800 disabled:text-zinc-600 text-black text-xs font-bold rounded-lg transition-all uppercase tracking-widest shadow-[0_0_20px_rgba(234,179,8,0.2)] active:scale-95"
-                                >
-                                    {claimingToken === 'WETH' && isConfirming ? (
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                    ) : (
-                                        'Claim'
-                                    )}
-                                </button>
+                                {claimingToken === 'WETH' && isConfirming ? (
+                                    <Loader2 className="w-6 h-6 text-yellow-400 animate-spin" />
+                                ) : (
+                                    <Droplet className="w-6 h-6 text-yellow-400 group-hover:scale-110 transition-transform" />
+                                )}
                             </div>
-                        </div>
+                        </button>
 
-                        {/* USDC Faucet */}
-                        <div className="group relative">
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-yellow-500/20 to-yellow-500/0 rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-500" />
-                            <div className="relative flex items-center justify-between p-6 bg-zinc-900/40 border border-yellow-500/20 rounded-xl hover:border-yellow-500/40 transition-all">
-                                <div>
-                                    <p className="font-bold text-white text-lg font-outfit">USDC</p>
-                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">Claim {FAUCET_AMOUNTS.USDC} USDC</p>
+                        {/* USDC */}
+                        <button
+                            onClick={() => handleClaim('USDC', 6)}
+                            disabled={claimingToken === 'USDC' || isConfirming}
+                            className="group relative overflow-hidden bg-gradient-to-br from-yellow-600/20 to-yellow-900/20 hover:from-yellow-600/30 hover:to-yellow-900/30 border-2 border-yellow-500/40 hover:border-yellow-400/60 rounded-xl p-4 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(234,179,8,0.15)] hover:shadow-[0_0_30px_rgba(234,179,8,0.25)]"
+                        >
+                            <div className="flex items-center justify-between relative z-10">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-xl bg-yellow-500/20 border border-yellow-400/40 flex items-center justify-center">
+                                        <span className="text-2xl font-black text-yellow-300">$</span>
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="text-lg font-bold text-white font-outfit">USDC</p>
+                                        <p className="text-xs text-yellow-300/70 font-medium">USD Coin • {FAUCET_AMOUNTS.USDC} tokens</p>
+                                    </div>
                                 </div>
-                                <button
-                                    onClick={() => handleClaim('USDC', 6, false)}
-                                    disabled={claimingToken === 'USDC' || isConfirming}
-                                    className="px-6 py-2.5 bg-yellow-400 hover:bg-yellow-300 disabled:bg-zinc-800 disabled:text-zinc-600 text-black text-xs font-bold rounded-lg transition-all uppercase tracking-widest shadow-[0_0_20px_rgba(234,179,8,0.2)] active:scale-95"
-                                >
-                                    {claimingToken === 'USDC' && isConfirming ? (
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                    ) : (
-                                        'Claim'
-                                    )}
-                                </button>
+                                {claimingToken === 'USDC' && isConfirming ? (
+                                    <Loader2 className="w-6 h-6 text-yellow-400 animate-spin" />
+                                ) : (
+                                    <Droplet className="w-6 h-6 text-yellow-400 group-hover:scale-110 transition-transform" />
+                                )}
                             </div>
-                        </div>
+                        </button>
                     </>
                 ) : (
                     <>
-                        {/* MockUSDC Faucet for RWA */}
-                        <div className="group relative">
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-yellow-500/20 to-yellow-500/0 rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-500" />
-                            <div className="relative flex items-center justify-between p-6 bg-zinc-900/40 border border-yellow-500/20 rounded-xl hover:border-yellow-500/40 transition-all">
-                                <div>
-                                    <p className="font-bold text-white text-lg font-outfit">USDC</p>
-                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">Claim {FAUCET_AMOUNTS.MockUSDC} USDC</p>
+                        {/* USDC (RWA Mode) */}
+                        <button
+                            onClick={() => handleClaim('MockUSDC', 6)}
+                            disabled={claimingToken === 'MockUSDC' || isConfirming}
+                            className="group relative overflow-hidden bg-gradient-to-br from-yellow-600/20 to-yellow-900/20 hover:from-yellow-600/30 hover:to-yellow-900/30 border-2 border-yellow-500/40 hover:border-yellow-400/60 rounded-xl p-4 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(234,179,8,0.15)] hover:shadow-[0_0_30px_rgba(234,179,8,0.25)]"
+                        >
+                            <div className="flex items-center justify-between relative z-10">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-xl bg-yellow-500/20 border border-yellow-400/40 flex items-center justify-center">
+                                        <span className="text-2xl font-black text-yellow-300">$</span>
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="text-lg font-bold text-white font-outfit">USDC</p>
+                                        <p className="text-xs text-green-300/70 font-medium">USD Coin • {FAUCET_AMOUNTS.MockUSDC} tokens</p>
+                                    </div>
                                 </div>
-                                <button
-                                    onClick={() => handleClaim('MockUSDC', 6, true)}
-                                    disabled={claimingToken === 'MockUSDC' || isConfirming}
-                                    className="px-6 py-2.5 bg-yellow-400 hover:bg-yellow-300 disabled:bg-zinc-800 disabled:text-zinc-600 text-black text-xs font-bold rounded-lg transition-all uppercase tracking-widest shadow-[0_0_20px_rgba(234,179,8,0.2)] active:scale-95"
-                                >
-                                    {claimingToken === 'MockUSDC' && isConfirming ? (
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                    ) : (
-                                        'Claim'
-                                    )}
-                                </button>
+                                {claimingToken === 'MockUSDC' && isConfirming ? (
+                                    <Loader2 className="w-6 h-6 text-yellow-400 animate-spin" />
+                                ) : (
+                                    <Droplet className="w-6 h-6 text-yellow-400 group-hover:scale-110 transition-transform" />
+                                )}
                             </div>
-                        </div>
+                        </button>
                     </>
                 )}
             </div>
 
-            <br />
-            {/* Info Footer */}
-            <div className="mt-4 pt-6 border-t border-yellow-500/20">
-                <div className="flex gap-3">
-                    <div className="mt-0.5">💡</div>
-                    <p className="text-[10px] text-zinc-500 leading-relaxed uppercase tracking-wider font-medium">
-                        These are test tokens for Anvil testnet only. You can claim multiple times for testing purposes.
-                    </p>
-                </div>
+            <div className="mt-6 pt-4 border-t border-yellow-500/20">
+                <p className="text-[10px] text-zinc-500 text-center uppercase tracking-[0.2em] font-semibold">
+                    Mantle Sepolia Testnet
+                </p>
             </div>
         </div>
     );

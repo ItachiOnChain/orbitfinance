@@ -156,7 +156,7 @@ export default function KYC() {
   if (isVerified) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="flex flex-col items-center gap-8 px-4 max-w-xl w-full">
+        <div className="flex flex-col items-center gap-8 px-4 max-w-2xl w-full">
           <div className="w-full">
             <div className="bg-yellow-500/5 border-2 border-yellow-400/40 rounded-xl p-10 text-center backdrop-blur-2xl shadow-[0_0_60px_rgba(234,179,8,0.3)]">
               <div className="relative mb-8">
@@ -179,7 +179,9 @@ export default function KYC() {
             </div>
           </div>
 
-          <TokenFaucet mode="rwa" />
+          <div className="w-full">
+            <TokenFaucet mode="rwa" />
+          </div>
         </div>
       </div>
     );
