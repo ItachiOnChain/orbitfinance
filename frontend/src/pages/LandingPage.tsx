@@ -140,17 +140,19 @@ const TypingWords = () => {
 
 /* ================= SECTIONS ================= */
 const Section = ({ label, title, subtitle, children }: any) => (
-    <section className="relative z-10" id={label.toLowerCase().replace(/\s+/g, '-')}>
-        <div className="max-w-7xl mx-auto px-6">
+    <section className="relative w-full py-20 md:py-32 text-center">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
             <Reveal>
-                <div className="text-center mb-24">
-                    <p className="text-[13px] tracking-[0.4em] text-gold mb-8 font-black uppercase">
+                <div className="flex flex-col items-center gap-4 mb-16">
+                    <span className="text-[10px] font-mono tracking-[0.35em] uppercase text-gold/60">
                         {label}
-                    </p>
-                    <h2 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] uppercase">
+                    </span>
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white">
                         {title}
-                        {subtitle && <span className="block text-white/40 mt-4">{subtitle}</span>}
                     </h2>
+                    <p className="text-base md:text-lg text-white/50 max-w-2xl mx-auto">
+                        {subtitle}
+                    </p>
                 </div>
             </Reveal>
             {children}
