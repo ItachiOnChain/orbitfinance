@@ -155,8 +155,8 @@ export default function KYC() {
   // VERIFIED STATE
   if (isVerified) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="flex flex-col items-center gap-8 px-4 max-w-2xl w-full">
+      <div className="min-h-screen flex items-center justify-center bg-black px-4">
+        <div className="flex flex-col items-center gap-6 md:gap-8 w-full max-w-md md:max-w-2xl">
           <div className="w-full">
             <div className="bg-yellow-500/5 border-2 border-yellow-400/40 rounded-xl p-10 text-center backdrop-blur-2xl shadow-[0_0_60px_rgba(234,179,8,0.3)]">
               <div className="relative mb-8">

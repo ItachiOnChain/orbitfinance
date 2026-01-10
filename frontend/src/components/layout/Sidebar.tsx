@@ -17,7 +17,12 @@ import {
 } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
 
-export function Sidebar() {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const { theme, toggleTheme } = useAppStore();
   const [isVisible, setIsVisible] = useState(true);
 
@@ -29,6 +34,11 @@ export function Sidebar() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleNavClick = () => {
+    // Close mobile menu when nav item is clicked
+    if (onClose) onClose();
+  };
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `
@@ -58,13 +68,17 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`hidden lg:flex w-80 sticky top-24 h-[calc(100vh-8rem)]
-      transition-all duration-500
-      ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'}`}
+      className={`
+        fixed lg:sticky top-0 lg:top-24 h-screen lg:h-[calc(100vh-8rem)]
+        w-80 z-40
+        transition-all duration-300
+        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        ${isVisible ? 'lg:opacity-100' : 'lg:opacity-0 lg:-translate-x-4 lg:pointer-events-none'}
+      `}
     >
       {/* Sidebar Shell */}
       <div
-        className={`flex-1 flex flex-col rounded-3xl border
+        className={`flex-1 flex flex-col h-full rounded-none lg:rounded-3xl border-r lg:border
         ${theme === 'light'
             ? 'bg-white/80 backdrop-blur-md border-zinc-200'
             : 'bg-zinc-950/50 backdrop-blur-xl border-zinc-900/60'
@@ -83,7 +97,7 @@ export function Sidebar() {
 
             {/* Navigation */}
             <nav className="flex flex-col gap-3">
-              <NavLink to="/app/crypto" className={linkClass}>
+              <NavLink to="/app/crypto" className={linkClass} onClick={handleNavClick}>
                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                   <span />
                   <span className="text-sm font-medium tracking-wide">Home</span>
@@ -91,7 +105,7 @@ export function Sidebar() {
                 </div>
               </NavLink>
 
-              <NavLink to="/app/account" className={linkClass}>
+              <NavLink to="/app/account" className={linkClass} onClick={handleNavClick}>
                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                   <span />
                   <span className="text-sm font-medium tracking-wide">My Account</span>
@@ -99,7 +113,7 @@ export function Sidebar() {
                 </div>
               </NavLink>
 
-              <NavLink to="/app/vaults" className={linkClass}>
+              <NavLink to="/app/vaults" className={linkClass} onClick={handleNavClick}>
                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                   <span />
                   <span className="text-sm font-medium tracking-wide">Vaults</span>
@@ -107,7 +121,7 @@ export function Sidebar() {
                 </div>
               </NavLink>
 
-              <NavLink to="/app/transmuter" className={linkClass}>
+              <NavLink to="/app/transmuter" className={linkClass} onClick={handleNavClick}>
                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                   <span />
                   <span className="text-sm font-medium tracking-wide">Transmuters</span>
@@ -115,7 +129,7 @@ export function Sidebar() {
                 </div>
               </NavLink>
 
-              <NavLink to="/app/bridge" className={linkClass}>
+              <NavLink to="/app/bridge" className={linkClass} onClick={handleNavClick}>
                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                   <span />
                   <span className="text-sm font-medium tracking-wide">Bridge</span>
@@ -123,7 +137,7 @@ export function Sidebar() {
                 </div>
               </NavLink>
 
-              <NavLink to="/app/farms" className={linkClass}>
+              <NavLink to="/app/farms" className={linkClass} onClick={handleNavClick}>
                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                   <span />
                   <span className="text-sm font-medium tracking-wide">Farms</span>
@@ -131,7 +145,7 @@ export function Sidebar() {
                 </div>
               </NavLink>
 
-              <NavLink to="/app/governance" className={linkClass}>
+              <NavLink to="/app/governance" className={linkClass} onClick={handleNavClick}>
                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                   <span />
                   <span className="text-sm font-medium tracking-wide">Governance</span>
@@ -139,7 +153,7 @@ export function Sidebar() {
                 </div>
               </NavLink>
 
-              <NavLink to="/app/utilities" className={linkClass}>
+              <NavLink to="/app/utilities" className={linkClass} onClick={handleNavClick}>
                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                   <span />
                   <span className="text-sm font-medium tracking-wide">Utilities</span>

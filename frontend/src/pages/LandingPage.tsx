@@ -35,7 +35,7 @@ const Reveal = ({ children, delay = 0 }: any) => {
 
 /* ================= ADVANCED FLOW ================= */
 const AdvancedFlow = () => {
-    const steps = ["COLLATERAL", "YIELD", "REPAY", "AUTO-COMPOUND"];
+    const steps = ["COLLATERAL", "YIELD", "REPAY", "AUTO-REPAY"];
     const [active, setActive] = useState(0);
 
     useEffect(() => {
@@ -63,7 +63,7 @@ const AdvancedFlow = () => {
 };
 
 /* ================= TYPING WORDS ================= */
-const typingWords = ["ASSETS", "CAPITAL", "LIQUIDITY", "FUTURE", "YIELD"];
+const typingWords = ["Crypto Assets", "RWA Assets", "Future Yield"];
 
 const TypingWords = () => {
     const [text, setText] = useState("");
@@ -97,7 +97,7 @@ const TypingWords = () => {
     }, [charIndex, isDeleting, index]);
 
     return (
-        <span className="text-gold/80 inline-block min-w-[220px] text-6xl md:text-7xl xl:text-8xl">
+        <span className="text-gold/80 inline-block min-w-[220px]">
             {text}<span className="animate-pulse">|</span>
         </span>
     );
@@ -215,32 +215,24 @@ export default function LandingPage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-[#050505]/70 via-transparent to-transparent z-10" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent z-10" />
 
-                <div className="relative z-20 max-w-7xl mx-auto px-6 grid lg:grid-cols-12 gap-12 items-center">
+                <div className="relative z-20 max-w-7xl mx-auto px-4 md:px-6 lg:px-8 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                     <div className="lg:col-span-6 text-center lg:text-left">
                         <Reveal><AdvancedFlow /></Reveal>
 
                         <Reveal delay={0.1}>
-                            <h1 className="mt-10 text-5xl md:text-6xl xl:text-7xl font-black leading-[1.05] uppercase text-gold">
+                            <h1 className="mt-6 md:mt-10 text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-black leading-[1.05] uppercase text-gold">
                                 Borrow Against<br />
                                 Your <TypingWords /><br />
-                                Yield
                             </h1>
                         </Reveal>
 
                         <Reveal delay={0.2}>
-                            <div className="mt-8 space-y-4 translate-x-5 translate-y-7">
-                                <p className="max-w-xl text-lg text-white/80">
+                            <div className="mt-6 md:mt-8 space-y-4">
+                                <p className="max-w-xl mx-auto lg:mx-0 text-base md:text-lg text-white/80">
                                     A self-repaying lending protocol powered by institutional-grade RWA infrastructure.
                                 </p>
                                 <div className="flex flex-wrap gap-4 pt-4">
-                                    <div className="px-4 py-2 rounded-full bg-white/5 border border-white/10 flex items-center gap-2">
-                                        <div className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-                                        <span className="text-[10px] font-mono tracking-widest uppercase ">Crypto Module</span>
-                                    </div>
-                                    <div className="px-4 py-2 rounded-full bg-white/5 border border-white/10 flex items-center gap-2">
-                                        <div className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-                                        <span className="text-[10px] font-mono tracking-widest uppercase">RWA Module</span>
-                                    </div>
+
                                 </div>
                             </div>
                         </Reveal>
@@ -248,17 +240,17 @@ export default function LandingPage() {
                         <br />
 
                         <Reveal delay={0.3}>
-                            <div className="mt-10 flex flex-wrap gap-6 justify-center lg:justify-start translate-x-3 translate-y-3">
+                            <div className="mt-6 md:mt-10 flex flex-wrap gap-4 md:gap-6 justify-center lg:justify-start">
                                 <button
                                     onClick={handleConnect}
-                                    className="px-8 py-4 bg-gold text-black font-bold rounded-xl uppercase tracking-widest text-xs flex items-center gap-2 hover:scale-105 transition-transform"
+                                    className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 bg-gold text-black font-bold rounded-xl uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:scale-105 transition-transform"
                                 >
                                     {isConnected ? "Launch Protocol" : "Connect Wallet"}
                                     <ArrowRight size={16} />
                                 </button>
                                 <button
                                     onClick={() => document.getElementById('docs')?.scrollIntoView({ behavior: 'smooth' })}
-                                    className="px-8 py-4 border border-white/20 rounded-xl text-xs uppercase tracking-widest hover:bg-white/5 transition-colors"
+                                    className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-4 border border-white/20 rounded-xl text-xs uppercase tracking-widest hover:bg-white/5 transition-colors flex items-center justify-center gap-1"
                                 >
                                     Docs <ChevronRight size={14} />
                                 </button>
@@ -280,9 +272,9 @@ export default function LandingPage() {
                 title="What is Orbit"
                 subtitle="A new primitive for decentralized credit"
             >
-                <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto translate-x-40 translate-y-7">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto px-4 translate-x-40 translate-y-7">
                     <Reveal delay={0.1}>
-                        <div className="p-10 rounded-3xl border border-gold/20 bg-white/5 backdrop-blur-sm hover:border-gold/50 transition-all group relative overflow-hidden">
+                        <div className="p-6 md:p-10 rounded-3xl border border-gold/20 bg-white/5 backdrop-blur-sm hover:border-gold/50 transition-all group relative overflow-hidden">
                             <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                             <div className="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
@@ -306,7 +298,7 @@ export default function LandingPage() {
                     </Reveal>
 
                     <Reveal delay={0.2}>
-                        <div className="p-10 rounded-3xl border border-gold/20 bg-white/5 backdrop-blur-sm hover:border-gold/50 transition-all group relative overflow-hidden">
+                        <div className="p-6 md:p-10 rounded-3xl border border-gold/20 bg-white/5 backdrop-blur-sm hover:border-gold/50 transition-all group relative overflow-hidden">
                             <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                             <div className="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
@@ -340,7 +332,7 @@ export default function LandingPage() {
                 title="Self-Repaying Credit"
                 subtitle="In Three Steps"
             >
-                <div className="relative max-w-4xl mx-auto py-12 translate-x-50 translate-y-7">
+                <div className="relative max-w-4xl mx-auto py-8 md:py-12 px-4">
                     {/* Vertical Line */}
                     <div className="absolute left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-gold/30 to-transparent -translate-x-1/2 hidden md:block" />
 

@@ -83,11 +83,11 @@ export default function AccountPage() {
     if (!accountAddress || accountAddress === '0x0000000000000000000000000000000000000000') {
         return (
             <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-12 w-full">
-                <div className="text-center space-y-4">
-                    <h1 className="text-5xl font-bold text-yellow-200 font-outfit tracking-tight" style={{ textShadow: '0 0 15px rgba(234,179,8,0.3)' }}>
+                <div className="text-center space-y-4 px-4">
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-yellow-200 font-outfit tracking-tight" style={{ textShadow: '0 0 15px rgba(234,179,8,0.3)' }}>
                         My Account
                     </h1>
-                    <p className="text-zinc-400 text-lg font-light max-w-xl mx-auto">
+                    <p className="text-zinc-400 text-base md:text-lg font-light max-w-xl mx-auto">
                         Initialize your institutional Orbit Account to begin managing your decentralized assets.
                     </p>
                 </div>
@@ -95,7 +95,7 @@ export default function AccountPage() {
                 <div className="max-w-4xl w-full px-4">
                     <div className="relative overflow-hidden rounded-[2.5rem] p-[1px] bg-gradient-to-br from-yellow-500/30 via-zinc-800 to-zinc-900 shadow-[0_0_50px_rgba(234,179,8,0.1)]">
                         <div className="absolute inset-0 bg-yellow-500/5 blur-3xl pointer-events-none" />
-                        <div className="relative rounded-[2.4rem] bg-zinc-950/90 backdrop-blur-2xl p-16 flex flex-col items-center text-center">
+                        <div className="relative rounded-[2.4rem] bg-zinc-950/90 backdrop-blur-2xl p-8 md:p-12 lg:p-16 flex flex-col items-center text-center">
                             <div className="w-24 h-24 rounded-full bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center mb-10 shadow-[0_0_40px_rgba(234,179,8,0.15)]">
                                 <User className="w-12 h-12 text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]" />
                             </div>
@@ -159,13 +159,13 @@ export default function AccountPage() {
                 />
                 <MetricCard
                     title="Current Debt (Reducing)"
-                    value={formatDebtWithPrecision( totalDebt)}
+                    value={formatDebtWithPrecision(totalDebt)}
                     icon={<TrendingDown className="w-5 h-5" />}
                     valueClassName="text-red-400 text-xs"
                 />
                 <MetricCard
                     title="Accumulated Credit"
-                    value={formatCreditWithPrecision( accumulatedCredit)}
+                    value={formatCreditWithPrecision(accumulatedCredit)}
                     icon={<Coins className="w-5 h-5" />}
                     valueClassName="text-gold text-xs"
                 />

@@ -18,7 +18,12 @@ import { isAdmin } from '../../utils/rwa/adminCheck';
 import { useKYCStatus } from '../../hooks/rwa/useKYC';
 import { useAppStore } from '../../store/appStore';
 
-export function RWASidebar() {
+interface RWASidebarProps {
+    isOpen?: boolean;
+    onClose?: () => void;
+}
+
+export function RWASidebar({ isOpen = false, onClose }: RWASidebarProps) {
     const { address } = useAccount();
     const { data: isVerified } = useKYCStatus();
     const { theme, toggleTheme } = useAppStore();
@@ -33,6 +38,11 @@ export function RWASidebar() {
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    const handleNavClick = () => {
+        // Close mobile menu when nav item is clicked
+        if (onClose) onClose();
+    };
 
     const linkClass = ({ isActive }: { isActive: boolean }) =>
         `
@@ -62,13 +72,17 @@ export function RWASidebar() {
 
     return (
         <aside
-            className={`hidden lg:flex w-80 sticky top-24 h-[calc(100vh-8rem)]
-      transition-all duration-500
-      ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'}`}
+            className={`
+        fixed lg:sticky top-0 lg:top-24 h-screen lg:h-[calc(100vh-8rem)]
+        w-80 z-40
+        transition-all duration-300
+        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        ${isVisible ? 'lg:opacity-100' : 'lg:opacity-0 lg:-translate-x-4 lg:pointer-events-none'}
+      `}
         >
             {/* Sidebar Shell */}
             <div
-                className={`flex-1 flex flex-col rounded-3xl border
+                className={`flex-1 flex flex-col h-full rounded-none lg:rounded-3xl border-r lg:border
         ${theme === 'light'
                         ? 'bg-white/80 backdrop-blur-md border-zinc-200'
                         : 'bg-zinc-950/50 backdrop-blur-xl border-zinc-900/60'
@@ -87,7 +101,7 @@ export function RWASidebar() {
 
                         {/* Navigation */}
                         <nav className="flex flex-col gap-3">
-                            <NavLink to="/app" end className={linkClass}>
+                            <NavLink to="/app" end className={linkClass} onClick={handleNavClick}>
                                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                                     <span />
                                     <span className="text-sm font-medium tracking-wide">Home</span>
@@ -95,7 +109,7 @@ export function RWASidebar() {
                                 </div>
                             </NavLink>
 
-                            <NavLink to="/app/kyc" className={linkClass}>
+                            <NavLink to="/app/kyc" className={linkClass} onClick={handleNavClick}>
                                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                                     <span />
                                     <span className="text-sm font-medium tracking-wide">KYC</span>
@@ -109,7 +123,7 @@ export function RWASidebar() {
                             <NavLink
                                 to="/app/bundle-pool"
                                 className={({ isActive }) => `${linkClass({ isActive })} ${!isVerified ? 'opacity-50' : ''}`}
-                                onClick={(e) => !isVerified && e.preventDefault()}
+                                onClick={(e) => { handleNavClick(); if (!isVerified) e.preventDefault(); }}
                             >
                                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                                     <span />
@@ -121,7 +135,7 @@ export function RWASidebar() {
                             <NavLink
                                 to="/app/origination"
                                 className={({ isActive }) => `${linkClass({ isActive })} ${!isVerified ? 'opacity-50' : ''}`}
-                                onClick={(e) => !isVerified && e.preventDefault()}
+                                onClick={(e) => { handleNavClick(); if (!isVerified) e.preventDefault(); }}
                             >
                                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                                     <span />
@@ -133,7 +147,7 @@ export function RWASidebar() {
                             <NavLink
                                 to="/app/portfolio"
                                 className={({ isActive }) => `${linkClass({ isActive })} ${!isVerified ? 'opacity-50' : ''}`}
-                                onClick={(e) => !isVerified && e.preventDefault()}
+                                onClick={(e) => { handleNavClick(); if (!isVerified) e.preventDefault(); }}
                             >
                                 <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                                     <span />
@@ -143,7 +157,7 @@ export function RWASidebar() {
                             </NavLink>
 
                             {showAdminLink && (
-                                <NavLink to="/app/admin/spv" className={linkClass}>
+                                <NavLink to="/app/admin/spv" className={linkClass} onClick={handleNavClick}>
                                     <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
                                         <span />
                                         <span className="text-sm font-medium tracking-wide">SPV Simulator</span>
