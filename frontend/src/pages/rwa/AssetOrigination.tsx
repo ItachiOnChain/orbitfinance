@@ -21,7 +21,6 @@ import {
 import { CONTRACTS } from '../../contracts';
 import RWAIncomeNFTABI from '../../contracts/rwa-abis/RWAIncomeNFT.json';
 import OrbitRWAPoolABI from '../../contracts/rwa-abis/OrbitRWAPool.json';
-import MockUSDCABI from '../../contracts/rwa-abis/MockUSDC.json';
 import { bundlePoolLoanTracker } from '../../services/rwa/bundlePoolLoanTracker';
 
 
@@ -104,7 +103,7 @@ export default function AssetOrigination() {
     ]);
 
     const { data: nftData } = useReadContracts({
-        contracts: nftMetadataContracts,
+        contracts: nftMetadataContracts as any,
     });
 
     // Process NFT data
@@ -212,7 +211,7 @@ export default function AssetOrigination() {
 
     // When debt becomes 0 after repayment, start withdrawing NFTs
     useEffect(() => {
-        if (repaySuccess && userDebt !== undefined && Number(userDebt) === 0 && collateralNFTIds && collateralNFTIds.length > 0 && nftsToWithdraw.length === 0) {
+        if (repaySuccess && userDebt !== undefined && Number(userDebt) === 0 && collateralNFTIds && Array.isArray(collateralNFTIds) && collateralNFTIds.length > 0 && nftsToWithdraw.length === 0) {
             console.log('Debt is 0, starting NFT withdrawal for:', collateralNFTIds);
             // Start withdrawing all locked NFTs
             setNftsToWithdraw(collateralNFTIds as bigint[]);

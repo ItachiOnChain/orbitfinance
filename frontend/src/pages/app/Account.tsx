@@ -1,7 +1,7 @@
 import { useAccount } from 'wagmi';
 import { useOrbitAccount } from '../../hooks/useOrbitAccount';
 import { useSyncYield } from '../../hooks/useSyncYield';
-import { usePendingYield } from '../../hooks/usePendingYield';
+// import { usePendingYield } from '../../hooks/usePendingYield'; // Unused
 import { MetricCard } from '../../components/ui/MetricCard';
 import { CreateAccountButton } from '../../components/CreateAccountButton';
 import { TokenFaucet } from '../../components/TokenFaucet';
@@ -13,7 +13,7 @@ export default function AccountPage() {
     const { address } = useAccount();
     const { accountAddress, totalDebt, accumulatedCredit, wethShares, usdcShares } = useOrbitAccount(address);
     const { syncYield, isPending } = useSyncYield();
-    const { uiDebt, uiCredit, rebaseFromOnChain } = usePendingYield(accountAddress, totalDebt, accumulatedCredit);
+    // const { rebaseFromOnChain } = useRebaseStore(); // Unused variable
 
 
 
@@ -159,13 +159,13 @@ export default function AccountPage() {
                 />
                 <MetricCard
                     title="Current Debt (Reducing)"
-                    value={formatDebtWithPrecision(uiDebt || totalDebt)}
+                    value={formatDebtWithPrecision( totalDebt)}
                     icon={<TrendingDown className="w-5 h-5" />}
                     valueClassName="text-red-400 text-xs"
                 />
                 <MetricCard
                     title="Accumulated Credit"
-                    value={formatCreditWithPrecision(uiCredit || accumulatedCredit)}
+                    value={formatCreditWithPrecision( accumulatedCredit)}
                     icon={<Coins className="w-5 h-5" />}
                     valueClassName="text-gold text-xs"
                 />
@@ -225,7 +225,7 @@ export default function AccountPage() {
                                     <div className="bg-zinc-900/50 rounded-2xl p-6 border border-zinc-800/50 hover:border-gold/30 transition-colors">
                                         <p className="text-sm text-zinc-400 mb-2 font-outfit uppercase tracking-widest">Yield Earned</p>
                                         <p className="text-4xl font-bold text-white font-outfit">
-                                            {formatCreditWithPrecision(uiCredit || accumulatedCredit)}
+                                            {formatCreditWithPrecision(accumulatedCredit || accumulatedCredit)}
                                         </p>
                                     </div>
                                 </div>

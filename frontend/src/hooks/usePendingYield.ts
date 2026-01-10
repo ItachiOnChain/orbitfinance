@@ -1,4 +1,4 @@
-import { useReadContract } from 'wagmi';
+// Removed unused import
 import { formatEther } from 'viem';
 import { useEffect, useState, useRef } from 'react';
 

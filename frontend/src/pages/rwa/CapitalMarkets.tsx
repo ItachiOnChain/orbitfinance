@@ -19,9 +19,6 @@ import {
     RWAContractCalls,
 } from '../../hooks/rwa/useRWAContracts';
 import { CONTRACTS } from '../../contracts';
-import SeniorTrancheABI from '../../contracts/rwa-abis/SeniorTranche.json';
-import JuniorTrancheABI from '../../contracts/rwa-abis/JuniorTranche.json';
-import MockUSDCABI from '../../contracts/rwa-abis/MockUSDC.json';
 
 export default function CapitalMarkets() {
     const { address } = useAccount();

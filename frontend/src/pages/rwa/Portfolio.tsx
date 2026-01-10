@@ -15,7 +15,6 @@ import { adminService } from '../../services/rwa/adminService';
 import { portfolioService } from '../../services/rwa/portfolioService';
 import OrbitRWAPoolABI from '../../contracts/rwa-abis/OrbitRWAPool.json';
 import RWAIncomeNFTABI from '../../contracts/rwa-abis/RWAIncomeNFT.json';
-import MockUSDCABI from '../../contracts/rwa-abis/MockUSDC.json';
 
 interface NFTAsset {
     tokenId: number;
@@ -59,7 +58,7 @@ export default function Portfolio() {
     ]), [uniqueNFTIds]);
 
     const { data: nftData } = useReadContracts({
-        contracts: nftMetadataContracts,
+        contracts: nftMetadataContracts as any,
     });
 
     // Fetch pending assets

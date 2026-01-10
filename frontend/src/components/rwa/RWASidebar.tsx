@@ -100,7 +100,7 @@ export function RWASidebar() {
                                     <span />
                                     <span className="text-sm font-medium tracking-wide">KYC</span>
                                     <div className="flex items-center justify-end gap-1">
-                                        {isVerified && <span className="text-[10px] text-green-400">✓</span>}
+                                        {(isVerified ? <span className="text-[10px] text-green-400">✓</span> : null) as React.ReactNode}
                                         <Shield size={18} className="text-gold/60" />
                                     </div>
                                 </div>

@@ -1,7 +1,5 @@
 import { useReadContract } from 'wagmi';
 import { CONTRACTS } from '../../contracts';
-import BundlePoolABI from '../../contracts/rwa-abis/BundlePool.json';
-import MockUSDCABI from '../../contracts/rwa-abis/MockUSDC.json';
 
 /**
  * Hook to get total outstanding loans from OrbitRWAPool

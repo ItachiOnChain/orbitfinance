@@ -191,7 +191,7 @@ export default function SPVDashboard() {
     }, [repaySuccess, refetchDebt]);
 
     useEffect(() => {
-        if (repaySuccess && borrowerDebt !== undefined && Number(borrowerDebt) === 0 && borrowerCollateralNFTs && borrowerCollateralNFTs.length > 0 && nftsToWithdraw.length === 0) {
+        if (repaySuccess && borrowerDebt !== undefined && Number(borrowerDebt) === 0 && borrowerCollateralNFTs && Array.isArray(borrowerCollateralNFTs) && borrowerCollateralNFTs.length > 0 && nftsToWithdraw.length === 0) {
             setTimeout(() => {
                 setNftsToWithdraw(borrowerCollateralNFTs as bigint[]);
                 setCurrentWithdrawIndex(0);
@@ -519,14 +519,14 @@ export default function SPVDashboard() {
                                             ${borrowerDebt ? (Number(borrowerDebt) / 1e6).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
                                         </p>
                                     </div>
-                                    {borrowerCollateralNFTs && borrowerCollateralNFTs.length > 0 && (
+                                    {((borrowerCollateralNFTs && Array.isArray(borrowerCollateralNFTs) && borrowerCollateralNFTs.length > 0) ? (
                                         <div className="flex items-center justify-center gap-3 text-zinc-400 bg-zinc-950/40 px-5 py-3 rounded-lg border border-zinc-800/50 mx-auto w-fit">
                                             <FileCheck size={16} className="text-yellow-500/50" />
                                             <p className="text-xs font-medium">
-                                                {borrowerCollateralNFTs.length} Asset NFT{borrowerCollateralNFTs.length !== 1 ? 's' : ''} Locked
+                                                {(borrowerCollateralNFTs as any[]).length} Asset NFT{borrowerCollateralNFTs.length !== 1 ? 's' : ''} Locked
                                             </p>
                                         </div>
-                                    )}
+                                    ) : null) as React.ReactNode}
                                 </div>
                             ) : (
                                 <div className="text-center py-4 relative z-10">

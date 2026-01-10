@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { CONTRACTS } from '../contracts';
 import { parseUnits } from 'viem';
 import { Droplet, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 // Anvil deployment removed - using Mantle Sepolia only
@@ -25,17 +24,19 @@ export function TokenFaucet({ mode }: TokenFaucetProps) {
     const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
     // Get contract addresses from deployments
-    const getTokenAddress = (token: string): `0x${string}` => {
+    const getTokenAddress = (_token: string): `0x${string}` => {
         try {
             if (mode === 'crypto') {
                 // Using Mantle Sepolia contracts from CONTRACTS
-                return addresses[token as keyof typeof addresses] as `0x${string}`;
-            } else {
-                return rwaAddresses.MockUSDC as `0x${string}`;
+//                 return addresses[token as keyof typeof addresses] as `0x${string}`;
+//             } else {
+//                 return rwaAddresses.MockUSDC as `0x${string}`;
             }
         } catch {
             return '0x0000000000000000000000000000000000000000';
+        return '0x0000000000000000000000000000000000000000' as `0x${string}`;
         }
+        return '0x0000000000000000000000000000000000000000' as `0x${string}`;
     };
 
     // Simple ERC20 ABI for mint function
