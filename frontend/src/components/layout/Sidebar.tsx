@@ -208,7 +208,24 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
             </div>
           </div>
 
-          {/* Wallet Controls - Mobile Only */}
+          {/* Theme Toggle */}
+          <div className="flex justify-between items-center pt-2">
+            <p className="text-[10px] font-semibold tracking-[0.3em] uppercase text-zinc-500">
+              Theme
+            </p>
+            <button
+              onClick={toggleTheme}
+              className={`p-2.5 rounded-xl transition-all
+                ${theme === 'light'
+                  ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200 hover:bg-zinc-100'
+                  : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:text-gold hover:bg-zinc-800'
+                }`}
+            >
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
+          </div>
+
+          {/* Wallet Controls - Mobile Only - AT THE BOTTOM */}
           <div className="lg:hidden">
             {isConnected && address ? (
               <WalletDropdown
@@ -231,23 +248,6 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                 Connect Wallet
               </button>
             )}
-          </div>
-
-          {/* Theme Toggle */}
-          <div className="flex justify-between items-center pt-2">
-            <p className="text-[10px] font-semibold tracking-[0.3em] uppercase text-zinc-500">
-              Theme
-            </p>
-            <button
-              onClick={toggleTheme}
-              className={`p-2.5 rounded-xl transition-all
-                ${theme === 'light'
-                  ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200 hover:bg-zinc-100'
-                  : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:text-gold hover:bg-zinc-800'
-                }`}
-            >
-              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-            </button>
           </div>
         </footer>
       </div>
