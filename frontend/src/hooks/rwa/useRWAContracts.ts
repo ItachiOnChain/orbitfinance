@@ -1,6 +1,10 @@
 // Wagmi hooks for RWA contracts
 import { useReadContract, useWriteContract, useAccount } from 'wagmi';
-import { getContractConfig, RWA_ADDRESSES } from '../../config/rwaContracts';
+import { CONTRACTS } from '../../contracts';
+import IdentityRegistryABI from '../../contracts/rwa-abis/IdentityRegistry.json';
+import RWAIncomeNFTABI from '../../contracts/rwa-abis/RWAIncomeNFT.json';
+import OrbitRWAPoolABI from '../../contracts/rwa-abis/OrbitRWAPool.json';
+import MockUSDCABI from '../../contracts/rwa-abis/MockUSDC.json';
 
 // ============================================================================
 // Read Hooks
@@ -11,7 +15,7 @@ export function useUserDebt(userAddress?: `0x${string}`) {
     const targetAddress = userAddress || connectedAddress;
 
     return useReadContract({
-        ...getContractConfig('OrbitRWAPool'),
+        ...{ address: CONTRACTS.OrbitRWAPool, abi: OrbitRWAPoolABI.abi },
         functionName: 'getUserDebt',
         args: targetAddress ? [targetAddress] : undefined,
         query: {
@@ -23,7 +27,7 @@ export function useUserDebt(userAddress?: `0x${string}`) {
 export function useUserNFTBalance() {
     const { address } = useAccount();
     return useReadContract({
-        ...getContractConfig('RWAIncomeNFT'),
+        ...{ address: CONTRACTS.RWAIncomeNFT, abi: RWAIncomeNFTABI.abi },
         functionName: 'balanceOf',
         args: address ? [address] : undefined,
         query: {
@@ -35,7 +39,7 @@ export function useUserNFTBalance() {
 export function useUserNFTTokens() {
     const { address } = useAccount();
     return useReadContract({
-        ...getContractConfig('RWAIncomeNFT'),
+        ...{ address: CONTRACTS.RWAIncomeNFT, abi: RWAIncomeNFTABI.abi },
         functionName: 'tokensOfOwner',
         args: address ? [address] : undefined,
         query: {
@@ -46,7 +50,7 @@ export function useUserNFTTokens() {
 
 export function useNFTMetadata(tokenId: bigint | undefined) {
     return useReadContract({
-        ...getContractConfig('RWAIncomeNFT'),
+        ...{ address: CONTRACTS.RWAIncomeNFT, abi: RWAIncomeNFTABI.abi },
         functionName: 'getMetadata',
         args: tokenId !== undefined ? [tokenId] : undefined,
         query: {
@@ -57,7 +61,7 @@ export function useNFTMetadata(tokenId: bigint | undefined) {
 
 export function useIsNFTLocked(tokenId: bigint | undefined) {
     return useReadContract({
-        ...getContractConfig('OrbitRWAPool'),
+        ...{ address: CONTRACTS.OrbitRWAPool, abi: OrbitRWAPoolABI.abi },
         functionName: 'isNFTLocked',
         args: tokenId !== undefined ? [tokenId] : undefined,
         query: {
@@ -68,14 +72,14 @@ export function useIsNFTLocked(tokenId: bigint | undefined) {
 
 export function useSeniorTrancheTVL() {
     return useReadContract({
-        ...getContractConfig('SeniorTranche'),
+        ...{ address: CONTRACTS.SeniorTranche, abi: [] },
         functionName: 'totalAssets',
     });
 }
 
 export function useJuniorTrancheTVL() {
     return useReadContract({
-        ...getContractConfig('JuniorTranche'),
+        ...{ address: CONTRACTS.JuniorTranche, abi: [] },
         functionName: 'totalAssets',
     });
 }
@@ -83,7 +87,7 @@ export function useJuniorTrancheTVL() {
 export function useSeniorTrancheBalance() {
     const { address } = useAccount();
     return useReadContract({
-        ...getContractConfig('SeniorTranche'),
+        ...{ address: CONTRACTS.SeniorTranche, abi: [] },
         functionName: 'balanceOf',
         args: address ? [address] : undefined,
         query: {
@@ -95,7 +99,7 @@ export function useSeniorTrancheBalance() {
 export function useJuniorTrancheBalance() {
     const { address } = useAccount();
     return useReadContract({
-        ...getContractConfig('JuniorTranche'),
+        ...{ address: CONTRACTS.JuniorTranche, abi: [] },
         functionName: 'balanceOf',
         args: address ? [address] : undefined,
         query: {
@@ -107,7 +111,7 @@ export function useJuniorTrancheBalance() {
 export function useUSDCBalance() {
     const { address } = useAccount();
     return useReadContract({
-        ...getContractConfig('MockUSDC'),
+        ...{ address: CONTRACTS.MockUSDC, abi: [] },
         functionName: 'balanceOf',
         args: address ? [address] : undefined,
         query: {
@@ -119,7 +123,7 @@ export function useUSDCBalance() {
 export function useIsKYCVerified() {
     const { address } = useAccount();
     return useReadContract({
-        ...getContractConfig('IdentityRegistry'),
+        ...{ address: CONTRACTS.IdentityRegistry, abi: IdentityRegistryABI.abi },
         functionName: 'isVerified',
         args: address ? [address] : undefined,
         query: {
@@ -177,7 +181,7 @@ export function useUserCollateralNFTs(userAddress?: `0x${string}`) {
     const targetAddress = userAddress || connectedAddress;
 
     return useReadContract({
-        ...getContractConfig('OrbitRWAPool'),
+        ...{ address: CONTRACTS.OrbitRWAPool, abi: OrbitRWAPoolABI.abi },
         functionName: 'getUserCollateralNFTs',
         args: targetAddress ? [targetAddress] : undefined,
         query: {
@@ -204,89 +208,88 @@ export function useWithdrawCollateral() {
 
 export const RWAContractCalls = {
     mintNFT: (to: string, assetName: string, assetType: number, monthlyIncome: bigint, duration: bigint, totalValue: bigint) => ({
-        ...getContractConfig('RWAIncomeNFT'),
+        ...{ address: CONTRACTS.RWAIncomeNFT, abi: RWAIncomeNFTABI.abi },
         functionName: 'mint' as const,
         args: [to as `0x${string}`, assetName, assetType, monthlyIncome, duration, totalValue] as const,
     }),
 
     approveNFT: (spender: string, tokenId: bigint) => ({
-        ...getContractConfig('RWAIncomeNFT'),
+        ...{ address: CONTRACTS.RWAIncomeNFT, abi: RWAIncomeNFTABI.abi },
         functionName: 'approve' as const,
         args: [spender as `0x${string}`, tokenId] as const,
     }),
 
     depositAndBorrow: (nftId: bigint, amount: bigint, enableAutoRepay: boolean) => ({
-        ...getContractConfig('OrbitRWAPool'),
+        ...{ address: CONTRACTS.OrbitRWAPool, abi: OrbitRWAPoolABI.abi },
         functionName: 'depositAndBorrow' as const,
         args: [nftId, amount, enableAutoRepay] as const,
     }),
 
     approveUSDC: (spender: string, amount: bigint) => ({
-        ...getContractConfig('MockUSDC'),
+        ...{ address: CONTRACTS.MockUSDC, abi: MockUSDCABI.abi },
         functionName: 'approve' as const,
         args: [spender as `0x${string}`, amount] as const,
     }),
 
     depositToSeniorTranche: (assets: bigint, receiver: string) => ({
-        ...getContractConfig('SeniorTranche'),
+        ...{ address: CONTRACTS.SeniorTranche, abi: [] },
         functionName: 'deposit' as const,
         args: [assets, receiver as `0x${string}`] as const,
     }),
 
     depositToJuniorTranche: (assets: bigint, receiver: string) => ({
-        ...getContractConfig('JuniorTranche'),
+        ...{ address: CONTRACTS.JuniorTranche, abi: [] },
         functionName: 'deposit' as const,
         args: [assets, receiver as `0x${string}`] as const,
     }),
 
     withdrawFromSeniorTranche: (assets: bigint, receiver: string, owner: string) => ({
-        ...getContractConfig('SeniorTranche'),
+        ...{ address: CONTRACTS.SeniorTranche, abi: [] },
         functionName: 'withdraw' as const,
         args: [assets, receiver as `0x${string}`, owner as `0x${string}`] as const,
     }),
 
     withdrawFromJuniorTranche: (assets: bigint, receiver: string, owner: string) => ({
-        ...getContractConfig('JuniorTranche'),
+        ...{ address: CONTRACTS.JuniorTranche, abi: [] },
         functionName: 'withdraw' as const,
         args: [assets, receiver as `0x${string}`, owner as `0x${string}`] as const,
     }),
 
     distributeYield: (amount: bigint) => ({
-        ...getContractConfig('WaterfallDistributor'),
+        ...{ address: CONTRACTS.WaterfallDistributor, abi: [] },
         functionName: 'distributeYield' as const,
         args: [amount] as const,
     }),
 
     approveAsset: (user: string, metadata: string) => ({
-        ...getContractConfig('SPVManager'),
+        ...{ address: CONTRACTS.SPVManager, abi: [] },
         functionName: 'approveAsset' as const,
         args: [user as `0x${string}`, metadata] as const,
     }),
 
     repayDebt: (amount: bigint) => ({
-        ...getContractConfig('OrbitRWAPool'),
+        ...{ address: CONTRACTS.OrbitRWAPool, abi: OrbitRWAPoolABI.abi },
         functionName: 'repay' as const,
         args: [amount] as const,
     }),
 
     repayDebtOnBehalfOf: (borrower: string, amount: bigint) => ({
-        ...getContractConfig('OrbitRWAPool'),
+        ...{ address: CONTRACTS.OrbitRWAPool, abi: OrbitRWAPoolABI.abi },
         functionName: 'repayOnBehalfOf' as const,
         args: [borrower as `0x${string}`, amount] as const,
     }),
 
     withdrawCollateral: (nftId: bigint) => ({
-        ...getContractConfig('OrbitRWAPool'),
+        ...{ address: CONTRACTS.OrbitRWAPool, abi: OrbitRWAPoolABI.abi },
         functionName: 'withdrawCollateral' as const,
         args: [nftId] as const,
     }),
 
     verifyUser: (userAddress: `0x${string}`) => ({
-        ...getContractConfig('IdentityRegistry'),
+        ...{ address: CONTRACTS.IdentityRegistry, abi: IdentityRegistryABI.abi },
         functionName: 'verifyUser' as const,
         args: [userAddress] as const,
     }),
 };
 
 // Export contract addresses for easy access
-export { RWA_ADDRESSES };

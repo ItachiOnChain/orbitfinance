@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAccount, useReadContract } from 'wagmi';
+import { CONTRACTS } from '../contracts';
 import { useLiquidate } from '../hooks/useLiquidate';
-import { CONTRACTS } from '../contracts/addresses';
 import AccountFactoryABI from '../contracts/abis/AccountFactory.json';
 import OrbitAccountABI from '../contracts/abis/OrbitAccount.json';
 import { formatEther } from 'viem';
@@ -17,7 +17,7 @@ export function LiquidateModal({ isOpen, onClose }: LiquidateModalProps) {
     const [asset, setAsset] = useState<'WETH' | 'USDC'>('WETH');
 
     const { data: accountAddress } = useReadContract({
-        address: CONTRACTS.anvil.AccountFactory as `0x${string}`,
+        address: CONTRACTS.AccountFactory as `0x${string}`,
         abi: AccountFactoryABI.abi,
         functionName: 'getAccount',
         args: address ? [address] : undefined,
@@ -53,7 +53,7 @@ export function LiquidateModal({ isOpen, onClose }: LiquidateModalProps) {
         }
 
         try {
-            const assetAddress = asset === 'WETH' ? CONTRACTS.anvil.WETH : CONTRACTS.anvil.USDC;
+            const assetAddress = asset === 'WETH' ? CONTRACTS.WETH : CONTRACTS.USDC;
 
             // Calculate max collateral: debt / price * 1.1 (10% safety margin)
             // Assuming WETH = $3000, USDC = $1

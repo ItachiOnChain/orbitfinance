@@ -3,7 +3,6 @@ import { Outlet } from 'react-router-dom';
 import { AppNavbar } from '../components/layout/AppNavbar';
 import { Sidebar } from '../components/layout/Sidebar';
 import { RWASidebar } from '../components/rwa/RWASidebar';
-import { Footer } from '../components/ui/Footer';
 import { useAppStore } from '../store/appStore';
 
 export default function AppLayout() {
@@ -37,10 +36,6 @@ export default function AppLayout() {
           </div>
         </main>
       </div>
-      <br />
-
-      {/* Footer - Full width, spanning sidebar space */}
-      <Footer />
     </div>
   );
 }

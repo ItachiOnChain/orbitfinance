@@ -17,8 +17,11 @@ import {
     useWithdrawFromSeniorTranche,
     useWithdrawFromJuniorTranche,
     RWAContractCalls,
-    RWA_ADDRESSES,
 } from '../../hooks/rwa/useRWAContracts';
+import { CONTRACTS } from '../../contracts';
+import SeniorTrancheABI from '../../contracts/rwa-abis/SeniorTranche.json';
+import JuniorTrancheABI from '../../contracts/rwa-abis/JuniorTranche.json';
+import MockUSDCABI from '../../contracts/rwa-abis/MockUSDC.json';
 
 export default function CapitalMarkets() {
     const { address } = useAccount();
@@ -90,7 +93,7 @@ export default function CapitalMarkets() {
 
         const amountWei = parseUnits(amount.toString(), 6);
         setPendingAmount(amountWei);
-        const trancheAddress = selectedTranche === 'senior' ? RWA_ADDRESSES.SeniorTranche : RWA_ADDRESSES.JuniorTranche;
+        const trancheAddress = selectedTranche === 'senior' ? CONTRACTS.SeniorTranche : CONTRACTS.JuniorTranche;
 
         try {
             setPendingTx('approve');

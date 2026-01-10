@@ -1,6 +1,4 @@
-import { useReadContract } from 'wagmi';
-import { CONTRACTS } from '../contracts/addresses';
-import VaultRegistryABI from '../contracts/abis/VaultRegistry.json';
+import { CONTRACTS } from '../contracts';
 
 export interface Vault {
     address: string;
@@ -13,22 +11,11 @@ export interface Vault {
 }
 
 export function useVaults() {
-    const { data: wethVaultData } = useReadContract({
-        address: CONTRACTS.anvil.WETH_Vault as `0x${string}`,
-        abi: VaultRegistryABI.abi,
-        functionName: 'asset',
-    });
-
-    const { data: usdcVaultData } = useReadContract({
-        address: CONTRACTS.anvil.USDC_Vault as `0x${string}`,
-        abi: VaultRegistryABI.abi,
-        functionName: 'asset',
-    });
-
+    // Vault data queries removed - using static configuration
     const vaults: Vault[] = [
         {
-            address: CONTRACTS.anvil.WETH_Vault,
-            asset: CONTRACTS.anvil.WETH,
+            address: CONTRACTS.WETH_Vault,
+            asset: CONTRACTS.WETH,
             name: 'WETH Vault',
             tvl: 0n,
             cap: 0n,
@@ -36,8 +23,8 @@ export function useVaults() {
             apy: '5.2',
         },
         {
-            address: CONTRACTS.anvil.USDC_Vault,
-            asset: CONTRACTS.anvil.USDC,
+            address: CONTRACTS.USDC_Vault,
+            asset: CONTRACTS.USDC,
             name: 'USDC Vault',
             tvl: 0n,
             cap: 0n,

@@ -156,8 +156,8 @@ export default function KYC() {
   if (isVerified) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="flex flex-col md:flex-row items-center gap-10 px-4">
-          <div className="max-w-xl w-full">
+        <div className="flex flex-col items-center gap-8 px-4 max-w-xl w-full">
+          <div className="w-full">
             <div className="bg-yellow-500/5 border-2 border-yellow-400/40 rounded-xl p-10 text-center backdrop-blur-2xl shadow-[0_0_60px_rgba(234,179,8,0.3)]">
               <div className="relative mb-8">
                 <div className="absolute inset-0 bg-yellow-400/25 blur-3xl rounded-full scale-150" />
@@ -231,7 +231,7 @@ export default function KYC() {
           <div className="bg-black/60 border border-yellow-500/60 rounded-2xl p-10 md:p-12 backdrop-blur-[12px] shadow-[0_0_24px_rgba(255,200,60,0.25)] transition-all duration-300">
             <div className="flex flex-col items-center text-center mb-10">
               <div className="p-5 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 mb-6 animate-pulse-gold">
-                
+
               </div>
               <h2 className="text-2xl md:text-3xl font-semibold text-[#FFD36A] mb-3 font-outfit tracking-[0.3px]">
                 KYC Pending Approval
@@ -250,7 +250,7 @@ export default function KYC() {
               </h3>
 
               <br />
-              
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
                 <div className="space-y-1.5">
                   <p className="text-[rgba(255,200,60,0.7)] uppercase tracking-[1.2px] text-[11px] font-bold translate-x-10">
@@ -283,7 +283,7 @@ export default function KYC() {
 
             <div className="mt-10">
               <p className="text-zinc-500/60 text-[10px] text-center font-bold tracking-[0.35em] uppercase">
-                
+
               </p>
             </div>
           </div>
@@ -352,7 +352,7 @@ export default function KYC() {
             {/* header */}
             <div className="flex flex-col items-center text-center gap-4 mb-10">
               <div className="p-4 rounded-xl bg-yellow-500/15 border border-yellow-500/40 shadow-[0_0_40px_rgba(234,179,8,0.35)]">
-                
+
               </div>
               <div>
                 <h1 className="text-3xl md:text-4xl font-bold text-gold/100 font-outfit tracking-tight">

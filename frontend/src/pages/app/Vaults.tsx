@@ -14,7 +14,8 @@ export default function VaultsPage() {
     const { address } = useAccount();
     const { vaults, isLoading } = useVaults();
     const { accountAddress, totalDebt, accumulatedCredit, wethShares, usdcShares } = useOrbitAccount(address);
-    const { uiDebt, uiCredit } = usePendingYield(accountAddress);
+    const { uiDebt, uiCredit } = usePendingYield(accountAddress, totalDebt, accumulatedCredit);
+
 
     const [expandedVault, setExpandedVault] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'all' | 'weth' | 'usdc'>('all');
@@ -41,6 +42,14 @@ export default function VaultsPage() {
 
     // Format debt with full precision to show decreasing values
     const currentDebtDisplay = uiDebt ? `${formatEther(uiDebt)} orUSD` : (totalDebt ? `${formatEther(totalDebt)} orUSD` : '$0.00');
+
+    // Format credit with full precision to show micro-increments
+    const formatCreditWithPrecision = (value: bigint | undefined) => {
+        if (!value) return '0.000000000000000000 orUSD';
+        return `${formatEther(value)} orUSD`;
+    };
+
+    const accumulatedCreditDisplay = formatCreditWithPrecision(uiCredit || accumulatedCredit);
 
     const filteredVaults = vaults.filter(vault => {
         if (activeTab === 'all') return true;
@@ -128,7 +137,7 @@ export default function VaultsPage() {
                 </div>
                 <div>
                     <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">Accumulated Credit</p>
-                    <p className="text-2xl font-light text-gold drop-shadow-[0_0_5px_rgba(251,191,36,0.3)]">{formatCurrency(accumulatedCreditUSD)}</p>
+                    <p className="text-2xl font-light text-gold drop-shadow-[0_0_5px_rgba(251,191,36,0.3)]">{accumulatedCreditDisplay}</p>
                 </div>
                 <div className="border-l border-zinc-800 pl-8">
                     <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">Global TVL</p>

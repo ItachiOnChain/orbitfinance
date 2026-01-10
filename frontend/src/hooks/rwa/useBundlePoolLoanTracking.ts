@@ -1,5 +1,7 @@
 import { useReadContract } from 'wagmi';
-import { getContractConfig } from '../../config/rwaContracts';
+import { CONTRACTS } from '../../contracts';
+import BundlePoolABI from '../../contracts/rwa-abis/BundlePool.json';
+import MockUSDCABI from '../../contracts/rwa-abis/MockUSDC.json';
 
 /**
  * Hook to get total outstanding loans from OrbitRWAPool
@@ -7,7 +9,7 @@ import { getContractConfig } from '../../config/rwaContracts';
  */
 export function useTotalOutstandingLoans() {
     const { data, isLoading, refetch } = useReadContract({
-        ...getContractConfig('OrbitRWAPool'),
+        ...{ address: CONTRACTS.OrbitRWAPool, abi: [] },
         functionName: 'getUserDebt',
         args: ['0x0000000000000000000000000000000000000000'], // We'll aggregate all users
     });

@@ -1,14 +1,21 @@
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { CONTRACTS } from '../contracts/addresses';
+import { CONTRACTS } from '../contracts';
 import AccountFactoryABI from '../contracts/abis/AccountFactory.json';
 
 export function useCreateAccount() {
-    const { data: hash, writeContract, isPending } = useWriteContract();
-    const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+    const {
+        data: hash,
+        writeContract,
+        isPending,
+    } = useWriteContract();
 
-    const createAccount = async () => {
-        await writeContract({
-            address: CONTRACTS.anvil.AccountFactory as `0x${string}`,
+    const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+        hash,
+    });
+
+    const createAccount = () => {
+        writeContract({
+            address: CONTRACTS.AccountFactory as `0x${string}`,
             abi: AccountFactoryABI.abi,
             functionName: 'createAccount',
             args: [],

@@ -47,14 +47,14 @@ export function AppNavbar() {
         {/* Center: Mode Toggle */}
         <div className="flex justify-center">
           <div
-            className={`flex items-center p-1 border transition-colors duration-300 rounded-lg ${theme === 'light'
+            className={`flex items-center gap-2 p-1 border transition-colors duration-300 rounded-lg ${theme === 'light'
               ? 'bg-zinc-100 border-zinc-200'
               : 'bg-zinc-900/80 border-zinc-800'
               }`}
           >
             <button
               onClick={handleModeToggle}
-              className={`group relative z-10 inline-flex h-10 cursor-pointer items-center justify-center rounded-lg border-0 px-20 py-3 font-outfit text-[11px] font-bold tracking-[0.3em] uppercase transition-all ${mode === 'crypto'
+              className={`group relative z-10 inline-flex h-10 cursor-pointer items-center justify-center rounded-l-lg rounded-r-none border-0 px-20 py-3 font-outfit text-[11px] font-bold tracking-[0.3em] uppercase transition-all ${mode === 'crypto'
                 ? 'text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)]'
                 : 'text-zinc-500 hover:text-zinc-400'
                 }`}
@@ -65,7 +65,7 @@ export function AppNavbar() {
 
             <button
               onClick={handleModeToggle}
-              className={`group relative z-10 inline-flex h-10 cursor-pointer items-center justify-center rounded-lg border-0 px-20 py-3 font-outfit text-[11px] font-bold tracking-[0.3em] uppercase transition-all ${mode === 'rwa'
+              className={`group relative z-10 inline-flex h-10 cursor-pointer items-center justify-center rounded-r-lg rounded-l-none border-0 px-20 py-3 font-outfit text-[11px] font-bold tracking-[0.3em] uppercase transition-all ${mode === 'rwa'
                 ? 'text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)]'
                 : 'text-zinc-500 hover:text-zinc-400'
                 }`}

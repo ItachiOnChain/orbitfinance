@@ -18,7 +18,10 @@ import {
     useWithdrawCollateral,
     RWAContractCalls,
 } from '../../hooks/rwa/useRWAContracts';
-import { getContractConfig, RWA_ADDRESSES } from '../../config/rwaContracts';
+import { CONTRACTS } from '../../contracts';
+import RWAIncomeNFTABI from '../../contracts/rwa-abis/RWAIncomeNFT.json';
+import OrbitRWAPoolABI from '../../contracts/rwa-abis/OrbitRWAPool.json';
+import MockUSDCABI from '../../contracts/rwa-abis/MockUSDC.json';
 import { bundlePoolLoanTracker } from '../../services/rwa/bundlePoolLoanTracker';
 
 
@@ -89,12 +92,12 @@ export default function AssetOrigination() {
 
     const nftMetadataContracts = uniqueNFTIds.flatMap((tokenId) => [
         {
-            ...getContractConfig('RWAIncomeNFT'),
+            address: CONTRACTS.RWAIncomeNFT, abi: RWAIncomeNFTABI.abi,
             functionName: 'getMetadata',
             args: [tokenId],
         },
         {
-            ...getContractConfig('OrbitRWAPool'),
+            address: CONTRACTS.OrbitRWAPool, abi: OrbitRWAPoolABI.abi,
             functionName: 'isNFTLocked',
             args: [tokenId],
         },
@@ -272,7 +275,7 @@ export default function AssetOrigination() {
             return;
         }
 
-        const rwaPoolAddress = getContractConfig('OrbitRWAPool').address;
+        const rwaPoolAddress = { address: CONTRACTS.OrbitRWAPool, abi: OrbitRWAPoolABI.abi }.address;
         const nftId = BigInt(selectedAsset.tokenId);
         const borrowAmount = parseUnits(amount.toString(), 6);
 
@@ -296,7 +299,7 @@ export default function AssetOrigination() {
 
             // Step 1: Approve USDC for OrbitRWAPool
             setPendingRepay(amountWei);
-            approveUSDC(RWAContractCalls.approveUSDC(RWA_ADDRESSES.OrbitRWAPool, amountWei));
+            approveUSDC(RWAContractCalls.approveUSDC(CONTRACTS.OrbitRWAPool, amountWei));
 
             // Step 2 will happen automatically in useEffect after approval succeeds
         } catch (error) {

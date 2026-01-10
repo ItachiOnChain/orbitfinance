@@ -1,8 +1,6 @@
 // Contract integration service for RWA asset origination
 // In production, use proper error handling and transaction management
 
-import { RWA_CONTRACTS } from '../../utils/rwa/contracts';
-
 export interface AssetMetadata {
     assetName: string;
     assetType: 'RENTAL' | 'INVOICE' | 'BOND';

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { CONTRACTS } from '../contracts';
 import { parseUnits } from 'viem';
 import { Droplet, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
-import { CONTRACTS } from '../contracts/addresses';
-import rwaAddresses from '../../../deployments/anvil-rwa.json';
+// Anvil deployment removed - using Mantle Sepolia only
 
 interface TokenFaucetProps {
     mode: 'crypto' | 'rwa';
@@ -28,7 +28,7 @@ export function TokenFaucet({ mode }: TokenFaucetProps) {
     const getTokenAddress = (token: string): `0x${string}` => {
         try {
             if (mode === 'crypto') {
-                const addresses = CONTRACTS.anvil;
+                // Using Mantle Sepolia contracts from CONTRACTS
                 return addresses[token as keyof typeof addresses] as `0x${string}`;
             } else {
                 return rwaAddresses.MockUSDC as `0x${string}`;
@@ -119,7 +119,7 @@ export function TokenFaucet({ mode }: TokenFaucetProps) {
 
     if (!isConnected) {
         return (
-            <div className="bg-black border-2 border-yellow-500/40 rounded-2xl p-10 shadow-[0_0_40px_rgba(234,179,8,0.15)] backdrop-blur-xl min-h-[400px] flex flex-col items-center justify-center text-center">
+            <div className="bg-black border-2 border-yellow-500/40 rounded-2xl p-10 shadow-[0_0_40px_rgba(234,179,8,0.15)] backdrop-blur-xl flex flex-col items-center justify-center text-center">
                 <div className="p-5 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 mb-8 animate-pulse-gold">
                     <Droplet className="w-10 h-10 text-yellow-400" />
                 </div>
@@ -132,7 +132,7 @@ export function TokenFaucet({ mode }: TokenFaucetProps) {
     }
 
     return (
-        <div className="bg-black border-2 border-yellow-500/40 rounded-2xl p-6 shadow-[0_0_40px_rgba(234,179,8,0.15)] backdrop-blur-xl min-h-[350px] flex flex-col">
+        <div className="bg-black border-2 border-yellow-500/40 rounded-2xl p-6 shadow-[0_0_40px_rgba(234,179,8,0.15)] backdrop-blur-xl flex flex-col">
             <div className="flex flex-col items-center text-center gap-4 mb-4">
                 <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/30">
                     <Droplet className="w-8 h-8 text-yellow-400" />

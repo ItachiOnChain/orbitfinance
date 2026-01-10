@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAccount, useReadContract } from 'wagmi';
+import { CONTRACTS } from '../contracts';
 import { useWithdraw } from '../hooks/useWithdraw';
-import { CONTRACTS } from '../contracts/addresses';
 import AccountFactoryABI from '../contracts/abis/AccountFactory.json';
 import OrbitAccountABI from '../contracts/abis/OrbitAccount.json';
 import type { Vault } from '../hooks/useVaults';
@@ -17,7 +17,7 @@ export function WithdrawForm({ vault }: WithdrawFormProps) {
     const [slippage, setSlippage] = useState(0.5);
 
     const { data: accountAddress } = useReadContract({
-        address: CONTRACTS.anvil.AccountFactory as `0x${string}`,
+        address: CONTRACTS.AccountFactory as `0x${string}`,
         abi: AccountFactoryABI.abi,
         functionName: 'getAccount',
         args: address ? [address] : undefined,

@@ -13,7 +13,9 @@ export default function AccountPage() {
     const { address } = useAccount();
     const { accountAddress, totalDebt, accumulatedCredit, wethShares, usdcShares } = useOrbitAccount(address);
     const { syncYield, isPending } = useSyncYield();
-    const { uiDebt, uiCredit } = usePendingYield(accountAddress);
+    const { uiDebt, uiCredit, rebaseFromOnChain } = usePendingYield(accountAddress, totalDebt, accumulatedCredit);
+
+
 
     const formatCurrency = (value: bigint | undefined) => {
         if (!value) return '$0.00';
@@ -25,6 +27,11 @@ export default function AccountPage() {
     };
 
     const formatDebtWithPrecision = (value: bigint | undefined) => {
+        if (!value) return '0.000000000000000000 orUSD';
+        return `${formatEther(value)} orUSD`;
+    };
+
+    const formatCreditWithPrecision = (value: bigint | undefined) => {
         if (!value) return '0.000000000000000000 orUSD';
         return `${formatEther(value)} orUSD`;
     };
@@ -92,7 +99,7 @@ export default function AccountPage() {
                             <div className="w-24 h-24 rounded-full bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center mb-10 shadow-[0_0_40px_rgba(234,179,8,0.15)]">
                                 <User className="w-12 h-12 text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]" />
                             </div>
-                            
+
                             <div className="space-y-4 mb-12">
                                 <h2 className="text-4xl font-bold text-white font-outfit tracking-tight">
                                     Initialize Account
@@ -128,7 +135,7 @@ export default function AccountPage() {
     }
 
     return (
-        <div className="space-y-8 max-w-7xl mx-auto pb-12 w-full">
+        <div className="space-y-8 max-w-6xl mx-auto pb-16 w-full px-8 ml-6">
             {/* Header */}
             <div className="flex items-start gap-6">
                 <div className="p-4 rounded-full border border-gold/20 bg-gold/5 shadow-[0_0_15px_rgba(251,191,36,0.1)]">
@@ -158,9 +165,9 @@ export default function AccountPage() {
                 />
                 <MetricCard
                     title="Accumulated Credit"
-                    value={formatCurrency(uiCredit || accumulatedCredit)}
+                    value={formatCreditWithPrecision(uiCredit || accumulatedCredit)}
                     icon={<Coins className="w-5 h-5" />}
-                    valueClassName="text-gold"
+                    valueClassName="text-gold text-xs"
                 />
                 <MetricCard
                     title="Max Borrowable"
@@ -218,7 +225,7 @@ export default function AccountPage() {
                                     <div className="bg-zinc-900/50 rounded-2xl p-6 border border-zinc-800/50 hover:border-gold/30 transition-colors">
                                         <p className="text-sm text-zinc-400 mb-2 font-outfit uppercase tracking-widest">Yield Earned</p>
                                         <p className="text-4xl font-bold text-white font-outfit">
-                                            {formatCurrency(uiCredit || accumulatedCredit)}
+                                            {formatCreditWithPrecision(uiCredit || accumulatedCredit)}
                                         </p>
                                     </div>
                                 </div>
@@ -249,47 +256,55 @@ export default function AccountPage() {
             <br />
 
             {/* Active Vaults */}
-            <div className="p-8 rounded-3xl bg-zinc-950/50 border border-zinc-800/50 backdrop-blur-sm">
-                <h2 className="text-2xl font-light text-white mb-6 font-outfit">Active Vaults</h2>
-                <div className="space-y-4">
-                    {wethShares && wethShares > 0n && (
-                        <div className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-zinc-700 transition-colors group">
-                            <div className="flex justify-between items-center">
-                                <div>
-                                    <p className="text-sm text-zinc-400 font-light font-outfit uppercase tracking-wider group-hover:text-zinc-300 transition-colors">WETH Vault</p>
-                                    <p className="text-xl text-gold font-light mt-1 font-outfit">
-                                        {formatSharesWETH(wethShares)} shares
-                                    </p>
+            <div className="flex justify-center w-full px-4 mb-8">
+                <div className="max-w-4xl w-full">
+                    <div className="p-8 rounded-3xl bg-zinc-950/50 border border-zinc-800/50 backdrop-blur-sm">
+                        <h2 className="text-2xl font-light text-white mb-6 font-outfit">Active Vaults</h2>
+                        <div className="space-y-4">
+                            {wethShares && wethShares > 0n && (
+                                <div className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-zinc-700 transition-colors group">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <p className="text-sm text-zinc-400 font-light font-outfit uppercase tracking-wider group-hover:text-zinc-300 transition-colors">WETH Vault</p>
+                                            <p className="text-xl text-gold font-light mt-1 font-outfit">
+                                                {formatSharesWETH(wethShares)} shares
+                                            </p>
+                                        </div>
+                                        <p className="text-2xl text-white font-light font-outfit">
+                                            ${wethValue.toFixed(2)}
+                                        </p>
+                                    </div>
                                 </div>
-                                <p className="text-2xl text-white font-light font-outfit">
-                                    ${wethValue.toFixed(2)}
-                                </p>
-                            </div>
-                        </div>
-                    )}
-                    {usdcShares && usdcShares > 0n && (
-                        <div className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-zinc-700 transition-colors group">
-                            <div className="flex justify-between items-center">
-                                <div>
-                                    <p className="text-sm text-zinc-400 font-light font-outfit uppercase tracking-wider group-hover:text-zinc-300 transition-colors">USDC Vault</p>
-                                    <p className="text-xl text-emerald-400 font-light mt-1 font-outfit">
-                                        {formatSharesUSDC(usdcShares)} shares
-                                    </p>
+                            )}
+                            {usdcShares && usdcShares > 0n && (
+                                <div className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-zinc-700 transition-colors group">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <p className="text-sm text-zinc-400 font-light font-outfit uppercase tracking-wider group-hover:text-zinc-300 transition-colors">USDC Vault</p>
+                                            <p className="text-xl text-emerald-400 font-light mt-1 font-outfit">
+                                                {formatSharesUSDC(usdcShares)} shares
+                                            </p>
+                                        </div>
+                                        <p className="text-2xl text-white font-light font-outfit">
+                                            ${usdcValue.toFixed(2)}
+                                        </p>
+                                    </div>
                                 </div>
-                                <p className="text-2xl text-white font-light font-outfit">
-                                    ${usdcValue.toFixed(2)}
-                                </p>
-                            </div>
+                            )}
+                            {(!wethShares || wethShares === 0n) && (!usdcShares || usdcShares === 0n) && (
+                                <p className="text-zinc-500 font-light text-sm italic">No active deposits found.</p>
+                            )}
                         </div>
-                    )}
-                    {(!wethShares || wethShares === 0n) && (!usdcShares || usdcShares === 0n) && (
-                        <p className="text-zinc-500 font-light text-sm italic">No active deposits found.</p>
-                    )}
+                    </div>
                 </div>
             </div>
 
             {/* Token Faucet */}
-            <TokenFaucet mode="crypto" />
+            <div className="flex justify-center w-full px-4 mb-8">
+                <div className="max-w-4xl w-full">
+                    <TokenFaucet mode="crypto" />
+                </div>
+            </div>
         </div>
     );
 }

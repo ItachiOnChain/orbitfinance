@@ -1,0 +1,11 @@
+{
+  "MockUSDC": "0xbaee9b65349929bd78f9878555bf78027df7f101",
+  "IdentityRegistry": "0x012d720e7d2e84b24b68989e0f4ad824fe5b294c",
+  "RWAIncomeNFT": "0xa4f9885550548c6a45b9d18c57b114c06f3c39b8",
+  "OrbitRWAPool": "0x886a2a3abf5b79aa5dff1c73016bd07cfc817e04",
+  "SPVManager": "0x449c286ab90639fd9f6604f4f15ec86bce2b8a61",
+  "SeniorTranche": "0x5e0399b4c3c4c31036dca08d53c0c5b5c29c113e",
+  "JuniorTranche": "0x512a0e8baeb6ac3d52a11780c92517627005b0b1",
+  "WaterfallDistributor": "0x5aa185fbefc205072faecc6b9d564383e761f8c2",
+  "BundlePool": "0x2ac430e52f47420a00984e11ef0ddba80652419a"
+}

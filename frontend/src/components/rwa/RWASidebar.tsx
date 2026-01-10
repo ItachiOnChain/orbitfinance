@@ -107,18 +107,6 @@ export function RWASidebar() {
                             </NavLink>
 
                             <NavLink
-                                to="/app/origination"
-                                className={({ isActive }) => `${linkClass({ isActive })} ${!isVerified ? 'opacity-50' : ''}`}
-                                onClick={(e) => !isVerified && e.preventDefault()}
-                            >
-                                <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
-                                    <span />
-                                    <span className="text-sm font-medium tracking-wide">Asset Origination</span>
-                                    {!isVerified ? <Lock size={14} className="text-zinc-600" /> : <FileText size={18} className="text-gold/60" />}
-                                </div>
-                            </NavLink>
-
-                            <NavLink
                                 to="/app/bundle-pool"
                                 className={({ isActive }) => `${linkClass({ isActive })} ${!isVerified ? 'opacity-50' : ''}`}
                                 onClick={(e) => !isVerified && e.preventDefault()}
@@ -127,6 +115,18 @@ export function RWASidebar() {
                                     <span />
                                     <span className="text-sm font-medium tracking-wide">Bundle Pool</span>
                                     {!isVerified ? <Lock size={14} className="text-zinc-600" /> : <LayoutGrid size={18} className="text-gold/60" />}
+                                </div>
+                            </NavLink>
+
+                            <NavLink
+                                to="/app/origination"
+                                className={({ isActive }) => `${linkClass({ isActive })} ${!isVerified ? 'opacity-50' : ''}`}
+                                onClick={(e) => !isVerified && e.preventDefault()}
+                            >
+                                <div className="grid grid-cols-[24px_1fr_24px] items-center w-full">
+                                    <span />
+                                    <span className="text-sm font-medium tracking-wide">Asset Origination</span>
+                                    {!isVerified ? <Lock size={14} className="text-zinc-600" /> : <FileText size={18} className="text-gold/60" />}
                                 </div>
                             </NavLink>
 

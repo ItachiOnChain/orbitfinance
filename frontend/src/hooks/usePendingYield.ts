@@ -2,91 +2,120 @@ import { useReadContract } from 'wagmi';
 import { formatEther } from 'viem';
 import { useEffect, useState, useRef } from 'react';
 
-export function usePendingYield(accountAddress: `0x${string}` | undefined) {
+export function usePendingYield(
+    accountAddress: `0x${string}` | undefined,
+    onChainDebt: bigint | undefined,
+    onChainCredit: bigint | undefined
+) {
     const [pendingYield, setPendingYield] = useState<bigint>(0n);
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const initializedRef = useRef(false);
 
     // Get storage keys for this account
     const getStorageKey = (key: string) => accountAddress ? `${accountAddress}_${key}` : null;
 
-    // Fetch current on-chain debt
-    const { data: totalDebt } = useReadContract({
-        address: accountAddress,
-        abi: [{
-            name: 'totalDebt',
-            type: 'function',
-            stateMutability: 'view',
-            inputs: [],
-            outputs: [{ type: 'uint256' }],
-        }],
-        functionName: 'totalDebt',
-        query: {
-            enabled: !!accountAddress,
-            refetchInterval: 12000,
-        },
-    });
-
-    // Fetch current on-chain accumulated credit
-    const { data: accumulatedCredit } = useReadContract({
-        address: accountAddress,
-        abi: [{
-            name: 'accumulatedCredit',
-            type: 'function',
-            stateMutability: 'view',
-            inputs: [],
-            outputs: [{ type: 'uint256' }],
-        }],
-        functionName: 'accumulatedCredit',
-        query: {
-            enabled: !!accountAddress,
-            refetchInterval: 12000,
-        },
-    });
-
     const [uiDebt, setUiDebt] = useState<bigint>(0n);
     const [uiCredit, setUiCredit] = useState<bigint>(0n);
+    const lastOnChainDebtRef = useRef<bigint | undefined>(undefined);
+    const lastOnChainCreditRef = useRef<bigint | undefined>(undefined);
 
-    // Initialize ONCE from localStorage or on-chain
+    // Initialize ONCE from on-chain (source of truth) or localStorage (UI state)
     useEffect(() => {
         if (!accountAddress || initializedRef.current) return;
 
-        const debtKey = getStorageKey('uiDebt');
         const creditKey = getStorageKey('uiCredit');
-        if (!debtKey || !creditKey) return;
+        if (!creditKey) return;
 
-        // Try localStorage first
-        const storedDebt = localStorage.getItem(debtKey);
-        const storedCredit = localStorage.getItem(creditKey);
+        // Wait for on-chain data to load (source of truth)
+        if (onChainDebt !== undefined && onChainCredit !== undefined) {
+            // 🔹 DEBT: Always ephemeral - NEVER use localStorage
+            // Always initialize from on-chain, discard any previous state
+            setUiDebt(onChainDebt);
 
-        if (storedDebt && BigInt(storedDebt) > 0n) {
-            // Use localStorage values
-            setUiDebt(BigInt(storedDebt));
-            setUiCredit(storedCredit ? BigInt(storedCredit) : 0n);
-            initializedRef.current = true;
-        } else if (totalDebt && totalDebt > 0n) {
-            // First time: use on-chain
-            setUiDebt(totalDebt);
-            setUiCredit(accumulatedCredit || 0n);
-            localStorage.setItem(debtKey, totalDebt.toString());
-            localStorage.setItem(creditKey, (accumulatedCredit || 0n).toString());
+            // 🔹 CREDIT: Persistent - use localStorage if available
+            if (onChainDebt > 0n) {
+                const storedCredit = localStorage.getItem(creditKey);
+                if (storedCredit && BigInt(storedCredit) > 0n) {
+                    // Use localStorage (accumulated credit from previous session)
+                    setUiCredit(BigInt(storedCredit));
+                } else {
+                    // First time with debt - initialize from on-chain
+                    setUiCredit(onChainCredit);
+                    localStorage.setItem(creditKey, onChainCredit.toString());
+                }
+            } else {
+                // ✅ Zero-state account (no debt) - explicitly set to zero
+                setUiDebt(0n);
+                setUiCredit(0n);
+                // Clear any stale localStorage from previous sessions
+                localStorage.removeItem(creditKey);
+            }
+
+            // Track initial on-chain values for change detection
+            lastOnChainDebtRef.current = onChainDebt;
+            lastOnChainCreditRef.current = onChainCredit;
             initializedRef.current = true;
         }
-    }, [accountAddress, totalDebt, accumulatedCredit]);
+    }, [accountAddress, onChainDebt, onChainCredit]);
 
-    // Save to localStorage when values change
+    // 🔥 REBASE: Detect on-chain changes and update local state
     useEffect(() => {
-        if (!accountAddress || uiDebt === 0n) return;
-        const key = getStorageKey('uiDebt');
-        if (key) localStorage.setItem(key, uiDebt.toString());
-    }, [uiDebt, accountAddress]);
+        if (!initializedRef.current || !accountAddress) return;
+        if (onChainDebt === undefined || onChainCredit === undefined) return;
 
+        const creditKey = getStorageKey('uiCredit');
+        if (!creditKey) return;
+
+        // Check if on-chain values changed (transaction occurred)
+        const debtChanged = lastOnChainDebtRef.current !== undefined &&
+            lastOnChainDebtRef.current !== onChainDebt;
+
+        const creditChanged = lastOnChainCreditRef.current !== undefined &&
+            lastOnChainCreditRef.current !== onChainCredit;
+
+        if (debtChanged || creditChanged) {
+            console.log('🔄 On-chain mutation detected - rebasing', {
+                oldDebt: lastOnChainDebtRef.current,
+                newDebt: onChainDebt,
+                oldCredit: lastOnChainCreditRef.current,
+                newCredit: onChainCredit
+            });
+
+            // 🔹 DEBT: Always override with on-chain (ephemeral)
+            setUiDebt(onChainDebt);
+
+            // 🔹 CREDIT: Override with on-chain and update localStorage
+            setUiCredit(onChainCredit);
+
+            // Update localStorage for credit only
+            if (onChainDebt > 0n) {
+                localStorage.setItem(creditKey, onChainCredit.toString());
+            } else {
+                localStorage.removeItem(creditKey);
+            }
+
+            // Update tracking refs
+            lastOnChainDebtRef.current = onChainDebt;
+            lastOnChainCreditRef.current = onChainCredit;
+
+            // Clear and restart timers
+            if (timerRef.current) clearTimeout(timerRef.current);
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            timerRef.current = null;
+            intervalRef.current = null;
+        }
+    }, [onChainDebt, onChainCredit, accountAddress]);
+
+    // Save credit to localStorage when it changes (always save, even if debt is 0)
+    // 🔹 DEBT: Never saved to localStorage (ephemeral)
+    // 🔹 CREDIT: Always saved to localStorage (persistent)
     useEffect(() => {
-        if (!accountAddress) return;
+        if (!accountAddress || !initializedRef.current) return;
         const key = getStorageKey('uiCredit');
         if (key) localStorage.setItem(key, uiCredit.toString());
     }, [uiCredit, accountAddress]);
+
 
     // Start timer ONCE when initialized
     useEffect(() => {
@@ -121,11 +150,45 @@ export function usePendingYield(accountAddress: `0x${string}` | undefined) {
         };
     }, [initializedRef.current, uiDebt]);
 
+    // Manual rebase function for "Sync Yield" button
+    const rebaseFromOnChain = () => {
+        if (!accountAddress || onChainDebt === undefined || onChainCredit === undefined) return;
+
+        const creditKey = getStorageKey('uiCredit');
+        if (!creditKey) return;
+
+        console.log('🔄 Manual sync - rebasing from on-chain');
+
+        // 🔹 DEBT: Always override with on-chain (ephemeral)
+        setUiDebt(onChainDebt);
+
+        // 🔹 CREDIT: Override with on-chain and update localStorage
+        setUiCredit(onChainCredit);
+
+        // Update localStorage for credit only
+        if (onChainDebt > 0n) {
+            localStorage.setItem(creditKey, onChainCredit.toString());
+        } else {
+            localStorage.removeItem(creditKey);
+        }
+
+        // Update tracking refs
+        lastOnChainDebtRef.current = onChainDebt;
+        lastOnChainCreditRef.current = onChainCredit;
+
+        // Clear and restart timers
+        if (timerRef.current) clearTimeout(timerRef.current);
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        timerRef.current = null;
+        intervalRef.current = null;
+    };
+
     return {
         pendingYield,
         uiDebt,
         uiCredit,
-        onChainDebt: totalDebt,
-        onChainCredit: accumulatedCredit,
+        onChainDebt,
+        onChainCredit,
+        rebaseFromOnChain,
     };
 }

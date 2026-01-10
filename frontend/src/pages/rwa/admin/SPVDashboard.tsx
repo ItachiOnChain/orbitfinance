@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { parseUnits } from 'viem';
-import { 
-    AlertTriangle, 
-    Wallet, 
-    CheckCircle, 
-    Copy, 
-    Users, 
-    FileCheck, 
+import {
+    AlertTriangle,
+    Wallet,
+    CheckCircle,
+    Copy,
+    Users,
+    FileCheck,
     RefreshCw,
     ArrowUpRight,
     Search,
@@ -24,8 +24,10 @@ import {
     useRepayDebt,
     useWithdrawCollateral,
 } from '../../../hooks/rwa/useRWAContracts';
-import { getContractConfig } from '../../../config/rwaContracts';
+import { CONTRACTS } from '../../../contracts';
 import { kycService, type KYCSubmission } from '../../../services/rwa/kycService';
+import OrbitRWAPoolABI from '../../../contracts/rwa-abis/OrbitRWAPool.json';
+import MockUSDCABI from '../../../contracts/rwa-abis/MockUSDC.json';
 
 export default function SPVDashboard() {
     const { address } = useAccount();
@@ -147,8 +149,8 @@ export default function SPVDashboard() {
         if (!selectedBorrower || repayAmount === 0) return;
 
         try {
-            const usdcAddress = getContractConfig('MockUSDC').address;
-            const rwaPoolAddress = getContractConfig('OrbitRWAPool').address;
+            const usdcAddress = { address: CONTRACTS.MockUSDC, abi: MockUSDCABI.abi }.address;
+            const rwaPoolAddress = { address: CONTRACTS.OrbitRWAPool, abi: OrbitRWAPoolABI.abi }.address;
             const amountInWei = parseUnits(repayAmount.toString(), 6);
 
             await approveUSDC({
@@ -225,7 +227,7 @@ export default function SPVDashboard() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24 ml-6">
             {/* Loading overlay */}
             {isTxPending && (
                 <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center">
@@ -264,7 +266,7 @@ export default function SPVDashboard() {
                         <span>Demo Environment</span>
                     </div>
                 </div>
-                
+
                 <div className="bg-zinc-900/20 border border-zinc-800/30 rounded-xl px-5 py-3 flex items-center justify-center gap-4 text-xs text-zinc-500">
                     <Info size={16} className="text-zinc-600" />
                     <p>Approval actions in this simulator will trigger automated smart contract interactions for demonstration purposes.</p>
@@ -453,7 +455,7 @@ export default function SPVDashboard() {
                 <div className="absolute top-0 right-0 p-16 opacity-[0.02] pointer-events-none">
                     <RefreshCw size={240} className="text-yellow-500" />
                 </div>
-                
+
                 <div className="relative z-10">
                     {/* Header Area: Centered */}
                     <div className="flex flex-col items-center text-center mb-16">
@@ -469,10 +471,10 @@ export default function SPVDashboard() {
                     </div>
 
                     {/* Form Container: Centered Column */}
-                    <div className="max-w-6xl mx-auto space-y-12">
+                    <div className="space-y-12 pb-12">
                         {/* Borrower Selector */}
-                        <div className="space-y-4">
-                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em] ml-1 text-left">
+                        <div className="space-y-4 w-full">
+                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em] text-center">
                                 Select Target Borrower
                             </label>
                             <div className="relative">
@@ -482,7 +484,7 @@ export default function SPVDashboard() {
                                     className="w-full px-6 py-5 bg-zinc-900/30 border border-zinc-800/50 rounded-xl text-zinc-200 font-outfit focus:border-yellow-500/40 focus:outline-none appearance-none transition-all hover:bg-zinc-900/50"
                                 >
                                     <option value="" className="bg-zinc-950">Choose borrower address...</option>
-                                    <option value="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" className="bg-zinc-950">0xf39F...2266 (Institutional Demo)</option>
+                                    <option value="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" className="bg-zinc-950">0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 (Institutional Demo)</option>
                                 </select>
                                 <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-600">
                                     <Search size={18} />
@@ -491,8 +493,8 @@ export default function SPVDashboard() {
                         </div>
 
                         {/* Repayment Amount */}
-                        <div className="space-y-4">
-                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em] ml-1 text-left">
+                        <div className="space-y-4 w-full">
+                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-[0.3em] text-center">
                                 Repayment Amount (USDC)
                             </label>
                             <div className="relative group">
@@ -508,7 +510,7 @@ export default function SPVDashboard() {
                         </div>
 
                         {/* Outstanding Debt Summary: Inner Card */}
-                        <div className="bg-zinc-900/40 border border-zinc-800/50 rounded-2xl p-10 text-center min-h-[160px] flex flex-col justify-center relative overflow-hidden">
+                        <div className="bg-zinc-900/40 border border-zinc-800/50 rounded-2xl p-10 text-center min-h-[160px] flex flex-col justify-center relative overflow-hidden w-full">
                             {selectedBorrower ? (
                                 <div className="space-y-6 relative z-10">
                                     <div>

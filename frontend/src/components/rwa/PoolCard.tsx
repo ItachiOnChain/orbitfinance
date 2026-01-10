@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useReadContract } from 'wagmi';
 import { formatUnits } from 'viem';
 import { Clock } from 'lucide-react';
-import { BUNDLE_POOL_ADDRESS, BUNDLE_POOL_ABI } from '../../contracts/bundlePoolConfig';
+import { CONTRACTS } from '../../contracts';
+import BundlePoolABI from '../../contracts/rwa-abis/BundlePool.json';
 import { TrancheCard } from './TrancheCardBundle';
 import { InvestmentModal } from './InvestmentModalBundle';
 
@@ -36,24 +37,24 @@ export function PoolCard({ pool, poolId, onInvestmentSuccess }: PoolCardProps) {
 
     // Fetch Junior Tranche details
     const { data: juniorData } = useReadContract({
-        address: BUNDLE_POOL_ADDRESS as `0x${string}`,
-        abi: BUNDLE_POOL_ABI,
+        address: CONTRACTS.BundlePool as `0x${string}`,
+        abi: BundlePoolABI.abi,
         functionName: 'getTrancheDetails',
         args: [BigInt(poolId), true],
     });
 
     // Fetch Senior Tranche details
     const { data: seniorData } = useReadContract({
-        address: BUNDLE_POOL_ADDRESS as `0x${string}`,
-        abi: BUNDLE_POOL_ABI,
+        address: CONTRACTS.BundlePool as `0x${string}`,
+        abi: BundlePoolABI.abi,
         functionName: 'getTrancheDetails',
         args: [BigInt(poolId), false],
     });
 
     // Fetch time remaining
     const { data: timeData } = useReadContract({
-        address: BUNDLE_POOL_ADDRESS as `0x${string}`,
-        abi: BUNDLE_POOL_ABI,
+        address: CONTRACTS.BundlePool as `0x${string}`,
+        abi: BundlePoolABI.abi,
         functionName: 'getTimeRemaining',
         args: [BigInt(poolId)],
     });

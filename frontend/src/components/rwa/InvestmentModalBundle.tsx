@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { formatUnits, parseUnits } from 'viem';
 import { X } from 'lucide-react';
-import { BUNDLE_POOL_ADDRESS, BUNDLE_POOL_ABI } from '../../contracts/bundlePoolConfig';
+import { CONTRACTS } from '../../contracts';
+import BundlePoolABI from '../../contracts/rwa-abis/BundlePool.json';
+import MockUSDCABI from '../../contracts/rwa-abis/MockUSDC.json';
 
 interface InvestmentModalProps {
     poolId: number;
@@ -12,37 +14,6 @@ interface InvestmentModalProps {
     onSuccess: () => void;
 }
 
-const USDT_ADDRESS = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
-const USDT_ABI = [
-    {
-        "type": "function",
-        "name": "balanceOf",
-        "inputs": [{ "name": "account", "type": "address" }],
-        "outputs": [{ "name": "", "type": "uint256" }],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
-        "name": "approve",
-        "inputs": [
-            { "name": "spender", "type": "address" },
-            { "name": "amount", "type": "uint256" }
-        ],
-        "outputs": [{ "name": "", "type": "bool" }],
-        "stateMutability": "nonpayable"
-    },
-    {
-        "type": "function",
-        "name": "allowance",
-        "inputs": [
-            { "name": "owner", "type": "address" },
-            { "name": "spender", "type": "address" }
-        ],
-        "outputs": [{ "name": "", "type": "uint256" }],
-        "stateMutability": "view"
-    }
-] as const;
-
 export function InvestmentModal({ poolId, tranche, trancheData, onClose, onSuccess }: InvestmentModalProps) {
     const { address } = useAccount();
     const [amount, setAmount] = useState('');
@@ -50,8 +21,8 @@ export function InvestmentModal({ poolId, tranche, trancheData, onClose, onSucce
 
     // Get USDT balance
     const { data: usdtBalance } = useReadContract({
-        address: USDT_ADDRESS as `0x${string}`,
-        abi: USDT_ABI,
+        address: CONTRACTS.MockUSDC,
+        abi: MockUSDCABI.abi,
         functionName: 'balanceOf',
         args: address ? [address] : undefined,
         query: {
@@ -61,10 +32,10 @@ export function InvestmentModal({ poolId, tranche, trancheData, onClose, onSucce
 
     // Get USDT allowance
     const { data: allowance } = useReadContract({
-        address: USDT_ADDRESS as `0x${string}`,
-        abi: USDT_ABI,
+        address: CONTRACTS.MockUSDC,
+        abi: MockUSDCABI.abi,
         functionName: 'allowance',
-        args: address ? [address, BUNDLE_POOL_ADDRESS] : undefined,
+        args: address ? [address, CONTRACTS.BundlePool] : undefined,
         query: {
             enabled: !!address
         }
@@ -114,10 +85,10 @@ export function InvestmentModal({ poolId, tranche, trancheData, onClose, onSucce
 
         try {
             (approveUSDT as any)({
-                address: USDT_ADDRESS as `0x${string}`,
-                abi: USDT_ABI,
+                address: CONTRACTS.MockUSDC,
+                abi: MockUSDCABI.abi,
                 functionName: 'approve',
-                args: [BUNDLE_POOL_ADDRESS, amountBigInt],
+                args: [CONTRACTS.BundlePool, amountBigInt],
             });
         } catch (error) {
             console.error('Approval error:', error);
@@ -134,15 +105,15 @@ export function InvestmentModal({ poolId, tranche, trancheData, onClose, onSucce
         try {
             if (tranche === 'junior') {
                 (invest as any)({
-                    address: BUNDLE_POOL_ADDRESS as `0x${string}`,
-                    abi: BUNDLE_POOL_ABI,
+                    address: CONTRACTS.BundlePool as `0x${string}`,
+                    abi: BundlePoolABI.abi,
                     functionName: 'investJuniorTranche',
                     args: [BigInt(poolId), amountBigInt],
                 });
             } else {
                 (invest as any)({
-                    address: BUNDLE_POOL_ADDRESS as `0x${string}`,
-                    abi: BUNDLE_POOL_ABI,
+                    address: CONTRACTS.BundlePool as `0x${string}`,
+                    abi: BundlePoolABI.abi,
                     functionName: 'investSeniorTranche',
                     args: [BigInt(poolId), amountBigInt],
                 });
@@ -185,7 +156,7 @@ export function InvestmentModal({ poolId, tranche, trancheData, onClose, onSucce
                     <h2 className="text-xl font-bold text-white font-outfit tracking-tight translate-x-1 translate-y-2">
                         Invest in <span className="text-yellow-500">{tranche === 'junior' ? 'Junior' : 'Senior'} Tranche</span>
                     </h2>
-                    
+
                     <button
                         onClick={onClose}
                         className="p-2 rounded-full hover:bg-zinc-900 text-zinc-500 hover:text-white transition-all"

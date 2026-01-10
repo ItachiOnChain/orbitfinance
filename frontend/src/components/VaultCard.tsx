@@ -157,52 +157,54 @@ export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
 
             {isExpanded && (
                 <div className="px-6 pb-6 bg-zinc-950/50 border-t border-zinc-800/50">
-                    <div className="flex gap-4 py-4 mb-4">
-                        {['Deposit', 'Withdraw', 'Info'].map((tab) => (
-                            <button
-                                key={tab}
-                                onClick={() => setActiveTab(tab.toLowerCase() as any)}
-                                className={`px-6 py-3 text-base font-medium rounded-md transition-colors ${activeTab === tab.toLowerCase()
-                                    ? 'bg-zinc-800 text-white'
-                                    : 'text-zinc-500 hover:text-zinc-300'
-                                    }`}
-                            >
-                                {tab}
-                            </button>
-                        ))}
-                    </div>
+                    <div className="max-w-5xl mx-auto ml-12">
+                        <div className="flex gap-4 py-4 mb-4">
+                            {['Deposit', 'Withdraw', 'Info'].map((tab) => (
+                                <button
+                                    key={tab}
+                                    onClick={() => setActiveTab(tab.toLowerCase() as any)}
+                                    className={`px-6 py-3 text-base font-medium rounded-md transition-colors ${activeTab === tab.toLowerCase()
+                                        ? 'bg-zinc-800 text-white'
+                                        : 'text-zinc-500 hover:text-zinc-300'
+                                        }`}
+                                >
+                                    {tab}
+                                </button>
+                            ))}
+                        </div>
 
-                    <div className="grid grid-cols-[1.5fr_1fr] gap-6">
-                        {/* Left Column: Form */}
-                        <div className="space-y-6">
-                            <div className="bg-zinc-900 rounded-xl p-6 border border-zinc-800">
-                                {activeTab === 'deposit' && <DepositForm vault={vault} />}
-                                {activeTab === 'withdraw' && <WithdrawForm vault={vault} />}
-                                {activeTab === 'info' && (
-                                    <div className="text-zinc-400 font-light text-base space-y-2">
-                                        <p>Vault Address: {vault.address}</p>
-                                        <p>Asset Address: {vault.asset}</p>
-                                        <p>Max LTV: {vault.ltv}%</p>
-                                        <p>Current APY: {vault.apy}%</p>
-                                    </div>
+                        <div className="grid grid-cols-[1.5fr_1fr] gap-6">
+                            {/* Left Column: Form */}
+                            <div className="space-y-6">
+                                <div className="bg-zinc-900 rounded-xl p-6 border border-zinc-800">
+                                    {activeTab === 'deposit' && <DepositForm vault={vault} />}
+                                    {activeTab === 'withdraw' && <WithdrawForm vault={vault} />}
+                                    {activeTab === 'info' && (
+                                        <div className="text-zinc-400 font-light text-base space-y-2">
+                                            <p>Vault Address: {vault.address}</p>
+                                            <p>Asset Address: {vault.asset}</p>
+                                            <p>Max LTV: {vault.ltv}%</p>
+                                            <p>Current APY: {vault.apy}%</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Connect Wallet Button */}
+                            <div className="space-y-4">
+                                {!isConnected && (
+                                    <button
+                                        onClick={() => connect({ connector: connectors[0] })}
+                                        className="w-full py-4 bg-emerald-900/20 border border-emerald-900/50 text-emerald-500 rounded-lg hover:bg-emerald-900/30 transition-colors font-medium"
+                                    >
+                                        Connect Wallet
+                                    </button>
                                 )}
                             </div>
-                        </div>
 
-                        {/* Connect Wallet Button */}
-                        <div className="space-y-4">
-                            {!isConnected && (
-                                <button
-                                    onClick={() => connect({ connector: connectors[0] })}
-                                    className="w-full py-4 bg-emerald-900/20 border border-emerald-900/50 text-emerald-500 rounded-lg hover:bg-emerald-900/30 transition-colors font-medium"
-                                >
-                                    Connect Wallet
-                                </button>
-                            )}
+                            {/* Right Column: Stats/Graph */}
+                            <VaultStats vaultAddress={vault.address} assetAddress={vault.asset} />
                         </div>
-
-                        {/* Right Column: Stats/Graph */}
-                        <VaultStats vaultAddress={vault.address} assetAddress={vault.asset} />
                     </div>
                 </div>
             )}

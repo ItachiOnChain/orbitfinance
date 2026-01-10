@@ -1,12 +1,12 @@
 import { useReadContract, useReadContracts } from 'wagmi';
-import { CONTRACTS } from '../contracts/addresses';
+import { CONTRACTS } from '../contracts';
 import AccountFactoryABI from '../contracts/abis/AccountFactory.json';
 import OrbitAccountABI from '../contracts/abis/OrbitAccount.json';
 import ERC4626VaultABI from '../contracts/abis/ERC4626Vault.json';
 
 export function useOrbitAccount(userAddress: `0x${string}` | undefined) {
     const { data: accountAddress } = useReadContract({
-        address: CONTRACTS.anvil.AccountFactory as `0x${string}`,
+        address: CONTRACTS.AccountFactory as `0x${string}`,
         abi: AccountFactoryABI.abi,
         functionName: 'getAccount',
         args: userAddress ? [userAddress] : undefined,
@@ -46,13 +46,13 @@ export function useOrbitAccount(userAddress: `0x${string}` | undefined) {
     const { data: vaultBalances, refetch } = useReadContracts({
         contracts: [
             {
-                address: CONTRACTS.anvil.WETH_Vault as `0x${string}`,
+                address: CONTRACTS.WETH_Vault as `0x${string}`,
                 abi: ERC4626VaultABI.abi,
                 functionName: 'balanceOf',
                 args: accountAddress ? [accountAddress] : undefined,
             },
             {
-                address: CONTRACTS.anvil.USDC_Vault as `0x${string}`,
+                address: CONTRACTS.USDC_Vault as `0x${string}`,
                 abi: ERC4626VaultABI.abi,
                 functionName: 'balanceOf',
                 args: accountAddress ? [accountAddress] : undefined,

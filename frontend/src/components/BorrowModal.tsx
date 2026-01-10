@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAccount, useReadContract } from 'wagmi';
+import { CONTRACTS } from '../contracts';
 import { useBorrow } from '../hooks/useBorrow';
-import { CONTRACTS } from '../contracts/addresses';
 import AccountFactoryABI from '../contracts/abis/AccountFactory.json';
 import OrbitAccountABI from '../contracts/abis/OrbitAccount.json';
 import { formatEther } from 'viem';
@@ -17,7 +17,7 @@ export function BorrowModal({ isOpen, onClose }: BorrowModalProps) {
     const [maxBorrowableDisplay, setMaxBorrowableDisplay] = useState('0');
 
     const { data: accountAddress } = useReadContract({
-        address: CONTRACTS.anvil.AccountFactory as `0x${string}`,
+        address: CONTRACTS.AccountFactory as `0x${string}`,
         abi: AccountFactoryABI.abi,
         functionName: 'getAccount',
         args: address ? [address] : undefined,
@@ -40,7 +40,7 @@ export function BorrowModal({ isOpen, onClose }: BorrowModalProps) {
         address: accountAddress as `0x${string}`,
         abi: OrbitAccountABI.abi,
         functionName: 'maxBorrowableAmount',
-        args: [CONTRACTS.anvil.orUSD],
+        args: [CONTRACTS.orUSD],
         query: {
             enabled: !!accountAddress,
             gcTime: 0,
@@ -91,7 +91,7 @@ export function BorrowModal({ isOpen, onClose }: BorrowModalProps) {
             await borrow(
                 accountAddress as `0x${string}`,
                 amount,
-                CONTRACTS.anvil.orUSD as `0x${string}`,
+                CONTRACTS.orUSD as `0x${string}`,
                 18
             );
         } catch (error) {

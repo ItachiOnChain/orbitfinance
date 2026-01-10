@@ -1,5 +1,6 @@
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
-import { getContractConfig } from '../../config/rwaContracts';
+import { CONTRACTS } from '../../contracts';
+import IdentityRegistryABI from '../../contracts/rwa-abis/IdentityRegistry.json';
 
 /**
  * Hook to check if a user's KYC is verified on-chain
@@ -10,7 +11,7 @@ export function useKYCStatus(userAddress?: `0x${string}`) {
     const targetAddress = userAddress || connectedAddress;
 
     return useReadContract({
-        ...getContractConfig('IdentityRegistry'),
+        ...{ address: CONTRACTS.IdentityRegistry, abi: IdentityRegistryABI.abi },
         functionName: 'isVerified',
         args: targetAddress ? [targetAddress] : undefined,
         query: {
@@ -27,7 +28,7 @@ export function useIsKYCAdmin(userAddress?: `0x${string}`) {
     const targetAddress = userAddress || connectedAddress;
 
     return useReadContract({
-        ...getContractConfig('IdentityRegistry'),
+        ...{ address: CONTRACTS.IdentityRegistry, abi: IdentityRegistryABI.abi },
         functionName: 'isAdmin',
         args: targetAddress ? [targetAddress] : undefined,
         query: {

@@ -1,24 +1,27 @@
 import { createConfig, http } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 
-const anvilChain = {
-    id: 31337,
-    name: 'Anvil',
+const mantleSepolia = {
+    id: 5003,
+    name: 'Mantle Sepolia Testnet',
     nativeCurrency: {
         decimals: 18,
-        name: 'Ether',
-        symbol: 'ETH',
+        name: 'MNT',
+        symbol: 'MNT',
     },
     rpcUrls: {
-        default: { http: ['http://localhost:8545'] },
-        public: { http: ['http://localhost:8545'] },
+        default: { http: ['https://rpc.sepolia.mantle.xyz'] },
+        public: { http: ['https://rpc.sepolia.mantle.xyz'] },
+    },
+    blockExplorers: {
+        default: { name: 'Mantlescan', url: 'https://sepolia.mantlescan.xyz' },
     },
 } as const;
 
 export const wagmiConfig = createConfig({
-    chains: [anvilChain],
+    chains: [mantleSepolia],
     connectors: [injected()],
     transports: {
-        [anvilChain.id]: http('http://localhost:8545'),
+        [mantleSepolia.id]: http('https://rpc.sepolia.mantle.xyz'),
     },
 });

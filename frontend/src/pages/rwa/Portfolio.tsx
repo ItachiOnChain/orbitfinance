@@ -9,10 +9,13 @@ import {
     useSeniorTrancheBalance,
     useJuniorTrancheBalance,
 } from '../../hooks/rwa/useRWAContracts';
-import { getContractConfig } from '../../config/rwaContracts';
+import { CONTRACTS } from '../../contracts';
 import { useReadContracts } from 'wagmi';
 import { adminService } from '../../services/rwa/adminService';
 import { portfolioService } from '../../services/rwa/portfolioService';
+import OrbitRWAPoolABI from '../../contracts/rwa-abis/OrbitRWAPool.json';
+import RWAIncomeNFTABI from '../../contracts/rwa-abis/RWAIncomeNFT.json';
+import MockUSDCABI from '../../contracts/rwa-abis/MockUSDC.json';
 
 interface NFTAsset {
     tokenId: number;
@@ -44,12 +47,12 @@ export default function Portfolio() {
     // Fetch NFT metadata
     const nftMetadataContracts = useMemo(() => uniqueNFTIds.flatMap((tokenId) => [
         {
-            ...getContractConfig('RWAIncomeNFT'),
+            ...{ address: CONTRACTS.RWAIncomeNFT, abi: RWAIncomeNFTABI.abi },
             functionName: 'getMetadata',
             args: [tokenId],
         },
         {
-            ...getContractConfig('OrbitRWAPool'),
+            ...{ address: CONTRACTS.OrbitRWAPool, abi: OrbitRWAPoolABI.abi },
             functionName: 'isNFTLocked',
             args: [tokenId],
         },
