@@ -274,7 +274,7 @@ export default function LandingPage() {
                 title="What is Orbit"
                 subtitle="A new primitive for decentralized credit"
             >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto px-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto px-4 translate-x-25 md:translate-x-40">
                     <Reveal delay={0.1}>
                         <div className="p-6 md:p-10 rounded-3xl border border-gold/20 bg-white/5 backdrop-blur-sm hover:border-gold/50 transition-all group relative overflow-hidden">
                             <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -287,11 +287,12 @@ export default function LandingPage() {
                                 Crypto Module
                             </h3>
 
-                            <p className="text-white/60 leading-relaxed mb-6">
+                            <p className="text-white/60 leading-relaxed mb-6 ">
                                 Unlock the value of your liquid DeFi assets. Deposit yield-bearing tokens as collateral and borrow with zero liquidation risk.
                             </p>
+                            <br />
 
-                            <ul className="space-y-3 text-sm text-white/40 font-mono">
+                            <ul className="space-y-3 text-sm text-white/40 font-mono -translate-y-1 translate-x-25 md:translate-x-40">
                                 <li className="flex gap-2"><span className="text-gold">▹</span> Self-Repaying Debt</li>
                                 <li className="flex gap-2"><span className="text-gold">▹</span> Automated Yield</li>
                                 <li className="flex gap-2"><span className="text-gold">▹</span> Multi-Chain</li>
@@ -314,8 +315,9 @@ export default function LandingPage() {
                             <p className="text-white/60 leading-relaxed mb-6">
                                 Use tokenized real-world assets as collateral for compliant, institutional-grade credit.
                             </p>
+                            <br />
 
-                            <ul className="space-y-3 text-sm text-white/40 font-mono">
+                            <ul className="space-y-3 text-sm text-white/40 font-mono translate-y-1 translate-x-25 md:translate-x-40">
                                 <li className="flex gap-2"><span className="text-gold">▹</span> Institutional Infra</li>
                                 <li className="flex gap-2"><span className="text-gold">▹</span> Real-World Yield</li>
                                 <li className="flex gap-2"><span className="text-gold">▹</span> On-Chain Compliance</li>
@@ -334,11 +336,11 @@ export default function LandingPage() {
                 title="Self-Repaying Credit"
                 subtitle="In Three Steps"
             >
-                <div className="relative max-w-4xl mx-auto py-8 md:py-12 px-4">
+                <div className="relative max-w-4xl mx-auto py-8 md:py-12 px-4 translate-x-20 md:translate-x-60" >
                     {/* Vertical Line */}
                     <div className="absolute left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-gold/30 to-transparent -translate-x-1/2 hidden md:block" />
 
-                    <div className="space-y-24 md:space-y-0">
+                    <div className="space-y-24 md:space-y-0 translate-y-1 ">
                         {[
                             {
                                 title: "Deposit Collateral",
@@ -361,8 +363,11 @@ export default function LandingPage() {
                                 <div className="w-full md:w-[42%]">
                                     <Reveal delay={i * 0.1}>
                                         <div className={`p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm hover:border-gold/30 transition-colors group ${i % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
+                                        <br />
                                             <div className={`text-gold/20 text-5xl font-black mb-4 group-hover:text-gold/40 transition-colors`}>{`0${i + 1}`}</div>
+                                            <br />
                                             <h3 className="text-xl font-bold uppercase mb-4 tracking-tight">{step.title}</h3>
+                                            <br />
                                             <p className="text-white/60 leading-relaxed">
                                                 {step.desc}
                                             </p>
