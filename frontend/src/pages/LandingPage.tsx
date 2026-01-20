@@ -369,7 +369,7 @@ export default function LandingPage() {
                                 {/* Content Card */}
                                 <div className="w-full md:w-[45%]">
                                     <Reveal delay={i * 0.1} y={20}>
-                                        <div className={`p-8 md:p-12 rounded-[3.5rem] bg-[#080808]/60 backdrop-blur-3xl border border-white/5 hover:border-gold/30 transition-all duration-700 shadow-2xl group ${i % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
+                                        <div className={`p-8 md:p-12 rounded-2xl bg-[#080808]/60 backdrop-blur-3xl border border-white/5 hover:border-gold/30 transition-all duration-700 shadow-2xl group ${i % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
                                             <div className="text-gold/20 text-5xl md:text-7xl font-black mb-8 group-hover:text-gold/40 transition-all duration-500 font-mono tracking-tighter">{`0${i + 1}`}</div>
                                             <h3 className="text-2xl md:text-4xl font-black uppercase text-white mb-6 tracking-tighter">{step.title}</h3>
                                             <p className="text-white/40 leading-relaxed font-light text-base md:text-lg">
@@ -408,7 +408,7 @@ export default function LandingPage() {
                         { label: "Network Security", val: "99.9%", sub: "Uptime and safety" },
                     ].map((m, i) => (
                         <Reveal key={i} delay={i * 0.1}>
-                            <div className="p-10 rounded-[2.5rem] bg-white/5 border border-white/10 flex flex-col items-center text-center group hover:bg-gold/5 transition-all duration-500">
+                            <div className="p-10 rounded-2xl bg-white/5 border border-white/10 flex flex-col items-center text-center group hover:bg-gold/5 transition-all duration-500">
                                 <span className="text-[10px] font-mono tracking-[0.3em] text-white/40 uppercase mb-4">{m.label}</span>
                                 <span className="text-4xl md:text-5xl font-black text-white group-hover:text-gold transition-colors">{m.val}</span>
                                 <span className="mt-4 text-[10px] text-white/20 font-bold uppercase tracking-widest">{m.sub}</span>
@@ -436,7 +436,7 @@ export default function LandingPage() {
                         { name: "Aave", icon: Activity, val: "Yield Engine" },
                     ].map((p, i) => (
                         <Reveal key={i} delay={i * 0.05}>
-                            <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 flex flex-col items-center justify-center gap-4 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 hover:bg-white/10 transition-all duration-500">
+                            <div className="p-8 rounded-2xl bg-white/5 border border-white/5 flex flex-col items-center justify-center gap-4 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 hover:bg-white/10 transition-all duration-500">
                                 <p.icon className="text-white" size={32} strokeWidth={1} />
                                 <div className="flex flex-col items-center">
                                     <span className="text-xs font-black uppercase text-white tracking-widest">{p.name}</span>
@@ -454,7 +454,7 @@ export default function LandingPage() {
             <section className="relative w-full py-24 flex flex-col items-center justify-center">
                 <div className="container mx-auto px-6 flex flex-col items-center">
                     <Reveal>
-                        <div className="relative w-full max-w-5xl px-8 py-20 md:py-32 rounded-[3.5rem] bg-gradient-to-br from-gold/15 to-zinc-950 border border-gold/20 flex flex-col items-center text-center overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.8)]">
+                        <div className="relative w-full max-w-5xl px-8 py-20 md:py-32 rounded-2xl bg-gradient-to-br from-gold/15 to-zinc-950 border border-gold/20 flex flex-col items-center text-center overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.8)]">
                             {/* Decorative Background Glows */}
                             <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-gold/5 blur-[120px] rounded-full" />
                             <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-white/5 blur-[120px] rounded-full" />
@@ -466,10 +466,10 @@ export default function LandingPage() {
                             <div className="relative z-10 flex flex-col items-center gap-8">
                                 <button 
                                     onClick={handleConnect}
-                                    className="group relative z-10 inline-flex h-14 md:h-16 cursor-pointer items-center justify-center rounded-[2rem] border-0 px-12 md:px-20 py-4 font-outfit text-xs md:text-sm font-black tracking-[0.4em] uppercase text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] blur-0 opacity-100 before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)] before:transition-opacity hover:before:animate-[buttonMovingGradientBg_3s_linear_infinite] hover:before:opacity-80 shadow-[0_0_60px_rgba(212,175,55,0.25)] hover:scale-110 transition-all"
+                                    className="group relative z-10 inline-flex h-14 md:h-16 cursor-pointer items-center justify-center rounded-[2rem] border-0 px-12 md:px-20 py-4 font-outfit text-xs md:text-sm font-black tracking-[0.4em] uppercase text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] blur-0 opacity-100 before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)] before:transition-opacity hover:before:animate-[buttonMovingGradientBg_3s_linear_infinite] hover:before:opacity-70 shadow-[0_0_60px_rgba(212,175,55,0.25)] hover:scale-110 transition-all"
                                 >
-                                    <span className="relative z-10 flex items-center gap-4 translate-x-1">
-                                        Deploy Capital 
+                                    <span className="relative z-10 flex items-center gap-4">
+                                        Deploy Capital <ArrowRight className="group-hover:translate-x-4 transition-transform duration-500" />
                                     </span>
                                 </button>
                                 <p className="text-white/30 font-mono text-[10px] tracking-[0.5em] uppercase">
