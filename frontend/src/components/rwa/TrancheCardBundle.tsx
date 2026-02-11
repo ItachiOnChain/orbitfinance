@@ -26,17 +26,14 @@ export function TrancheCard({ type, data, onInvest }: TrancheCardProps) {
     };
 
     return (
-        
-        <div className="border border-yellow-500/10 rounded-2xl p-8 transition-all bg-zinc-900/60 hover:bg-zinc-900/80 hover:border-yellow-500/30 group">
-            <br />
+        <div className="border border-white/5 rounded-2xl p-8 transition-all bg-zinc-900/40 backdrop-blur-xl hover:bg-zinc-900/60 hover:border-gold/30 group shadow-2xl">
             <div className="flex items-start justify-between mb-10">
                 <div className="flex items-center space-x-6">
-                    <br />
-                    <div className={`w-16 h-16 bg-zinc-950 border border-yellow-500/20 rounded-2xl flex items-center justify-center shadow-xl group-hover:border-yellow-500/40 transition-colors`}>
-                        <span className="text-yellow-500 text-2xl font-black font-outfit">{iconLetter}</span>
+                    <div className={`w-16 h-16 bg-zinc-950 border border-white/10 rounded-2xl flex items-center justify-center shadow-xl group-hover:border-gold/40 transition-all duration-500`}>
+                        <span className="text-gold text-2xl font-black font-outfit">{iconLetter}</span>
                     </div>
-                    <div>
-                        <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.3em] mb-1 translate-x-1">{data.name}</h3>
+                    <div className="space-y-1">
+                        <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.3em]">{data.name}</h3>
                         <div className="flex items-baseline space-x-2">
                             <p className="text-3xl font-bold text-white font-outfit tracking-tight">{formatCurrency(data.pricePerUnit)}</p>
                             <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Per Token</p>

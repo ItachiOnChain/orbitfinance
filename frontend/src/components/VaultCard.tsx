@@ -89,30 +89,33 @@ export function VaultCard({ vault, isExpanded, onToggle }: VaultCardProps) {
     const details = getVaultDetails(vault);
 
     return (
-        <Card className={`transition-all duration-300 border border-zinc-800 bg-zinc-900 overflow-hidden ${isExpanded ? 'ring-1 ring-zinc-700' : 'hover:border-zinc-700'}`}>
-            <div className="p-6 grid grid-cols-[auto_2fr_1fr_1fr_1fr_1fr] gap-8 items-center">
+        <Card className={`transition-all duration-500 border border-white/5 bg-zinc-900/40 backdrop-blur-xl overflow-hidden group/card ${isExpanded ? 'ring-1 ring-gold/20 shadow-[0_0_30px_rgba(212,175,55,0.1)]' : 'hover:border-gold/20 hover:bg-zinc-900/60 shadow-xl'}`}>
+            <div className="p-8 grid grid-cols-[auto_2fr_1fr_1fr_1fr_1fr] gap-10 items-center">
                 {/* Expand Toggle */}
                 <button
                     onClick={onToggle}
-                    className="w-8 h-8 flex items-center justify-center rounded border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors"
+                    className="w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 text-zinc-500 hover:text-gold hover:border-gold/30 hover:bg-gold/5 transition-all duration-300"
                 >
-                    {isExpanded ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                    {isExpanded ? <Minus className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
                 </button>
 
                 {/* Vault Info */}
-                <div className="flex items-center gap-4">
-                    <div className="relative">
-                        <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center overflow-hidden border border-zinc-700">
-                            {details.icon && <img src={details.icon} alt="" className="w-full h-full object-cover" />}
+                <div className="flex items-center gap-6">
+                    <div className="relative group/icon">
+                        <div className="w-14 h-14 rounded-2xl bg-zinc-950 flex items-center justify-center overflow-hidden border border-white/5 group-hover/icon:border-gold/30 transition-colors duration-500">
+                            {details.icon && <img src={details.icon} alt="" className="w-full h-full object-cover p-2" />}
                         </div>
-                        <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-zinc-900 flex items-center justify-center overflow-hidden border border-zinc-800">
-                            {details.subIcon && <img src={details.subIcon} alt="" className="w-full h-full object-cover" />}
+                        <div className="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-lg bg-zinc-900 flex items-center justify-center overflow-hidden border border-zinc-800 shadow-lg">
+                            {details.subIcon && <img src={details.subIcon} alt="" className="w-full h-full object-cover p-1" />}
                         </div>
                     </div>
-                    <div>
-                        <h3 className="text-xl font-medium text-white">{details.title}</h3>
-                        <p className="text-sm text-zinc-500">{details.subtitle}</p>
-                        <p className="text-sm text-zinc-500">LTV: {vault.ltv}%</p>
+                    <div className="space-y-1">
+                        <h3 className="text-xl font-bold text-white tracking-tight group-hover/card:text-gold transition-colors duration-500 font-outfit">{details.title}</h3>
+                        <div className="flex items-center gap-3">
+                            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{details.subtitle}</p>
+                            <div className="w-1 h-1 rounded-full bg-zinc-700" />
+                            <p className="text-[10px] font-bold text-gold uppercase tracking-widest">LTV: {vault.ltv}%</p>
+                        </div>
                     </div>
                 </div>
 

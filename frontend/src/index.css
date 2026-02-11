@@ -2,7 +2,9 @@
 
 @theme {
   /* ===== COLOR TOKENS ===== */
-  --color-gold: #d4af37;
+  --color-gold: #FFD700;
+  --color-gold-bright: #FFF7B1;
+  --color-gold-dark: #B8860B;
   --color-gold-muted: #b8860b;
   --color-dark-bg: #050505;
   --color-sidebar-bg: #050607;
@@ -20,10 +22,40 @@
   --letter-spacing-widest: 0.25em;
 
   /* ===== SPACING SCALE ===== */
-  --section-gap: 10rem;
-  --section-gap-lg: 16rem;
+  --section-gap: 12rem;
+  --section-gap-lg: 20rem;
 
   /* ===== ANIMATIONS ===== */
+  @keyframes orbit {
+    0% {
+      transform: translate(0, 0);
+    }
+
+    33% {
+      transform: translate(10px, -5px);
+    }
+
+    66% {
+      transform: translate(-10px, 5px);
+    }
+
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
   @keyframes buttonMovingGradientBg {
     0% {
       background-position: 0% 50%;
@@ -106,6 +138,10 @@
 @layer utilities {
 
   /* ===== ANIMATION UTILITIES ===== */
+  .animate-orbit {
+    animation: orbit 8s ease-in-out infinite;
+  }
+
   .animate-slide-down {
     animation: slide-down 0.5s ease-out forwards;
   }
@@ -222,15 +258,35 @@
     letter-spacing: 0.15em;
     text-transform: uppercase;
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 0.125rem;
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
   }
 
   .btn-primary-gold:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 40px rgba(212, 175, 55, 0.35);
+    background: var(--color-gold-bright);
+    box-shadow: 0 0 35px rgba(255, 215, 0, 0.35);
+  }
+
+  .btn-rectangular {
+    border-radius: 0.125rem !important;
+  }
+
+  .gold-mesh-bg {
+    background-image:
+      radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+      linear-gradient(rgba(255, 215, 0, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 215, 0, 0.02) 1px, transparent 1px);
+    background-size: 100% 100%, 40px 40px, 40px 40px;
+  }
+
+  .text-polished-gold {
+    background: linear-gradient(to bottom, #FFF7B1 0%, #FFD700 50%, #B8860B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
   }
 
   .btn-secondary-outline {

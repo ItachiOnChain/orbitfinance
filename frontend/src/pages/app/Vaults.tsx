@@ -73,12 +73,10 @@ export default function VaultsPage() {
                 <div className="p-4 rounded-full border border-gold/20 bg-gold/5 shadow-[0_0_15px_rgba(251,191,36,0.1)]">
                     <LayoutGrid className="w-8 h-8 text-gold drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
                 </div>
-                <div>
-                    <h1 className="text-3xl font-light tracking-tight text-white mb-2 drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
+                <div className="space-y-2">
+                    <h1 className="text-3xl font-light tracking-tight text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
                         Vaults
                     </h1>
-                    <br />
-
                     <p className="text-zinc-400 font-light">
                         Deposit collateral and borrow your future yield right away.
                     </p>
@@ -87,8 +85,7 @@ export default function VaultsPage() {
 
             <br />
             {/* Golden Separator Line */}
-            <div className="h-px w-full bg-gradient-to-r from-transparent via-gold/50 to-transparent shadow-[0_0_10px_rgba(251,191,36,0.3)]" />
-            <br />
+            <div className="h-px w-full bg-gradient-to-r from-transparent via-gold/50 to-transparent shadow-[0_0_10px_rgba(251,191,36,0.3)] my-8" />
 
             {/* Filter Tabs */}
             <div className="flex gap-4 bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/50 w-fit">
@@ -126,25 +123,24 @@ export default function VaultsPage() {
             <br />
 
             {/* Summary Stats */}
-            <div className="grid grid-cols-4 gap-8 bg-zinc-900/30 p-6 rounded-xl border border-zinc-800/50 hover:border-gold/20 transition-colors duration-500">
-                <div>
-                    <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">Total Deposit</p>
-                    <p className="text-2xl font-light text-gold drop-shadow-[0_0_5px_rgba(251,191,36,0.3)]">{formatCurrency(totalDepositsUSD)}</p>
+            <div className="grid grid-cols-4 gap-8 bg-zinc-900/30 backdrop-blur-md p-6 rounded-xl border border-white/5 hover:border-gold/20 transition-all duration-500 shadow-2xl">
+                <div className="space-y-1">
+                    <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Total Deposit</p>
+                    <p className="text-2xl font-light text-gold drop-shadow-[0_0_5px_rgba(212,175,55,0.3)]">{formatCurrency(totalDepositsUSD)}</p>
                 </div>
-                <div>
-                    <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">Current Debt</p>
-                    <p className="text-xl font-light text-gold drop-shadow-[0_0_5px_rgba(251,191,36,0.3)]">{currentDebtDisplay}</p>
+                <div className="space-y-1">
+                    <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Current Debt</p>
+                    <p className="text-xl font-light text-gold drop-shadow-[0_0_5px_rgba(212,175,55,0.3)]">{currentDebtDisplay}</p>
                 </div>
-                <div>
-                    <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">Accumulated Credit</p>
-                    <p className="text-2xl font-light text-gold drop-shadow-[0_0_5px_rgba(251,191,36,0.3)]">{accumulatedCreditDisplay}</p>
+                <div className="space-y-1">
+                    <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Accumulated Credit</p>
+                    <p className="text-2xl font-light text-gold drop-shadow-[0_0_5px_rgba(212,175,55,0.3)]">{accumulatedCreditDisplay}</p>
                 </div>
-                <div className="border-l border-zinc-800 pl-8">
-                    <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">Global TVL</p>
-                    <p className="text-2xl font-light text-gold drop-shadow-[0_0_5px_rgba(251,191,36,0.3)]">$2.14M</p>
+                <div className="border-l border-zinc-800 pl-8 space-y-1">
+                    <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Global TVL</p>
+                    <p className="text-2xl font-light text-gold drop-shadow-[0_0_5px_rgba(212,175,55,0.3)]">$2.14M</p>
                 </div>
             </div>
-            <br />
 
             {/* Action Buttons */}
             <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-4">
@@ -173,7 +169,6 @@ export default function VaultsPage() {
                     <Eye className="w-5 h-5 text-zinc-400" />
                 </button>
             </div>
-            <br />
 
             {/* Strategies List */}
             <div className="space-y-4">
@@ -182,7 +177,6 @@ export default function VaultsPage() {
                     <button className="text-sm font-medium text-zinc-500 hover:text-zinc-300 px-3 py-1 rounded-md transition-colors">All Strategies</button>
                     <button className="text-sm font-medium text-zinc-500 hover:text-zinc-300 px-3 py-1 rounded-md transition-colors">Unused Strategies</button>
                 </div>
-                <br />
 
                 <div className="space-y-4">
                     {filteredVaults.map((vault) => (

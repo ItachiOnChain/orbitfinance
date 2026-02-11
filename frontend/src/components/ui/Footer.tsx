@@ -1,112 +1,85 @@
-import { Twitter, Github, Mail, MessageSquare, Newspaper, Globe, ShieldCheck, Orbit, Hexagon } from 'lucide-react';
+import { Twitter, Github, Mail, MessageSquare, Orbit } from 'lucide-react';
 
 export function Footer() {
     return (
-        <footer className="bg-[#050505] py-24 px-6 border-t border-white/5 relative overflow-hidden">
-            {/* Subtle Background Glow - Reduced */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[200px] bg-gold/[0.03] blur-[80px] pointer-events-none" />
+        <footer className="bg-[#050505] py-32 md:py-48 px-10 border-t border-white/5 relative overflow-hidden">
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
             
-            <div className="max-w-7xl mx-auto relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
-                    {/* Brand Column */}
-                    <div className="flex flex-col gap-8">
-                        <div className="flex flex-col">
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="relative group">
-                                    <div className="text-gold animate-[spin_10s_linear_infinite]">
-                                        <Orbit size={32} strokeWidth={1.5} />
-                                    </div>
-                                    <div className="absolute inset-0 flex items-center justify-center text-gold">
-                                        <Hexagon size={16} fill="currentColor" className="opacity-20" />
-                                        <div className="absolute w-1 h-1 bg-gold rounded-full shadow-[0_0_8px_rgba(212,175,55,1)]" />
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col leading-none">
-                                    <span className="text-lg font-black tracking-[0.15em] text-white font-outfit uppercase">ORBIT</span>
-                                    <span className="text-[9px] font-bold tracking-[0.4em] text-gold mt-0.5">FINANCE</span>
-                                </div>
+            <div className="max-w-[1440px] mx-auto relative z-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 md:gap-24 mb-32">
+                    {/* Brand Column (Span 5) */}
+                    <div className="lg:col-span-5 flex flex-col gap-10">
+                        <div className="flex items-center gap-4">
+                            <div className="text-gold">
+                                <Orbit size={32} strokeWidth={1} />
                             </div>
-                            <p className="text-zinc-600 text-[11px] font-bold tracking-[0.1em] mb-4">
-                                © 2020-2026 Orbit Labs
-                            </p>
-                            <p className="text-zinc-500 text-[11px] font-light leading-relaxed max-w-[240px]">
-                                All rights reserved, no guarantees given. 
-                                DeFi tools are not toys. Use at your own risk.
-                            </p>
+                            <div className="flex flex-col leading-none">
+                                <span className="text-xl font-black tracking-[0.2em] text-white font-outfit uppercase">ORBIT</span>
+                                <span className="text-[10px] font-bold tracking-[0.5em] text-gold mt-1">FINANCE</span>
+                            </div>
+                        </div>
+                        <p className="text-white/40 text-lg font-light leading-relaxed max-w-md">
+                            The first self-repaying decentralized credit bridge. 
+                            Institutional yield meeting decentralized liquidity. 
+                            Built for the next generation of financial autonomy.
+                        </p>
+                        <div className="flex gap-6">
+                            {[Twitter, Github, MessageSquare, Mail].map((Icon, i) => (
+                                <a key={i} href="#" className="w-12 h-12 rounded-none border border-white/5 bg-white/[0.02] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/40 hover:bg-gold/5 transition-all duration-500">
+                                    <Icon size={20} strokeWidth={1.5} />
+                                </a>
+                            ))}
                         </div>
                     </div>
 
-                    {/* Navigation Column */}
-                    <div>
-                        <h4 className="text-white font-bold tracking-[0.3em] uppercase text-[10px] mb-10 font-outfit">Navigation</h4>
-                        <ul className="space-y-5">
-                            {[
-                                { name: 'Introduction', icon: Globe },
-                                { name: 'Github', icon: Github },
-                                { name: 'Documentation', icon: ShieldCheck },
-                                { name: 'Snapshot', icon: Newspaper }
-                            ].map((item) => (
-                                <li key={item.name}>
-                                    <a href="#" className="text-zinc-500 hover:text-white transition-colors text-[13px] font-light flex items-center gap-3 group">
-                                        {item.name}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Social Column */}
-                    <div>
-                        <h4 className="text-white font-bold tracking-[0.3em] uppercase text-[10px] mb-10 font-outfit">Social</h4>
-                        <ul className="space-y-5">
-                            {[
-                                { name: 'Medium', icon: Newspaper },
-                                { name: 'Discord', icon: MessageSquare },
-                                { name: 'Forum', icon: MessageSquare },
-                                { name: 'X (Prev. Twitter)', icon: Twitter },
-                                { name: 'Newsletter', icon: Mail }
-                            ].map((item) => (
-                                <li key={item.name}>
-                                    <a href="#" className="text-zinc-500 hover:text-white transition-colors text-[13px] font-light flex items-center gap-3 group">
-                                        <item.icon size={14} className="text-zinc-600 group-hover:text-gold transition-colors" />
-                                        {item.name}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Proudly Using Column */}
-                    <div className="flex flex-col gap-10">
+                    {/* Links Grid (Span 7) */}
+                    <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-12">
+                        {/* Solutions */}
                         <div>
-                            <h4 className="text-white font-bold tracking-[0.3em] uppercase text-[10px] mb-8 font-outfit">Proudly Using</h4>
-                            <div className="flex flex-col gap-3">
-                                {[
-                                    { name: 'DefiLlama', color: 'bg-[#1a2b3c]' },
-                                    { name: 'LI.FI', color: 'bg-[#2a1b3c]' },
-                                    { name: 'snapshot', color: 'bg-[#1b2a3c]' }
-                                ].map((partner) => (
-                                    <div key={partner.name} className={`flex items-center gap-3 px-4 py-2 rounded-lg border border-zinc-800/50 ${partner.color} bg-opacity-20 hover:bg-opacity-40 transition-all cursor-pointer group`}>
-                                        <div className="w-4 h-4 rounded-sm bg-gold/20 border border-gold/40" />
-                                        <span className="text-[11px] font-bold tracking-widest text-zinc-400 group-hover:text-white transition-colors uppercase">{partner.name}</span>
-                                    </div>
+                            <h4 className="text-white font-black tracking-[0.3em] uppercase text-[12px] mb-10 opacity-80">SOLUTIONS</h4>
+                            <ul className="space-y-6">
+                                {['Crypto Yield', 'RWA Credit', 'Stable Swaps', 'Vault Strategies'].map((item) => (
+                                    <li key={item}>
+                                        <a href="#" className="text-white/30 hover:text-gold transition-all duration-500 text-[11px] font-bold uppercase tracking-[0.2em]">{item}</a>
+                                    </li>
                                 ))}
-                            </div>
+                            </ul>
                         </div>
 
-                        {/* Built on Ethereum Badge */}
-                        <div className="mt-auto">
-                            <div className="inline-flex items-center gap-3 px-4 py-3 border border-zinc-800 rounded-lg bg-zinc-900/30">
-                                <div className="w-6 h-6 border border-zinc-700 flex items-center justify-center">
-                                    <div className="w-3 h-5 border border-zinc-600" />
-                                </div>
-                                <div className="flex flex-col leading-none">
-                                    <span className="text-[8px] font-black tracking-[0.2em] text-zinc-600 uppercase">Built on</span>
-                                    <span className="text-[10px] font-black tracking-[0.1em] text-white uppercase mt-0.5">Ethereum</span>
-                                </div>
-                            </div>
+                        {/* Resources */}
+                        <div>
+                            <h4 className="text-white font-black tracking-[0.3em] uppercase text-[12px] mb-10 opacity-80">RESOURCES</h4>
+                            <ul className="space-y-6">
+                                {['Documentation', 'Developer Hub', 'Security Audits', 'Github'].map((item) => (
+                                    <li key={item}>
+                                        <a href="#" className="text-white/30 hover:text-gold transition-all duration-500 text-[11px] font-bold uppercase tracking-[0.2em]">{item}</a>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
+
+                        {/* Company */}
+                        <div className="hidden sm:block">
+                            <h4 className="text-white font-black tracking-[0.3em] uppercase text-[12px] mb-10 opacity-80">COMPANY</h4>
+                            <ul className="space-y-6">
+                                {['About Us', 'Careers', 'Press Kit', 'Contact'].map((item) => (
+                                    <li key={item}>
+                                        <a href="#" className="text-white/30 hover:text-gold transition-all duration-500 text-[11px] font-bold uppercase tracking-[0.2em]">{item}</a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Bottom Bar */}
+                <div className="pt-16 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-10">
+                    <p className="text-white/20 text-[10px] font-bold tracking-[0.4em] uppercase order-2 md:order-1">
+                        © 2026 Orbit Finance Protocol. Institutional Grade Liquidity.
+                    </p>
+                    <div className="flex gap-12 order-1 md:order-2">
+                        <a href="#" className="text-white/20 hover:text-gold text-[10px] font-bold tracking-[0.3em] uppercase transition-colors">Privacy Policy</a>
+                        <a href="#" className="text-white/20 hover:text-gold text-[10px] font-bold tracking-[0.3em] uppercase transition-colors">Terms of Service</a>
                     </div>
                 </div>
             </div>

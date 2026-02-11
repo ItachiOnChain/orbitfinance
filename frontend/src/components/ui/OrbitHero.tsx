@@ -54,8 +54,8 @@ function Shape() {
             <mesh ref={innerSphereRef}>
                 <sphereGeometry args={[1.2, 32, 32]} />
                 <meshPhysicalMaterial
-                    color="#d4af37"
-                    emissive="#d4af37"
+                    color="#FFD700"
+                    emissive="#FFD700"
                     emissiveIntensity={1.5}
                     transparent
                     opacity={0.9}
@@ -64,7 +64,7 @@ function Shape() {
 
             <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
                 <torusGeometry args={[3.5, 0.02, 16, 100]} />
-                <meshStandardMaterial color="#d4af37" emissive="#d4af37" emissiveIntensity={2} />
+                <meshStandardMaterial color="#FFD700" emissive="#FFD700" emissiveIntensity={2} />
             </mesh>
         </>
     );
@@ -145,12 +145,12 @@ export const OrbitHero: React.FC<OrbitHeroProps> = () => {
                 <div className="flex flex-col sm:flex-row items-center gap-4 md:gap-6 w-full sm:w-auto px-4">
                     <button
                         onClick={isConnected ? handleLaunchApp : handleConnect}
-                        className="w-full sm:w-auto group relative z-10 inline-flex h-14 md:h-16 cursor-pointer items-center justify-center rounded-xl border-0 px-8 md:px-14 py-4 md:py-6 font-outfit text-[11px] md:text-[13px] font-bold tracking-[0.3em] uppercase text-gold bg-[length:200%] [background-clip:padding-box,border-box,border-box] [background-origin:border-box] [border:calc(0.08*1rem)_solid_transparent] bg-[linear-gradient(#0a0d11,#0a0d11),linear-gradient(#d4af37,#d4af37),linear-gradient(90deg,#d4af37,#d4af37,#d4af37,#d4af37,#d4af37)] blur-0 opacity-100 before:animate-[buttonMovingGradientBg_3s_linear_infinite] before:absolute before:bottom-[-10%] before:left-0 before:z-0 before:h-[30%] before:w-full before:bg-[linear-gradient(90deg,#0a0d11,#d4af37,#0a0d11,#d4af37,#0a0d11)] before:bg-[length:200%] before:opacity-15 before:[filter:blur(1rem)] before:transition-opacity hover:before:animate-[buttonMovingGradientBg_3s_linear_infinite] hover:before:opacity-70 shadow-[0_0_40px_rgba(212,175,55,0.25)] hover:scale-105"
-                        style={{ transition: 'opacity 2s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                        className="w-full sm:w-auto group relative z-10 inline-flex h-14 md:h-16 cursor-pointer items-center justify-center rounded-none border-0 px-8 md:px-14 py-4 md:py-6 font-outfit text-[11px] md:text-[13px] font-bold tracking-[0.3em] uppercase text-black bg-[linear-gradient(#FFD700,#FFD700),linear-gradient(#FFD700,#FFD700),linear-gradient(90deg,#FFD700,#FFD700,#FFD700,#FFD700,#FFD700)] shadow-[0_0_40px_rgba(255,215,0,0.25)] hover:scale-105"
+                        style={{ transition: 'opacity 2.0s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)' }}
                     >
                         <span className="relative z-10">GET A SELF-REPAYING LOAN</span>
                     </button>
-                    <button className="p-3 md:p-4 btn-gold-outline text-gold rounded-xl hover:bg-gold/10 transition-all shadow-[0_0_30px_rgba(212,175,55,0.15)]">
+                    <button className="p-3 md:p-4 border border-gold/40 text-gold rounded-none hover:bg-gold/10 transition-all shadow-[0_0_30px_rgba(255,215,0,0.1)]">
                         <Play size={20} className="md:w-6 md:h-6" fill="currentColor" />
                     </button>
                 </div>

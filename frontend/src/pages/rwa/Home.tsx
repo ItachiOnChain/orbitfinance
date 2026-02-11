@@ -135,22 +135,19 @@ export default function RWAHome() {
                 <div className="p-4 rounded-full border border-gold/20 bg-gold/5 shadow-[0_0_15px_rgba(251,191,36,0.1)]">
                     <Globe className="w-8 h-8 text-gold drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
                 </div>
-                <div>
-                    <h1 className="text-3xl font-light tracking-tight text-gold/100 mb-2 drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] font-outfit">
+                <div className="space-y-1">
+                    <h1 className="text-3xl font-light tracking-tight text-gold/100 drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] font-outfit">
                         Real-World Assets
                     </h1>
                 </div>
             </div>
-            <br />
-            
-            <br />
 
             {/* Hero Section with Exact Orbit Animation */}
             <div className="relative h-[600px] w-full rounded-3xl overflow-hidden border border-zinc-800/50 bg-zinc-950/50 backdrop-blur-sm">
                 <div className="absolute inset-0 opacity-60">
                     <Scene />
                 </div>
-                <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6 max-w-4xl mx-auto translate-x-8 md:translate-x-40">
+                <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6 max-w-4xl mx-auto">
                     <h2 className="text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-8 font-outfit leading-tight drop-shadow-[0_0_30px_rgba(0,0,0,0.8)]">
                                    Unlock Capital from<br />
                         <span className="text-gold">Real-World Income</span>
@@ -176,8 +173,6 @@ export default function RWAHome() {
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-zinc-950 to-transparent pointer-events-none" />
             </div>
-            <br />
-            <br />
             {/* KYC Banner */}
             {address && !isVerified && (
                 <div className="relative overflow-hidden rounded-3xl p-[1px] bg-gradient-to-br from-yellow-500/30 via-zinc-800 to-zinc-900 shadow-[0_0_50px_rgba(234,179,8,0.1)]">
@@ -210,8 +205,6 @@ export default function RWAHome() {
                     </div>
                 </div>
             )}
-            <br />
-            <br />
 
             {/* Protocol Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -234,13 +227,10 @@ export default function RWAHome() {
                     valueClassName="text-gold"
                 />
             </div>
-            <br />
-            <br />
 
-            {/* Active Asset Pools */}
             <div className="py-20">
                 <div className="flex items-center justify-between mb-16">
-                    <h2 className="text-4xl md:text-5xl font-bold text-gold font-outfit drop-shadow-[0_0_15px_rgba(212,175,55,0.4)] translate-x-6 md:translate-x-80">
+                    <h2 className="text-4xl md:text-5xl font-bold text-gold font-outfit drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">
                         Active Bundle Pools
                     </h2>
                     
@@ -287,8 +277,8 @@ export default function RWAHome() {
                                     <div className="bg-zinc-900/50 rounded-2xl p-6 border border-zinc-800/50 group-hover:border-gold/20 transition-all duration-500 relative overflow-hidden">
                                         <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                         <div className="relative">
-                                            <span className="text-zinc-500 text-[11px] font-bold font-outfit uppercase tracking-[0.3em] mb-2 block translate-x-6 md:translate-x-3">Target APY</span>
-                                            <span className="text-5xl font-bold font-outfit tracking-tighter text-gold drop-shadow-[0_0_10px_rgba(212,175,55,0.3)] translate-x-6 md:translate-x-12">
+                                            <span className="text-zinc-500 text-[11px] font-bold font-outfit uppercase tracking-[0.3em] mb-2 block text-center">Target APY</span>
+                                            <span className="text-5xl font-bold font-outfit tracking-tighter text-gold drop-shadow-[0_0_10px_rgba(212,175,55,0.3)] block text-center">
                                                 {pool.apy}%
                                             </span>
                                         </div>
