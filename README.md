@@ -2,9 +2,7 @@
 
 **A Hybrid Self-Repaying Lending Protocol Combining DeFi + Real-World Assets**
 
-**Demo Video: https://drive.google.com/file/d/1rKzAXlFGaVow4XAWNUbMWYVYrjkRtaUe/view?usp=sharing
-**
-
+**Demo Video:** https://drive.google.com/file/d/1rKzAXlFGaVow4XAWNUbMWYVYrjkRtaUe/view?usp=sharing
 
 Orbit Finance is a next-generation lending protocol that enables automatic debt repayment through yield generation. By combining traditional DeFi collateral with tokenized Real-World Assets (RWAs), Orbit creates a sustainable borrowing experience where your debt reduces over time without manual intervention.
 
